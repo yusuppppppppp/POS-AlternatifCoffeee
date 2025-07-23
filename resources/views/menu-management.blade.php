@@ -3,6 +3,177 @@
 @section('title', 'Menu Management')
 
 @section('content')
+<style>
+    .menu-section {
+        margin-left: 250px; /* Supaya tidak tertutup sidebar */
+        padding: 10px 30px 30px 30px; /* padding atas diperkecil */
+    }
+
+    .category-btn {
+        background-color: #2d4a70;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: 0.3s ease;
+    }
+
+    .category-btn:hover {
+        background-color: #1c3552;
+    }
+
+    .menu-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .menu-table th, .menu-table td {
+        padding: 14px 16px;
+        text-align: left;
+    }
+
+    .menu-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .menu-table tbody tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .menu-table img {
+        border-radius: 6px;
+        object-fit: cover;
+        height: 60px;
+    }
+
+    .edit-btn, .delete-btn {
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-right: 6px;
+    }
+
+    .edit-btn {
+        background-color: #f0ad4e;
+        color: white;
+    }
+
+    .delete-btn {
+        background-color: #d9534f;
+        color: white;
+    }
+
+    .edit-btn:hover {
+        background-color: #ec9c33;
+    }
+
+    .delete-btn:hover {
+        background-color: #c9302c;
+    }
+
+    /* Modal styling (same, just added shadow and nicer border) */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 25px;
+        width: 90%;
+        max-width: 500px;
+        margin: 80px auto;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .close-btn {
+        font-size: 24px;
+        cursor: pointer;
+        color: #aaa;
+    }
+
+    .close-btn:hover {
+        color: #000;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    #modalSubmitBtn {
+        background-color: #3d5a80;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 6px;
+        width: 100%;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #modalSubmitBtn:hover {
+        background-color: #2d4a70;
+    }
+
+    #errorMessage {
+        margin-top: 10px;
+        color: red;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .menu-section {
+            margin-left: 0;
+            padding: 20px;
+        }
+
+        .menu-table img {
+            height: 40px;
+        }
+
+        .modal-content {
+            width: 95%;
+            margin: 60px auto;
+        }
+    }
+</style>
+
 <div class="menu-section">
     <button class="category-btn" onclick="showModal('add')">Add New Menu +</button>
     <table class="menu-table">
@@ -64,57 +235,11 @@
                     <input type="file" name="image" id="image" accept="image/*">
                 </div>
                 <button type="submit" id="modalSubmitBtn">Submit</button>
-                <div id="errorMessage" style="color: red; display: none;"></div>
+                <div id="errorMessage" style="display: none;"></div>
             </form>
         </div>
     </div>
 </div>
-
-<style>
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1000;
-}
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    margin: 80px auto;
-    border-radius: 10px;
-    position: relative;
-}
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.close-btn {
-    font-size: 24px;
-    cursor: pointer;
-}
-.form-group {
-    margin-bottom: 15px;
-}
-.form-group input, .form-group select {
-    width: 100%;
-    padding: 8px;
-}
-button#modalSubmitBtn {
-    background-color: #3d5a80;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-button#modalSubmitBtn:hover {
-    background-color: #2d4a70;
-}
-</style>
 
 <script>
 function showModal(action, id = null) {
@@ -139,7 +264,7 @@ function showModal(action, id = null) {
         title.textContent = 'Edit Menu';
         submitBtn.textContent = 'Update Menu';
         form.setAttribute('data-action', '{{ url("menus") }}/' + id);
-        form.setAttribute('data-method', 'POST');
+        form.setAttribute('data-method', 'PUT');
 
         fetch('/api/menus/' + id)
             .then(res => res.json())
@@ -149,7 +274,7 @@ function showModal(action, id = null) {
                 document.getElementById('price').value = menu.price;
                 document.getElementById('category').value = menu.category;
             })
-            .catch(err => {
+            .catch(() => {
                 errorMessage.textContent = 'Failed to load menu';
                 errorMessage.style.display = 'block';
             });
@@ -167,9 +292,8 @@ document.getElementById('menuForm').addEventListener('submit', function(e) {
     const data = new FormData(form);
     const action = form.getAttribute('data-action');
     const method = form.getAttribute('data-method');
-    const menuId = document.getElementById('menuId').value;
 
-    if (method === 'POST' && menuId) {
+    if (method === 'PUT') {
         data.append('_method', 'PUT');
     }
 
@@ -181,8 +305,11 @@ document.getElementById('menuForm').addEventListener('submit', function(e) {
         },
         body: data
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Gagal menyimpan data');
+    .then(async res => {
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || 'Gagal menyimpan data');
+        }
         return res.json();
     })
     .then(() => {
@@ -217,4 +344,5 @@ window.onclick = function(e) {
     if (e.target == modal) hideModal();
 };
 </script>
+
 @endsection
