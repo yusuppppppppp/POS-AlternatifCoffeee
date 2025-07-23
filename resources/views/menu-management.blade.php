@@ -5,83 +5,99 @@
 @section('content')
 <style>
     .menu-section {
-        margin-left: 250px; /* Supaya tidak tertutup sidebar */
-        padding: 10px 30px 30px 30px; /* padding atas diperkecil */
+        margin-left: 285px;
+        padding: 0px 40px 40px 40px;
+        max-width: 2100px;
     }
 
     .category-btn {
         background-color: #2d4a70;
         color: #fff;
         border: none;
-        padding: 10px 18px;
-        border-radius: 8px;
-        font-size: 14px;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-size: 15px;
         cursor: pointer;
-        margin-bottom: 20px;
-        transition: 0.3s ease;
+        margin-bottom: 28px;
+        margin-left: 0;
+        font-weight: 500;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(44, 74, 112, 0.18), 0 1.5px 4px rgba(44,74,112,0.10);
     }
-
     .category-btn:hover {
         background-color: #1c3552;
     }
 
     .menu-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
         background-color: #fff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
         overflow: hidden;
     }
-
     .menu-table th, .menu-table td {
-        padding: 14px 16px;
+        padding: 18px 18px;
         text-align: left;
     }
-
     .menu-table th {
-        background-color: #f5f5f5;
-        font-weight: bold;
+        background-color: #f7f9fb;
+        font-weight: 700;
+        color: #2d4a70;
+        font-size: 15px;
+        border-bottom: 2px solid #eaeaea;
     }
-
+    .menu-table tbody tr {
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .menu-table tbody tr:last-child {
+        border-bottom: none;
+    }
     .menu-table tbody tr:nth-child(even) {
-        background-color: #fafafa;
+        background-color: #fcfdff;
     }
-
     .menu-table img {
-        border-radius: 6px;
+        border-radius: 8px;
         object-fit: cover;
-        height: 60px;
+        height: 48px;
+        width: 48px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        border: 2px solid #f5f5f5;
     }
-
     .edit-btn, .delete-btn {
         border: none;
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 16px;
+        padding: 7px 11px;
+        border-radius: 7px;
+        font-size: 18px;
         cursor: pointer;
-        margin-right: 6px;
+        margin-right: 4px;
+        transition: background 0.2s, color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
-
     .edit-btn {
-        background-color: #f0ad4e;
-        color: white;
+        background-color: #fffbe6;
+        color: #f0ad4e;
+        border: 1px solid #ffe6a1;
     }
-
     .delete-btn {
-        background-color: #d9534f;
-        color: white;
+        background-color: #fff0f0;
+        color: #d9534f;
+        border: 1px solid #ffd6d6;
     }
-
     .edit-btn:hover {
-        background-color: #ec9c33;
+        background-color: #ffe6a1;
+        color: #fff;
     }
-
     .delete-btn:hover {
-        background-color: #c9302c;
+        background-color: #ffd6d6;
+        color: #fff;
     }
-
-    /* Modal styling (same, just added shadow and nicer border) */
     .modal {
         display: none;
         position: fixed;
@@ -89,7 +105,6 @@
         background: rgba(0,0,0,0.4);
         z-index: 1000;
     }
-
     .modal-content {
         background: white;
         padding: 25px;
@@ -100,41 +115,34 @@
         box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         position: relative;
     }
-
     .modal-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 10px;
     }
-
     .close-btn {
         font-size: 24px;
         cursor: pointer;
         color: #aaa;
     }
-
     .close-btn:hover {
         color: #000;
     }
-
     .form-group {
         margin-bottom: 15px;
     }
-
     .form-group label {
         font-weight: 600;
         display: block;
         margin-bottom: 5px;
     }
-
     .form-group input, .form-group select {
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 6px;
     }
-
     #modalSubmitBtn {
         background-color: #3d5a80;
         color: white;
@@ -146,36 +154,41 @@
         cursor: pointer;
         transition: background 0.3s;
     }
-
     #modalSubmitBtn:hover {
         background-color: #2d4a70;
     }
-
     #errorMessage {
         margin-top: 10px;
         color: red;
         font-size: 14px;
     }
-
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         .menu-section {
             margin-left: 0;
             padding: 20px;
+            max-width: 100vw;
         }
-
+    }
+    @media (max-width: 768px) {
+        .menu-section {
+            margin-left: 0;
+            padding: 10px;
+        }
         .menu-table img {
-            height: 40px;
+            height: 36px;
+            width: 36px;
         }
-
         .modal-content {
-            width: 95%;
-            margin: 60px auto;
+            width: 98%;
+            margin: 40px auto;
         }
     }
 </style>
 
 <div class="menu-section">
-    <button class="category-btn" onclick="showModal('add')">Add New Menu +</button>
+    <button class="category-btn" onclick="showModal('add')">
+         Add New Menu <img src="{{ asset('images/tambah.png') }}" alt="Add" style="height:22px;width:22px;margin-right:0px;vertical-align:middle;">
+    </button>
     <table class="menu-table">
         <thead>
             <tr>
@@ -190,17 +203,24 @@
             @foreach($menus as $menu)
             <tr>
                 <td>{{ $menu->name }}</td>
-                <td><img src="{{ asset('storage/' . $menu->image_path) }}" alt="{{ $menu->name }}" width="80"></td>
+                <td><img src="{{ asset('storage/' . $menu->image_path) }}" alt="{{ $menu->name }}" width="48"></td>
                 <td>Rp. {{ number_format($menu->price, 0, ',', '.') }}</td>
                 <td>{{ $menu->category }}</td>
                 <td>
-                    <button class="edit-btn" onclick="showModal('edit', '{{ $menu->id }}')">✏️</button>
-                    <button class="delete-btn" onclick="deleteMenu('{{ $menu->id }}')">🗑️</button>
+                    <button class="edit-btn" onclick="showModal('edit', '{{ $menu->id }}')">
+                        <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:20px;width:20px;vertical-align:middle;">
+                    </button>
+                    <button class="delete-btn" onclick="deleteMenu('{{ $menu->id }}')">
+                        <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:20px;width:20px;vertical-align:middle;">
+                    </button>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+    <div class="pagination-container">
+        {{ $menus->links() }}
+    </div>
 </div>
 
 <!-- Modal -->

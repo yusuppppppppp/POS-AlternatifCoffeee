@@ -35,7 +35,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            /* background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>'); */
             opacity: 0.3;
         }
 
@@ -136,11 +136,17 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            color: #64748b;
             background-color: #f1f5f9;
             border-radius: 6px;
             padding: 4px;
             transition: all 0.2s ease;
+        }
+        .drawer-item-icon-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
         }
 
         .drawer-item:hover .drawer-item-icon {
@@ -152,7 +158,7 @@
         .drawer-item-text {
             font-size: 15px;
             font-weight: 500;
-            color: #334155;
+            color:rgb(0, 0, 0);
             transition: color 0.2s ease;
         }
 
@@ -168,27 +174,27 @@
         }
 
         /* Special styling for logout */
-        .drawer-item:last-child {
+        .drawer-section-logout {
             margin-top: 20px;
             border-top: 1px solid #fee2e2;
         }
 
-        .drawer-item:last-child:hover {
+        .drawer-section-logout:hover {
             background-color: #fef2f2;
             border-left-color: #ef4444;
         }
 
-        .drawer-item:last-child .drawer-item-icon {
+        .drawer-section-logout .drawer-item-icon {
             color: #dc2626;
             background-color: #fee2e2;
         }
 
-        .drawer-item:last-child:hover .drawer-item-icon {
+        .drawer-section-logout:hover .drawer-item-icon {
             color: #dc2626;
             background-color: #fecaca;
         }
 
-        .drawer-item:last-child .drawer-item-text {
+        .drawer-section-logout .drawer-item-text {
             color: #dc2626;
         }
 
@@ -209,15 +215,6 @@
         .drawer-content::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
         }
-
-        /* Icons using Unicode/Emoji */
-        .icon-cashier::before { content: '🛒'; }
-        .icon-order::before { content: '📋'; }
-        .icon-dashboard::before { content: '🏠'; }
-        .icon-menu::before { content: '🍽️'; }
-        .icon-report::before { content = '⏰'; }
-        .icon-account::before { content: '👤'; }
-        .icon-logout::before { content: '🚪'; }
 
         /* Animation for smooth transitions */
         @keyframes slideIn {
@@ -262,36 +259,36 @@
         <div class="drawer-content">
             <div class="drawer-section">
                 <div class="drawer-item" onclick="navigateTo('kasir')">
-                    <div class="drawer-item-icon">🛒</div>
+                    <div class="drawer-item-icon"><img src="/images/kasir.png" alt="Cashier" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Cashier</div>
                 </div>
                 <div class="drawer-item" onclick="navigateTo('order-list')">
-                    <div class="drawer-item-icon">📋</div>
+                    <div class="drawer-item-icon"><img src="/images/order_list.png" alt="Order List" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Order List</div>
                 </div>
             </div>
             <div class="drawer-section">
-                <div class="drawer-section-title">Admin</div>
+                <div class="drawer-section-title">Admin</div>   
                 <div class="drawer-item" onclick="navigateTo('dashboard')">
-                    <div class="drawer-item-icon">🏠</div>
+                    <div class="drawer-item-icon"><img src="/images/dashboard.png" alt="Dashboard" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Dashboard</div>
                 </div>
                 <div class="drawer-item" onclick="navigateTo('menu-management')">
-                    <div class="drawer-item-icon">🍽️</div>
+                    <div class="drawer-item-icon"><img src="/images/menu_management.png" alt="Menu Management" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Menu Management</div>
                 </div>
                 <div class="drawer-item" onclick="navigateTo('sales-report')">
-                    <div class="drawer-item-icon">⏰</div>
+                    <div class="drawer-item-icon"><img src="/images/sales_report.png" alt="Sales Report" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Sales Report</div>
                 </div>
                 <div class="drawer-item" onclick="navigateTo('account-management')">
-                    <div class="drawer-item-icon">👤</div>
+                    <div class="drawer-item-icon"><img src="/images/account_management.png" alt="Account Management" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">Account Management</div>
                 </div>
             </div>
-            <div class="drawer-section">
+            <div class="drawer-section-logout">
                 <div class="drawer-item" onclick="logout()">
-                    <div class="drawer-item-icon">🚪</div>
+                    <div class="drawer-item-icon"><img src="/images/logout.png" alt="Logout" class="drawer-item-icon-img"></div>
                     <div class="drawer-item-text">
                         <a href="{{ route('logout') }}" style="text-decoration: none; color: inherit;">Logout</a>
                     </div>

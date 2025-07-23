@@ -24,7 +24,13 @@
         </div>
         <div class="brand-info">
             <h1>Alternatif Coffee</h1>
-            <p>Lukmin Tajinan</p>
+            <p>
+                @auth
+                    {{ Auth::user()->name }}
+                @else
+                    Guest
+                @endauth
+            </p>
         </div>
     </div>
 

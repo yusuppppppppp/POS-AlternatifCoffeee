@@ -61,4 +61,36 @@ class UserController extends Controller
         Auth::logout();
         return redirect()->route('login');
     }
+
+    public function dashboard() {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            return view('dashboard');
+        } else {
+            return redirect()->route('login');
+        }
+    }
+
+    public function salesReport() {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            return view('sales-report');
+        } else {
+            return redirect()->route('login');
+        }
+    }
+
+    // public function accountManagement() {
+    //     if (Auth::check() && Auth::user()->usertype == 'admin') {
+    //         return view('account-management');
+    //     } else {
+    //         return redirect()->route('login');
+    //     }
+    // }
+
+    public function orderList() {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            return view('order-list');
+        } else {
+            return redirect()->route('login');
+        }
+    }
 }
