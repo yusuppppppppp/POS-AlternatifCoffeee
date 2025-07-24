@@ -404,19 +404,19 @@
 </div>
 
 <div class="container" id="container">
-    <!-- Menu -->
-    <div class="menu-section">
-        <div class="category-filters">
-            <button class="category-btn active" onclick="filterCategory('All')">All Category</button>
-            <button class="category-btn" onclick="filterCategory('Coffee')">Coffee</button>
-            <button class="category-btn" onclick="filterCategory('Non Coffee')">Non Coffee</button>
-            <button class="category-btn" onclick="filterCategory('Food')">Food</button>
-        </div>
+        <!-- Menu -->
+        <div class="menu-section">
+            <div class="category-filters">
+                <button class="category-btn active" onclick="filterCategory('All')">All Category</button>
+                <button class="category-btn" onclick="filterCategory('Coffee')">Coffee</button>
+                <button class="category-btn" onclick="filterCategory('Non Coffee')">Non Coffee</button>
+                <button class="category-btn" onclick="filterCategory('Food')">Food</button>
+            </div>
 
-        <div class="menu-grid" id="menuGrid">
-            <!-- Menu items will be loaded dynamically -->
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be loaded dynamically -->
+            </div>
         </div>
-    </div>
 
     <!-- Bills -->
     <div class="bills-section">
@@ -440,7 +440,7 @@
         <div class="payment-header">
             <div class="payment-user">
                 <span class="payment-user-icon">&#128100;</span>
-                <span class="payment-user-name">Lukmin Tajinan</span>
+                <input type="text" id="customerNameInput" class="payment-user-name" placeholder="Nama Customer" style="font-weight:500; color:#2c3e50; border:none; background:transparent; outline:none; font-size:1rem;" />
             </div>
         </div>
         <div class="payment-summary">
@@ -474,13 +474,35 @@
                 <button class="keypad-btn">9</button>
             </div>
             <div class="keypad-row">
-                <button class="keypad-btn">Enter</button>
+            <button class="keypad-btn" onclick="printReceiptAndReset()">Enter</button>
                 <button class="keypad-btn">0</button>
                 <button class="keypad-btn">⌫</button>
             </div>
         </div>
     </div>
 </div>
+
+<div id="receiptContent" style="display: none;">
+    <h2>Alternatif Coffee</h2>
+    <hr>
+    <ul id="receiptItems"></ul>
+    <hr>
+    <div class="line"><span>Total</span><span class="payment-total"></span></div>
+    <div class="line"><span>Cash</span><span class="payment-cash"></span></div>
+    <div class="line"><span>Balance</span><span class="payment-balance"></span></div>
+    <hr>
+    <div style="text-align:center;" class="payment-user-name">{{ Auth::user()->name ?? 'Guest' }}</div>
+</div>
+
+<!-- Receipt Modal -->
+<div id="receiptModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:3000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:16px; padding:32px 24px; min-width:320px; max-width:90vw; box-shadow:0 8px 32px rgba(0,0,0,0.2); position:relative;">
+        <div id="receiptModalContent"></div>
+        <button onclick="printReceiptFromModal()" style="margin-top:20px; width:100%; padding:10px 0; border:none; border-radius:8px; background:#27ae60; color:#fff; font-weight:600; font-size:1rem; cursor:pointer;">Print</button>
+        <button onclick="closeReceiptModal()" style="margin-top:10px; width:100%; padding:10px 0; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:600; font-size:1rem; cursor:pointer;">Tutup</button>
+    </div>
+</div>
+
 
 <style>
 .payment-modal {
@@ -771,25 +793,95 @@
     };
 
     function printReceiptAndReset(cash, balance) {
-        let printWindow = window.open('', '', 'width=600,height=600');
-        let html = `<h2>Alternatif Coffee</h2><hr><ul>`;
-        for (let item in cart) {
-            html += `<li>${cart[item].quantity}x ${item} - Rp. ${(cart[item].price * cart[item].quantity).toLocaleString()}</li>`;
-        }
-        html += `</ul><hr><strong>Total: Rp. ${totalAmount.toLocaleString()}</strong><br>`;
-        html += `<strong>Cash: Rp. ${cash.toLocaleString()}</strong><br>`;
-        html += `<strong>Balance: Rp. ${(balance >= 0 ? balance.toLocaleString() : '0')}</strong>`;
-        printWindow.document.write(html);
-        printWindow.document.close();
-        printWindow.print();
-        // Reset cart dan modal
-        cart = {};
-        updateBillDisplay();
-        document.getElementById('paymentModal').style.display = 'none';
-        document.querySelector('.bills-section').style.display = '';
-        cashValue = '';
+    // Perbarui isi struk
+    const receiptItems = document.getElementById('receiptItems');
+    receiptItems.innerHTML = '';
+
+    let total = 0;
+
+    for (const itemKey in cart) {
+        const item = cart[itemKey];
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div class="line">
+                <span>${item.quantity}x ${item.name}</span>
+                <span>Rp. ${itemTotal.toLocaleString()}</span>
+            </div>`;
+        receiptItems.appendChild(li);
     }
 
-    window.addEventListener('load', loadMenuItems);
+    total = Math.round(total); // pembulatan aman
+
+    // Tampilkan ke struk
+    document.querySelector('.payment-total').textContent = `Rp. ${total.toLocaleString()}`;
+    document.querySelector('.payment-cash').textContent = `Rp. ${cash.toLocaleString()}`;
+    document.querySelector('.payment-balance').textContent = `Rp. ${balance.toLocaleString()}`;
+
+    // Tampilkan struk di modal, bukan window baru
+    const receiptModal = document.getElementById('receiptModal');
+    const receiptModalContent = document.getElementById('receiptModalContent');
+    receiptModalContent.innerHTML = document.getElementById('receiptContent').innerHTML;
+    receiptModal.style.display = 'flex';
+
+    // Simpan ke database via fetch POST
+    fetch('/save-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            customer_name: document.getElementById('customerNameInput').value || 'Unknown',
+            order_type: document.getElementById('dineInBtn')?.classList.contains('active') ? 'Dine in' : 'Take Away',
+            total_amount: total,
+            cash_paid: cash,
+            balance: balance,
+            items: Object.values(cart)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Order berhasil disimpan, tidak perlu refresh langsung
+        // Bisa refresh setelah tutup modal jika diinginkan
+    })
+    .catch(error => {
+        console.error('Error saving order:', error);
+        alert('Gagal menyimpan order!');
+        window.location.reload();
+    });
+
+    // Reset cart dan tampilan
+    cart = {};
+    updateBillDisplay();
+    document.querySelector('.payment-total').textContent = '';
+    document.querySelector('.payment-cash').textContent = '';
+    document.querySelector('.payment-balance').textContent = '';
+    receiptItems.innerHTML = '';
+}
+
+function printReceiptFromModal() {
+    const printContents = document.getElementById('receiptModalContent').innerHTML;
+    const originalContents = document.body.innerHTML;
+    // Buat elemen sementara untuk print
+    const printArea = document.createElement('div');
+    printArea.id = 'printAreaTemp';
+    printArea.innerHTML = printContents;
+    document.body.innerHTML = printArea.outerHTML;
+    window.print();
+    document.body.innerHTML = originalContents;
+    // Kembalikan event listener jika perlu
+    window.location.reload(); // reload agar event tetap berjalan normal
+}
+
+function closeReceiptModal() {
+    document.getElementById('receiptModal').style.display = 'none';
+    window.location.reload(); // refresh setelah tutup modal
+}
+
+window.onload = loadMenuItems;
+
 </script>
 @endsection

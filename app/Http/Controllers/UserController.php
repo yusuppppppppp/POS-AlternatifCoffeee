@@ -85,12 +85,4 @@ class UserController extends Controller
     //         return redirect()->route('login');
     //     }
     // }
-
-    public function orderList() {
-        if (Auth::check() && Auth::user()->usertype == 'admin') {
-            return view('order-list');
-        } else {
-            return redirect()->route('login');
-        }
-    }
 }

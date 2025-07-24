@@ -7,6 +7,7 @@
     .menu-section {
         margin-left: 285px;
         padding: 0px 40px 40px 40px;
+        margin-top: -75px;
         max-width: 2100px;
     }
 
@@ -171,7 +172,7 @@
     }
     @media (max-width: 768px) {
         .menu-section {
-            margin-left: 0;
+            margin-left: 0px;
             padding: 10px;
         }
         .menu-table img {

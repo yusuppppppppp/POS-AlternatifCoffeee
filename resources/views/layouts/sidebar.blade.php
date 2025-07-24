@@ -108,7 +108,7 @@
         }
 
         .drawer-item {
-            margin-top: 20px;
+            margin-top: 5px;
             display: flex;
             align-items: center;
             padding: 16px 20px;
@@ -251,10 +251,13 @@
 <body>
 
     <div class="drawer" id="drawer">
-        <div class="drawer-header">
-            <button class="menu-toggle">
-                <span class="menu-lines"></span>
-            </button>
+        <div class="drawer-header" style="height: 80px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start;">
+            <div class="logo" style="margin-right: 10px; margin-bottom: 0;">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 70px; height: 70px;">
+            </div>
+            <div class="brand-info">
+                <span style="color: #fff; font-size: 17px; font-weight: 750; letter-spacing: 0.5px;">Alternatif Coffee</span>
+            </div>
         </div>
         <div class="drawer-content">
             <div class="drawer-section">

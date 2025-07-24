@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alternatif Coffee - @yield('title')</title>
+
+    {{-- ✅ Tambahkan baris ini untuk CSRF --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
         /* [Existing styles from your files can be moved here] */
         .drawer { /* Sidebar styles */ }
