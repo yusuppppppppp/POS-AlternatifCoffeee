@@ -11,7 +11,7 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::paginate(5);
+        $menus = Menu::orderBy('id', 'desc')->paginate(5);
         return view('menu-management', compact('menus'));
     }
 
@@ -94,7 +94,7 @@ class MenuController extends Controller
 
     public function apiIndex()
     {
-        $menus = Menu::all();
+        $menus = Menu::orderBy('id', 'desc')->get();
         $menus->each(function ($menu) {
             $menu->image_url = asset('storage/' . $menu->image_path);
         });

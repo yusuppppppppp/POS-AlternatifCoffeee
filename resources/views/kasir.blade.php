@@ -439,7 +439,7 @@
     <div class="payment-modal-content">
         <div class="payment-header">
             <div class="payment-user">
-                <span class="payment-user-icon">&#128100;</span>
+                <img class="payment-user-icon" src="/images/user_icon.png" alt="User Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
                 <input type="text" id="customerNameInput" class="payment-user-name" placeholder="Nama Customer" style="font-weight:500; color:#2c3e50; border:none; background:transparent; outline:none; font-size:1rem;" />
             </div>
         </div>
@@ -491,7 +491,9 @@
     <div class="line"><span>Cash</span><span class="payment-cash"></span></div>
     <div class="line"><span>Balance</span><span class="payment-balance"></span></div>
     <hr>
-    <div style="text-align:center;" class="payment-user-name">{{ Auth::user()->name ?? 'Guest' }}</div>
+    <div style="text-align:left; margin-bottom:2px;" id="receiptCustomerLabel"></div>
+    <div style="text-align:left;" id="receiptCashierLabel"></div>
+    <div style="text-align:left; margin-top:2px;" id="receiptOrderTypeLabel"></div>
 </div>
 
 <!-- Receipt Modal -->
@@ -627,9 +629,16 @@
 @media (max-width: 400px) {
     .payment-modal-content { width: 98vw; padding: 10px 2vw; }
 }
+@media print {
+    body * { display: none !important; }
+    #receiptModal, #receiptModal * { display: block !important; }
+    #receiptModal { position: static !important; background: none !important; box-shadow: none !important; }
+    #receiptModalContent { box-shadow: none !important; background: #fff !important; }
+}
 </style>
 
 <script>
+window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
     let cart = {};
     let totalAmount = 0;
     let allMenus = [];
@@ -819,7 +828,13 @@
     document.querySelector('.payment-total').textContent = `Rp. ${total.toLocaleString()}`;
     document.querySelector('.payment-cash').textContent = `Rp. ${cash.toLocaleString()}`;
     document.querySelector('.payment-balance').textContent = `Rp. ${balance.toLocaleString()}`;
-
+    // Set nama pembeli dan kasir di struk
+    const customerName = document.getElementById('customerNameInput').value || 'Unknown';
+    document.getElementById('receiptCustomerLabel').textContent = 'Customer: ' + customerName;
+    document.getElementById('receiptCashierLabel').textContent = 'Kasir: ' + (window.currentCashierName || 'Guest');
+    // Set order type di struk
+    const orderType = document.getElementById('dineInBtn')?.classList.contains('active') ? 'Dine in' : 'Take Away';
+    document.getElementById('receiptOrderTypeLabel').textContent = 'Order: ' + orderType;
     // Tampilkan struk di modal, bukan window baru
     const receiptModal = document.getElementById('receiptModal');
     const receiptModalContent = document.getElementById('receiptModalContent');
@@ -834,7 +849,7 @@
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({
-            customer_name: document.getElementById('customerNameInput').value || 'Unknown',
+            customer_name: customerName,
             order_type: document.getElementById('dineInBtn')?.classList.contains('active') ? 'Dine in' : 'Take Away',
             total_amount: total,
             cash_paid: cash,
@@ -863,17 +878,20 @@
 }
 
 function printReceiptFromModal() {
+    // Print hanya area receiptModalContent tanpa reload atau mengganti body
     const printContents = document.getElementById('receiptModalContent').innerHTML;
-    const originalContents = document.body.innerHTML;
-    // Buat elemen sementara untuk print
-    const printArea = document.createElement('div');
-    printArea.id = 'printAreaTemp';
-    printArea.innerHTML = printContents;
-    document.body.innerHTML = printArea.outerHTML;
-    window.print();
-    document.body.innerHTML = originalContents;
-    // Kembalikan event listener jika perlu
-    window.location.reload(); // reload agar event tetap berjalan normal
+    const printWindow = window.open('', '', 'height=700,width=550'); 
+    printWindow.document.write('<html><head><title>Print Receipt</title>');
+    printWindow.document.write('<style>@media print { body { margin:0; } .line { display:flex; justify-content:space-between; } #receiptModalContent { min-width:500px; max-width:90vw; margin:auto; } }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write('<div id="receiptModalContent" style="min-width:500px;max-width:90vw;margin:auto;">');
+    printWindow.document.write(printContents);
+    printWindow.document.write('</div>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
 }
 
 function closeReceiptModal() {

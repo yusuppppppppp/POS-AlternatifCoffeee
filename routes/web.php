@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Order
     Route::get('/order-list', [UserController::class, 'orderList'])->name('order-list'); // Menampilkan halaman
+    Route::get('/order-list/download-pdf', [UserController::class, 'downloadOrderListPdf'])->name('order-list.download-pdf'); // Download PDF
     Route::get('/order-data', [OrderController::class, 'todayOrders'])->name('order.data'); // Ambil data pesanan (HARUS JSON)
     Route::post('/save-order', [OrderController::class, 'store'])->name('save-order');
 

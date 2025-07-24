@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
@@ -85,4 +87,31 @@ class UserController extends Controller
     //         return redirect()->route('login');
     //     }
     // }
+
+    public function orderList()
+    {
+        if (Auth::check() && Auth::user()->usertype === 'user') {
+            $orders = Order::with('items')
+                ->whereDate('created_at', now()->toDateString())
+                ->orderBy('created_at', 'desc')
+                ->paginate(5);
+            return view('order-list', compact('orders'));
+        } else {
+            return redirect()->route('login');
+        }
+    }
+
+    public function downloadOrderListPdf()
+    {
+        if (Auth::check() && Auth::user()->usertype === 'user') {
+            $orders = Order::with('items')
+                ->whereDate('created_at', now()->toDateString())
+                ->orderBy('created_at', 'desc')
+                ->get();
+            $pdf = Pdf::loadView('order-list-pdf', compact('orders'));
+            return $pdf->download('order-list-'.now()->format('Y-m-d').'.pdf');
+        } else {
+            return redirect()->route('login');
+        }
+    }
 }
