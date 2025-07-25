@@ -31,6 +31,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/order-data', [OrderController::class, 'todayOrders'])->name('order.data'); // Ambil data pesanan (HARUS JSON)
     Route::post('/save-order', [OrderController::class, 'store'])->name('save-order');
 
+    // User CRUD API Routes
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/api/users', [UserController::class, 'getUsers'])->name('users.api.index');
+    Route::get('/api/users/{id}', [UserController::class, 'getUser'])->name('users.api.show');
+
 
     // Logout
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');

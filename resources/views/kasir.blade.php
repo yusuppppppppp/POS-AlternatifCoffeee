@@ -557,6 +557,8 @@
     border-radius: 10px;
     padding: 10px 0 10px 0;
     margin-bottom: 10px;
+    max-height: 180px;
+    overflow-y: auto;
 }
 #payment-items {
     margin-bottom: 8px;

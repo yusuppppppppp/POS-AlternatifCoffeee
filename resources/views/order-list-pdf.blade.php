@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <h2>History Pembelian Hari Ini ({{ date('d-m-Y') }})</h2>
+    <h2>History Pembelian ({{ date('d-m-Y') }})</h2>
     <table>
         <thead>
             <tr>

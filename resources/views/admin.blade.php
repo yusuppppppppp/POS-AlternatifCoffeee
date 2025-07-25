@@ -1,3 +1,12 @@
-ini adalah halaman admin
+@extends('layouts.app')
 
-<a href="{{route('logout')}}">Logout</a>
+@section('title', 'Admin')
+
+@section('content')
+
+<div class="container">
+    <h1 style="margin-left: 500px;">Admin</h1>
+</div>
+
+
+

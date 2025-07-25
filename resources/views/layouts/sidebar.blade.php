@@ -260,35 +260,40 @@
             </div>
         </div>
         <div class="drawer-content">
-            <div class="drawer-section">
-                <div class="drawer-item" onclick="navigateTo('kasir')">
-                    <div class="drawer-item-icon"><img src="/images/kasir.png" alt="Cashier" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Cashier</div>
+            @auth
+                @if(Auth::user()->usertype == 'user')
+                <div class="drawer-section">
+                    <div class="drawer-item" onclick="navigateTo('kasir')">
+                        <div class="drawer-item-icon"><img src="/images/kasir.png" alt="Cashier" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Cashier</div>
+                    </div>
+                    <div class="drawer-item" onclick="navigateTo('order-list')">
+                        <div class="drawer-item-icon"><img src="/images/order_list.png" alt="Order List" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Order List</div>
+                    </div>
                 </div>
-                <div class="drawer-item" onclick="navigateTo('order-list')">
-                    <div class="drawer-item-icon"><img src="/images/order_list.png" alt="Order List" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Order List</div>
+                @endif
+                @if(Auth::user()->usertype == 'admin')
+                <div class="drawer-section">
+                    <div class="drawer-item" onclick="navigateTo('dashboard')">
+                        <div class="drawer-item-icon"><img src="/images/dashboard.png" alt="Dashboard" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Dashboard</div>
+                    </div>
+                    <div class="drawer-item" onclick="navigateTo('menu-management')">
+                        <div class="drawer-item-icon"><img src="/images/menu_management.png" alt="Menu Management" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Menu Management</div>
+                    </div>
+                    <div class="drawer-item" onclick="navigateTo('sales-report')">
+                        <div class="drawer-item-icon"><img src="/images/sales_report.png" alt="Sales Report" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Sales Report</div>
+                    </div>
+                    <div class="drawer-item" onclick="navigateTo('account-management')">
+                        <div class="drawer-item-icon"><img src="/images/account_management.png" alt="Account Management" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Account Management</div>
+                    </div>
                 </div>
-            </div>
-            <div class="drawer-section">
-                <div class="drawer-section-title">Admin</div>   
-                <div class="drawer-item" onclick="navigateTo('dashboard')">
-                    <div class="drawer-item-icon"><img src="/images/dashboard.png" alt="Dashboard" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Dashboard</div>
-                </div>
-                <div class="drawer-item" onclick="navigateTo('menu-management')">
-                    <div class="drawer-item-icon"><img src="/images/menu_management.png" alt="Menu Management" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Menu Management</div>
-                </div>
-                <div class="drawer-item" onclick="navigateTo('sales-report')">
-                    <div class="drawer-item-icon"><img src="/images/sales_report.png" alt="Sales Report" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Sales Report</div>
-                </div>
-                <div class="drawer-item" onclick="navigateTo('account-management')">
-                    <div class="drawer-item-icon"><img src="/images/account_management.png" alt="Account Management" class="drawer-item-icon-img"></div>
-                    <div class="drawer-item-text">Account Management</div>
-                </div>
-            </div>
+                @endif
+            @endauth
             <div class="drawer-section-logout">
                 <div class="drawer-item" onclick="logout()">
                     <div class="drawer-item-icon"><img src="/images/logout.png" alt="Logout" class="drawer-item-icon-img"></div>
