@@ -776,6 +776,13 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
             if (val === '⌫') {
                 cashValue = cashValue.slice(0, -1);
             } else if (val === 'Enter') {
+                // Validasi nama customer
+                const customerName = document.getElementById('customerNameInput').value.trim();
+                if (!customerName) {
+                    alert('Nama Customer wajib diisi!');
+                    document.getElementById('customerNameInput').focus();
+                    return;
+                }
                 // Hitung balance
                 const cash = parseInt(cashValue || '0');
                 const balance = cash - totalAmount;

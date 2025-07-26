@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', fn() => view('login'));
 
@@ -15,7 +16,7 @@ Route::post('/signup', [UserController::class, 'registercheck'])->name('register
 Route::middleware(['auth'])->group(function () {
     // Kasir dan Dashboard
     Route::get('/kasir', [UserController::class, 'goKasir'])->name('kasir');
-    Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/sales-report', [UserController::class, 'salesReport'])->name('sales-report');
     Route::get('/account-management', [UserController::class, 'accountManagement'])->name('account-management');
 
@@ -37,7 +38,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/api/users', [UserController::class, 'getUsers'])->name('users.api.index');
     Route::get('/api/users/{id}', [UserController::class, 'getUser'])->name('users.api.show');
-
 
     // Logout
     Route::get('/logout', [UserController::class, 'logout'])->name('logout');

@@ -153,6 +153,47 @@
         color: red;
         font-size: 14px;
     }
+    .pagination-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 5px;
+    }
+    .pagination li {
+        margin: 0;
+    }
+    .pagination a, .pagination span {
+        display: inline-block;
+        padding: 8px 12px;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #2d4a70;
+        background-color: #fff;
+        transition: all 0.2s;
+    }
+    .pagination a:hover {
+        background-color: #2d4a70;
+        color: #fff;
+        border-color: #2d4a70;
+    }
+    .pagination .active span {
+        background-color: #2d4a70;
+        color: #fff;
+        border-color: #2d4a70;
+    }
+    .pagination .disabled span {
+        color: #999;
+        background-color: #f5f5f5;
+        border-color: #ddd;
+        cursor: not-allowed;
+    }
     @media (max-width: 900px) {
         .account-section {
             margin-left: 0;
@@ -210,6 +251,9 @@
             @endforelse
         </tbody>
     </table>
+    <div class="pagination-container">
+        {{ $users->links() }}
+    </div>
 </div>
 
 <!-- Modal -->

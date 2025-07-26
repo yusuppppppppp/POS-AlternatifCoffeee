@@ -63,7 +63,7 @@ class UserController extends Controller
     public function goKasir()
     {
         if (Auth::check() && Auth::user()->usertype == 'admin') {
-            return view('dashboard');
+            return redirect()->route('dashboard');
         } elseif (Auth::check() && Auth::user()->usertype == 'user') {
             return view('kasir');
         } else {
@@ -71,19 +71,19 @@ class UserController extends Controller
         }
     }
 
-    public function dashboard()
-    {
-        if (Auth::check() && Auth::user()->usertype == 'admin') {
-            return view('dashboard');
-        } else {
-            return redirect()->route('login');
-        }
-    }
+    // public function dashboard()
+    // {
+    //     if (Auth::check() && Auth::user()->usertype == 'admin') {
+    //         return view('dashboard');
+    //     } else {
+    //         return redirect()->route('login');
+    //     }
+    // }
 
     public function accountManagement()
     {
         if (Auth::check() && Auth::user()->usertype == 'admin') {
-            $users = User::where('usertype', 'user')->orderBy('created_at', 'desc')->get();
+            $users = User::where('usertype', 'user')->orderBy('created_at', 'desc')->paginate(5);
             return view('account-management', compact('users'));
         } else {
             return redirect()->route('login');

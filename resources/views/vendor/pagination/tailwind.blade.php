@@ -1,6 +1,5 @@
 @if ($paginator->hasPages())
 <style>
-    /* Modern Pagination Styles */
     .modern-pagination-wrapper {
         display: flex;
         flex-direction: column;
