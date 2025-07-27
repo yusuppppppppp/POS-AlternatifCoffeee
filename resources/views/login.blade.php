@@ -30,7 +30,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* efek gelap */
+            background-color: rgba(0, 0, 0, 0.1); 
             top: 0;
             left: 0;
             z-index: 0;
@@ -42,52 +42,53 @@
         }
 
         .login-container {
-            background: rgba(0, 0, 0, 0.28);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            padding: 50px 40px;
+            padding: 40px 35px;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 420px;
+            max-width: 380px;
+            max-height: 450px;
             text-align: center;
             position: relative;
-            z-index: 1; /* di atas overlay */
+            z-index: 1;
         }
 
         .logo {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             background: #f8f9fa;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
+            margin: -10px auto 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .logo img {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             object-fit: contain;
         }
 
         h2 {
-            color: #F0E8D5;
-            margin-bottom: 20px;
-            font-size: 28px;
+            color: #2E4766;
+            margin-bottom: 15px;
+            font-size: 26px;
             font-weight: 700;
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            color: #F0E8D5;
+            margin-bottom: 6px;
+            color: #2E4766;
             font-weight: 500;
             font-size: 14px;
         }
@@ -95,10 +96,10 @@
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 15px 20px;
+            padding: 12px 16px;
             border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             transition: all 0.3s ease;
             background: #f8f9fa;
         }
@@ -118,16 +119,16 @@
 
         .login-btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: linear-gradient(135deg, #274fc7c4, #1d3784cc);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .login-btn:hover {
@@ -143,11 +144,39 @@
         @media (max-width: 480px) {
             .login-container {
                 margin: 20px;
-                padding: 40px 30px;
+                padding: 35px 25px;
+                max-width: 320px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 20px;
+            }
+            
+            .logo img {
+                width: 60px;
+                height: 60px;
             }
             
             h2 {
                 font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            input[type="email"],
+            input[type="password"] {
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+            
+            .login-btn {
+                padding: 12px;
+                font-size: 15px;
             }
         }
     </style>

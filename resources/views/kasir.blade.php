@@ -69,7 +69,7 @@
     /* Menu Section */
     .menu-section {
         flex: 1;
-        padding-left: 350px;
+        padding-left: 370px;
     }
 
     .category-filters {
@@ -497,16 +497,290 @@
 </div>
 
 <!-- Receipt Modal -->
-<div id="receiptModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:3000; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:16px; padding:32px 24px; min-width:320px; max-width:90vw; box-shadow:0 8px 32px rgba(0,0,0,0.2); position:relative;">
+<div id="receiptModal">
+    <div class="modal-container">
+        <button class="close-icon" onclick="closeReceiptModal()">×</button>
+        
+        <div class="modal-header">
+            <h3 class="modal-title">Receipt</h3>
+            <p class="modal-subtitle">Detail transaksi pembayaran</p>
+        </div>
+        
         <div id="receiptModalContent"></div>
-        <button onclick="printReceiptFromModal()" style="margin-top:20px; width:100%; padding:10px 0; border:none; border-radius:8px; background:#27ae60; color:#fff; font-weight:600; font-size:1rem; cursor:pointer;">Print</button>
-        <button onclick="closeReceiptModal()" style="margin-top:10px; width:100%; padding:10px 0; border:none; border-radius:8px; background:#2c3e50; color:#fff; font-weight:600; font-size:1rem; cursor:pointer;">Tutup</button>
+        
+        <div class="button-group">
+            <button class="modal-button print-button" onclick="printReceiptFromModal()">
+                <span class="loading" style="display:none;"></span>
+                Print Receipt
+            </button>
+            <button class="modal-button close-button" onclick="closeReceiptModal()">
+                Tutup
+            </button>
+        </div>
     </div>
 </div>
 
 
 <style>
+/* Receipt Modal Styles */
+#receiptModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(46, 71, 102, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-container {
+    background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+    border-radius: 24px;
+    padding: 40px 32px;
+    min-width: 380px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 
+        0 25px 50px rgba(46, 71, 102, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+}
+
+.modal-header::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2E4766, #4a6b8a);
+    border-radius: 2px;
+}
+
+.modal-title {
+    color: #2E4766;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 8px;
+}
+
+.modal-subtitle {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+#receiptModalContent {
+    background: #fff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: inset 0 2px 4px rgba(46, 71, 102, 0.05);
+    min-height: 200px;
+    position: relative;
+    overflow-y: auto;
+}
+
+#receiptModalContent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
+    overflow-y: auto;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+}
+
+.modal-button {
+    padding: 14px 0;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.modal-button:hover::before {
+    left: 100%;
+}
+
+.print-button {
+    background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+    color: #fff;
+    box-shadow: 
+        0 4px 15px rgba(46, 71, 102, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.print-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(46, 71, 102, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.print-button:active {
+    transform: translateY(0);
+}
+
+.close-button {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    color: #fff;
+    box-shadow: 
+        0 4px 15px rgba(100, 116, 139, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.close-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 20px rgba(100, 116, 139, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
+}
+
+.close-button:active {
+    transform: translateY(0);
+}
+
+.close-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(46, 71, 102, 0.1);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2E4766;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.close-icon:hover {
+    background: rgba(46, 71, 102, 0.2);
+    transform: rotate(90deg);
+}
+
+.sample-receipt {
+    color: #2E4766;
+    line-height: 1.6;
+}
+
+.sample-receipt h3 {
+    margin: 0 0 16px 0;
+    color: #2E4766;
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 12px;
+}
+
+.sample-receipt .item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.sample-receipt .total {
+    border-top: 2px solid #2E4766;
+    margin-top: 16px;
+    padding-top: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 480px) {
+    .modal-container {
+        margin: 20px;
+        padding: 32px 24px;
+        min-width: auto;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+}
+
+/* Loading animation for demo */
+.loading {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Existing Payment Modal Styles */
 .payment-modal {
     position: fixed;
     top: 80px; left: 1045px; right: 0; bottom: 0;
