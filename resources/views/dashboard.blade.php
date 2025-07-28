@@ -20,10 +20,10 @@
                         <img src="{{ asset('images/total_orders.png') }}" alt="Orders" style="width: 24px; height: 24px; filter: brightness(0) invert(1);">
                     </div>
                 </div>
-                <div class="card-value">{{ $totalOrdersToday }}</div>
+                <div class="card-value">{{ $totalOrdersThisMonth }}</div>
                 <div class="card-change {{ $orderPercentageChange >= 0 ? 'positive' : 'negative' }}">
                     {{ number_format(abs($orderPercentageChange), 1) }}% 
-                    {{ $orderPercentageChange >= 0 ? 'Up' : 'Down' }} from yesterday
+                    {{ $orderPercentageChange >= 0 ? 'Up' : 'Down' }} from last month
                 </div>
             </div>
         </div>
@@ -40,10 +40,10 @@
                         <img src="{{ asset('images/total_income.png') }}" alt="Income" style="width: 24px; height: 24px; filter: brightness(0) invert(1);">
                     </div>
                 </div>
-                <div class="card-value">Rp. {{ number_format($totalIncomeToday, 0, ',', '.') }}</div>
+                <div class="card-value">Rp. {{ number_format($totalIncomeThisMonth, 0, ',', '.') }}</div>
                 <div class="card-change {{ $incomePercentageChange >= 0 ? 'positive' : 'negative' }}">
                     {{ number_format(abs($incomePercentageChange), 1) }}% 
-                    {{ $incomePercentageChange >= 0 ? 'Up' : 'Down' }} from yesterday
+                    {{ $incomePercentageChange >= 0 ? 'Up' : 'Down' }} from last month
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
         <div class="chart-card">
             <div class="chart-header">
                 <h5 id="chartTitle">Total Order</h5>
-                <small id="chartValue" class="chart-current-value">{{ $totalOrdersToday }}</small>
+                <small id="chartValue" class="chart-current-value">{{ $totalOrdersThisMonth }}</small>
             </div>
             
             <!-- Chart Container -->
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentChartType = 'orders';
             createChart('orders');
             document.getElementById('chartTitle').textContent = 'Total Order';
-            document.getElementById('chartValue').textContent = '{{ $totalOrdersToday }}';
+            document.getElementById('chartValue').textContent = '{{ $totalOrdersThisMonth }}';
             
             // Update card styles
             document.getElementById('ordersCard').classList.add('active');
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
             currentChartType = 'income';
             createChart('income');
             document.getElementById('chartTitle').textContent = 'Total Income';
-            document.getElementById('chartValue').textContent = 'Rp. {{ number_format($totalIncomeToday, 0, ",", ".") }}';
+            document.getElementById('chartValue').textContent = 'Rp. {{ number_format($totalIncomeThisMonth, 0, ",", ".") }}';
             
             // Update card styles
             document.getElementById('incomeCard').classList.add('active');

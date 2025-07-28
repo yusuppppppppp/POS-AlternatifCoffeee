@@ -10,43 +10,47 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Get today's data
-        $today = Carbon::today();
-        $yesterday = Carbon::yesterday();
+        // Get current month and previous month
+        $currentMonth = Carbon::now()->startOfMonth();
+        $previousMonth = Carbon::now()->subMonth()->startOfMonth();
         
-        // Total orders today
-        $totalOrdersToday = DB::table('orders')
-            ->whereDate('created_at', $today)
+        // Total orders this month
+        $totalOrdersThisMonth = DB::table('orders')
+            ->whereYear('created_at', $currentMonth->year)
+            ->whereMonth('created_at', $currentMonth->month)
             ->count();
             
-        // Total orders yesterday
-        $totalOrdersYesterday = DB::table('orders')
-            ->whereDate('created_at', $yesterday)
+        // Total orders last month
+        $totalOrdersLastMonth = DB::table('orders')
+            ->whereYear('created_at', $previousMonth->year)
+            ->whereMonth('created_at', $previousMonth->month)
             ->count();
             
         // Calculate percentage change for orders
         $orderPercentageChange = 0;
-        if ($totalOrdersYesterday > 0) {
-            $orderPercentageChange = (($totalOrdersToday - $totalOrdersYesterday) / $totalOrdersYesterday) * 100;
-        } elseif ($totalOrdersToday > 0) {
+        if ($totalOrdersLastMonth > 0) {
+            $orderPercentageChange = (($totalOrdersThisMonth - $totalOrdersLastMonth) / $totalOrdersLastMonth) * 100;
+        } elseif ($totalOrdersThisMonth > 0) {
             $orderPercentageChange = 100;
         }
         
-        // Total income today
-        $totalIncomeToday = DB::table('orders')
-            ->whereDate('created_at', $today)
-            ->sum('total_amount'); // Assuming you have a total_amount column
+        // Total income this month
+        $totalIncomeThisMonth = DB::table('orders')
+            ->whereYear('created_at', $currentMonth->year)
+            ->whereMonth('created_at', $currentMonth->month)
+            ->sum('total_amount');
             
-        // Total income yesterday
-        $totalIncomeYesterday = DB::table('orders')
-            ->whereDate('created_at', $yesterday)
+        // Total income last month
+        $totalIncomeLastMonth = DB::table('orders')
+            ->whereYear('created_at', $previousMonth->year)
+            ->whereMonth('created_at', $previousMonth->month)
             ->sum('total_amount');
             
         // Calculate percentage change for income
         $incomePercentageChange = 0;
-        if ($totalIncomeYesterday > 0) {
-            $incomePercentageChange = (($totalIncomeToday - $totalIncomeYesterday) / $totalIncomeYesterday) * 100;
-        } elseif ($totalIncomeToday > 0) {
+        if ($totalIncomeLastMonth > 0) {
+            $incomePercentageChange = (($totalIncomeThisMonth - $totalIncomeLastMonth) / $totalIncomeLastMonth) * 100;
+        } elseif ($totalIncomeThisMonth > 0) {
             $incomePercentageChange = 100;
         }
         
@@ -72,8 +76,8 @@ class DashboardController extends Controller
         }
         
         return view('dashboard', compact(
-            'totalOrdersToday',
-            'totalIncomeToday',
+            'totalOrdersThisMonth',
+            'totalIncomeThisMonth',
             'orderPercentageChange',
             'incomePercentageChange',
             'monthlyData'

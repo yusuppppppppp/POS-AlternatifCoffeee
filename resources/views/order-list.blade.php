@@ -3,12 +3,140 @@
 
 @section('content')
 <style>
-    .order-container {
-        max-width: 900px;
-        margin: -60px 20px 100px 450px;
-        padding: 20px;
-        background-color: #f8f9fa;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         min-height: 100vh;
+        color: #334155;
+    }
+
+    .order-container {
+        max-width: 1000px;
+        margin: -70px 20px 0px 400px;
+        padding: 40px;
+        background: transparent;
+        min-height: 100vh;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        padding: 40px;
+        border-radius: 24px;
+        margin-bottom: 32px;
+        box-shadow: 
+            0 20px 40px rgba(46, 71, 102, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.6;
+    }
+
+    .page-title {
+        color: white;
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        margin-bottom: 24px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-download-pdf {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-download-pdf:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-download-pdf::before {
+        content: '';
+        background-image: url('/images/download.png');
+        background-size: 25px 25px;
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 25px;
+        height: 25px;
+        display: inline-block;
+    }
+
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(226, 232, 240, 0.5);
+        text-align: center;
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2E4766;
+        margin-bottom: 8px;
+    }
+
+    .stat-card p {
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .stat-card.orders h3 {
+        color: #2E4766;
+        font-weight: 750;
+    }
+
+    .stat-card.revenue h3 {
+        color: #2E4766;
+        font-weight: 750;
     }
 
     .order-table {
@@ -96,14 +224,6 @@
         font-size: 16px;
     }
 
-    .page-title {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #212529;
-        font-weight: 600;
-        font-size: 24px;
-    }
-
     /* Order details modal/expandable section (optional) */
     .order-details {
         display: none;
@@ -151,7 +271,35 @@
         color: #495057;
     }
 
+    .pagination-container {
+        margin-top: 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+        .order-container {
+            margin-left: 0;
+            padding: 20px;
+            margin-top: 0;
+        }
+        
+        .page-header {
+            padding: 32px 24px;
+            margin-bottom: 24px;
+        }
+        
+        .page-title {
+            font-size: 1.75rem;
+        }
+    }
+
     @media (max-width: 768px) {
+        .order-container {
+            padding: 16px;
+        }
+        
         .table-header,
         .order-row {
             grid-template-columns: 1fr 1fr;
@@ -167,12 +315,47 @@
         .info-icon {
             justify-self: end;
         }
+        
+        .stats-cards {
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-cards {
+            grid-template-columns: 1fr;
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1rem;
+        }
     }
 </style>
 
 <div class="order-container">
-    <h2 class="page-title" style="font-weight: 650;">History Pembelian</h2>
-    <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf" style="display:inline-block;margin-bottom:20px;padding:8px 18px;background:#2E4766;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;">Download PDF</a>
+    <!-- Enhanced Header -->
+    <div class="page-header">
+        <h2 class="page-title">History Pembelian</h2>
+        <p class="page-subtitle">Kelola dan pantau semua transaksi penjualan</p>
+        <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+        <div class="stat-card orders">
+            <h3>{{ $totalOrdersToday }}</h3>
+            <p>Total Orders Hari Ini</p>
+        </div>
+        <div class="stat-card revenue">
+            <h3>Rp {{ number_format($totalRevenueToday, 0, ',', '.') }}</h3>
+            <p>Total Revenue</p>
+        </div>
+    </div>
 
     @if($orders->count() > 0)
         <div class="order-table">
@@ -208,7 +391,8 @@
                 </div>
             @endforeach
         </div>
-        <div class="pagination-container" style="margin-top: 24px; display: flex; justify-content: center;">
+        
+        <div class="pagination-container">
             {{ $orders->links() }}
         </div>
     @else
@@ -233,5 +417,30 @@ function toggleOrderDetails(index) {
         details.classList.add('show');
     }
 }
+
+// Add loading animation for download button
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.btn-download-pdf').addEventListener('click', function(e) {
+        const btn = this;
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite;margin-right:8px;"></span>Generating...';
+        btn.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.pointerEvents = 'auto';
+        }, 2000);
+    });
+});
+
+// Add CSS animation for loading spinner
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+`;
+document.head.appendChild(style);
 </script>
 @endsection

@@ -440,7 +440,10 @@
         <div class="payment-header">
             <div class="payment-user">
                 <img class="payment-user-icon" src="/images/user_icon.png" alt="User Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
-                <input type="text" id="customerNameInput" class="payment-user-name" placeholder="Nama Customer" style="font-weight:500; color:#2c3e50; border:none; background:transparent; outline:none; font-size:1rem;" />
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label for="customerNameInput" style="font-size: 12px; color: #64748b; font-weight: 500;">Nama Customer <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="customerNameInput" class="payment-user-name" placeholder="Masukkan nama customer" style="font-weight:500; color:#2c3e50; border:none; background:transparent; outline:none; font-size:1rem; width: 200px;" required />
+                </div>
             </div>
         </div>
         <div class="payment-summary">
@@ -825,6 +828,22 @@
 .payment-user-name {
     font-weight: 500;
     color: #2c3e50;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.payment-user-name:focus {
+    border-color: #2c3e50;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+}
+
+.payment-user-name::placeholder {
+    color: #94a3b8;
+    font-style: italic;
 }
 .payment-summary {
     background: #fff;
@@ -1057,6 +1076,19 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
                     document.getElementById('customerNameInput').focus();
                     return;
                 }
+                
+                // Validasi panjang nama customer
+                if (customerName.length < 2) {
+                    alert('Nama Customer minimal 2 karakter!');
+                    document.getElementById('customerNameInput').focus();
+                    return;
+                }
+                
+                if (customerName.length > 100) {
+                    alert('Nama Customer maksimal 100 karakter!');
+                    document.getElementById('customerNameInput').focus();
+                    return;
+                }
                 // Hitung balance
                 const cash = parseInt(cashValue || '0');
                 const balance = cash - totalAmount;
@@ -1083,6 +1115,26 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
         this.classList.add('active');
         document.getElementById('dineInBtn').classList.remove('active');
     };
+
+    // Real-time customer name validation
+    document.getElementById('customerNameInput').addEventListener('input', function() {
+        const customerName = this.value.trim();
+        const label = this.parentElement.querySelector('label');
+        
+        if (customerName.length === 0) {
+            this.style.borderColor = '#e2e8f0';
+            label.style.color = '#64748b';
+        } else if (customerName.length < 2) {
+            this.style.borderColor = '#f59e0b';
+            label.style.color = '#f59e0b';
+        } else if (customerName.length > 100) {
+            this.style.borderColor = '#ef4444';
+            label.style.color = '#ef4444';
+        } else {
+            this.style.borderColor = '#10b981';
+            label.style.color = '#10b981';
+        }
+    });
 
     function printReceiptAndReset(cash, balance) {
     // Perbarui isi struk

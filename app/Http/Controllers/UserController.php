@@ -270,7 +270,16 @@ class UserController extends Controller
                 ->whereDate('created_at', now()->toDateString())
                 ->orderBy('created_at', 'desc')
                 ->paginate(5);
-            return view('order-list', compact('orders'));
+                
+            // Calculate total orders for today (same as dashboard)
+            $totalOrdersToday = Order::whereDate('created_at', now()->toDateString())
+                ->count();
+                
+            // Calculate total revenue for today (same as dashboard)
+            $totalRevenueToday = Order::whereDate('created_at', now()->toDateString())
+                ->sum('total_amount');
+                
+            return view('order-list', compact('orders', 'totalOrdersToday', 'totalRevenueToday'));
         } else {
             return redirect()->route('login');
         }
