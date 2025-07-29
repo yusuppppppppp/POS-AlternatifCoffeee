@@ -128,6 +128,24 @@
             background-color: #e2e8f0;
         }
 
+        /* Active state styling */
+        .drawer-item.active {
+            background-color: #dbeafe;
+            border-left-color: #3b82f6;
+            transform: translateX(2px);
+        }
+
+        .drawer-item.active .drawer-item-icon {
+            color: #3b82f6;
+            background-color: #bfdbfe;
+            transform: scale(1.1);
+        }
+
+        .drawer-item.active .drawer-item-text {
+            color: #1e40af;
+            font-weight: 600;
+        }
+
         .drawer-item-icon {
             width: 24px;
             height: 24px;
@@ -263,11 +281,11 @@
             @auth
                 @if(Auth::user()->usertype == 'user')
                 <div class="drawer-section">
-                    <div class="drawer-item" onclick="navigateTo('kasir')">
+                    <div class="drawer-item" onclick="navigateTo('kasir', this)">
                         <div class="drawer-item-icon"><img src="/images/kasir.png" alt="Cashier" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Cashier</div>
                     </div>
-                    <div class="drawer-item" onclick="navigateTo('order-list')">
+                    <div class="drawer-item" onclick="navigateTo('order-list', this)">
                         <div class="drawer-item-icon"><img src="/images/order_list.png" alt="Order List" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Order List</div>
                     </div>
@@ -275,19 +293,19 @@
                 @endif
                 @if(Auth::user()->usertype == 'admin')
                 <div class="drawer-section">
-                    <div class="drawer-item" onclick="navigateTo('dashboard')">
+                    <div class="drawer-item" onclick="navigateTo('dashboard', this)">
                         <div class="drawer-item-icon"><img src="/images/dashboard.png" alt="Dashboard" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Dashboard</div>
                     </div>
-                    <div class="drawer-item" onclick="navigateTo('menu-management')">
+                    <div class="drawer-item" onclick="navigateTo('menu-management', this)">
                         <div class="drawer-item-icon"><img src="/images/menu_management.png" alt="Menu Management" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Menu Management</div>
                     </div>
-                    <div class="drawer-item" onclick="navigateTo('sales-report')">
+                    <div class="drawer-item" onclick="navigateTo('sales-report', this)">
                         <div class="drawer-item-icon"><img src="/images/sales_report.png" alt="Sales Report" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Sales Report</div>
                     </div>
-                    <div class="drawer-item" onclick="navigateTo('account-management')">
+                    <div class="drawer-item" onclick="navigateTo('account-management', this)">
                         <div class="drawer-item-icon"><img src="/images/account_management.png" alt="Account Management" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Account Management</div>
                     </div>
@@ -308,12 +326,44 @@
 
 
     <script>
-    function navigateTo(page) {
+    // Function to set active state
+    function setActiveItem(element) {
+        // Remove active class from all drawer items
+        const allItems = document.querySelectorAll('.drawer-item');
+        allItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        if (element) {
+            element.classList.add('active');
+        }
+    }
+
+    // Function to navigate and set active state
+    function navigateTo(page, element) {
+        // Set active state immediately
+        setActiveItem(element);
+        
+        // Navigate to page
         window.location.href = '/' + page;
     }
 
     function logout() {
         window.location.href = '{{ route('logout') }}';
     }
+
+    // Set active state based on current page on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPath = window.location.pathname;
+        const drawerItems = document.querySelectorAll('.drawer-item');
+        
+        drawerItems.forEach(item => {
+            const onclick = item.getAttribute('onclick');
+            if (onclick && onclick.includes(currentPath.substring(1))) {
+                item.classList.add('active');
+            }
+        });
+    });
     </script>
 </body>

@@ -11,7 +11,8 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::orderBy('id', 'desc')->paginate(5);
+        $perPage = request()->get('per_page', 5);
+        $menus = Menu::orderBy('id', 'desc')->paginate($perPage);
         return view('menu-management', compact('menus'));
     }
 

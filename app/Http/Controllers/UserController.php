@@ -263,14 +263,34 @@ class UserController extends Controller
 
     // ==== ORDER & SALES ====
 
-    public function orderList()
+    public function orderList(Request $request)
     {
         if (Auth::check() && Auth::user()->usertype === 'user') {
-            $orders = Order::with('items')
-                ->whereDate('created_at', now()->toDateString())
-                ->orderBy('created_at', 'desc')
-                ->paginate(5);
-                
+            // Get per_page from request, default to 5
+            $perPage = $request->get('per_page', 5);
+            $search = $request->get('search', '');
+            
+            $query = Order::with(['items', 'user'])
+                ->whereDate('created_at', now()->toDateString());
+            
+            // Add search functionality
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('customer_name', 'LIKE', "%{$search}%")
+                      ->orWhere('order_type', 'LIKE', "%{$search}%")
+                      ->orWhere('id', 'LIKE', "%{$search}%")
+                      ->orWhere('total_amount', 'LIKE', "%{$search}%")
+                      ->orWhereHas('user', function($userQuery) use ($search) {
+                          $userQuery->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('items', function($itemQuery) use ($search) {
+                          $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+            
+            $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
+            
             // Calculate total orders for today (same as dashboard)
             $totalOrdersToday = Order::whereDate('created_at', now()->toDateString())
                 ->count();
@@ -279,7 +299,7 @@ class UserController extends Controller
             $totalRevenueToday = Order::whereDate('created_at', now()->toDateString())
                 ->sum('total_amount');
                 
-            return view('order-list', compact('orders', 'totalOrdersToday', 'totalRevenueToday'));
+            return view('order-list', compact('orders', 'totalOrdersToday', 'totalRevenueToday', 'perPage', 'search'));
         } else {
             return redirect()->route('login');
         }
@@ -288,7 +308,7 @@ class UserController extends Controller
     public function downloadOrderListPdf()
     {
         if (Auth::check() && Auth::user()->usertype === 'user') {
-            $orders = Order::with('items')
+            $orders = Order::with(['items', 'user'])
                 ->whereDate('created_at', now()->toDateString())
                 ->orderBy('created_at', 'desc')
                 ->get();

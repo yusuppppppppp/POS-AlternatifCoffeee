@@ -20,6 +20,7 @@
                 <th>Type</th>
                 <th>Date</th>
                 <th>Total</th>
+                <th>Kasir</th>
                 <th>Items</th>
             </tr>
         </thead>
@@ -31,6 +32,7 @@
                     <td>{{ $order->order_type }}</td>
                     <td>{{ $order->created_at->format('d-m-Y H:i') }}</td>
                     <td>Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                    <td>{{ $order->user ? $order->user->name : 'Unknown' }}</td>
                     <td>
                         <ul class="order-items">
                         @foreach($order->items as $item)

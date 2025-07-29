@@ -17,8 +17,8 @@
     }
 
     .order-container {
-        max-width: 1000px;
-        margin: -70px 20px 0px 400px;
+        max-width: 1200px;
+        margin: -70px 150px 0px 430px;
         padding: 40px;
         background: transparent;
         min-height: 100vh;
@@ -87,6 +87,8 @@
         border-color: rgba(255, 255, 255, 0.5);
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        color: white;
+        text-decoration: none;
     }
 
     .btn-download-pdf::before {
@@ -102,41 +104,43 @@
 
     .stats-cards {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
         margin-bottom: 32px;
     }
 
     .stat-card {
         background: white;
-        padding: 24px;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(226, 232, 240, 0.5);
+        padding: 28px 24px;
+        border-radius: 18px;
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.06),
+            0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(226, 232, 240, 0.4);
         text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 8px 30px rgba(0, 0, 0, 0.1),
+            0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     .stat-card h3 {
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 700;
         color: #2E4766;
         margin-bottom: 8px;
+        line-height: 1.2;
     }
 
     .stat-card p {
         color: #64748b;
         font-size: 14px;
         font-weight: 500;
-    }
-
-    .stat-card.orders h3 {
-        color: #2E4766;
-        font-weight: 750;
-    }
-
-    .stat-card.revenue h3 {
-        color: #2E4766;
-        font-weight: 750;
+        letter-spacing: 0.5px;
     }
 
     .order-table {
@@ -151,8 +155,8 @@
         padding: 20px;
         border-bottom: 1px solid #e9ecef;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 60px;
-        gap: 20px;
+        grid-template-columns: 60px 80px 1fr 1fr 1fr 100px 60px;
+        gap: 15px;
         align-items: center;
         font-weight: 600;
         color: #495057;
@@ -163,8 +167,8 @@
         padding: 20px;
         border-bottom: 1px solid #e9ecef;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 60px;
-        gap: 20px;
+        grid-template-columns: 60px 80px 1fr 1fr 1fr 100px 60px;
+        gap: 15px;
         align-items: center;
         transition: background-color 0.2s ease;
         cursor: pointer;
@@ -178,10 +182,30 @@
         border-bottom: none;
     }
 
+    .order-number {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 14px;
+        text-align: center;
+    }
+
     .order-id {
         font-weight: 600;
         color: #212529;
         font-size: 16px;
+    }
+
+    .customer-name {
+        font-weight: 500;
+        color: #212529;
+        font-size: 14px;
+    }
+
+    .order-type {
+        font-weight: 500;
+        color: #212529;
+        font-size: 14px;
+        text-transform: capitalize;
     }
 
     .total-amount {
@@ -214,14 +238,6 @@
         border-color: #007bff;
         color: #007bff;
         background-color: #f0f8ff;
-    }
-
-    .no-orders {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-        font-style: italic;
-        font-size: 16px;
     }
 
     /* Order details modal/expandable section (optional) */
@@ -271,10 +287,158 @@
         color: #495057;
     }
 
+    .no-orders {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+        font-style: italic;
+        font-size: 16px;
+    }
+
     .pagination-container {
-        margin-top: 24px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .pagination-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .per-page-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .per-page-selector select {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: white;
+        color: #374151;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .per-page-selector select:hover {
+        border-color: #2E4766;
+    }
+
+    .per-page-selector select:focus {
+        outline: none;
+        border-color: #2E4766;
+        box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
+    }
+
+    .pagination-links {
         display: flex;
         justify-content: center;
+    }
+
+    /* Search Form Styles */
+    .search-container {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.06),
+            0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(226, 232, 240, 0.4);
+        margin-bottom: 24px;
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .search-input-group {
+        position: relative;
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 14px 50px 14px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 14px;
+        color: #374151;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .search-input:focus {
+        border-color: #2E4766;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
+    }
+
+    .search-input::placeholder {
+        color: #9ca3af;
+    }
+
+    .search-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        border: none;
+        border-radius: 8px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .search-button:hover {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 4px 12px rgba(46, 71, 102, 0.3);
+    }
+
+    .search-button:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .clear-search {
+        padding: 10px 16px;
+        background: #f3f4f6;
+        color: #6b7280;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid #d1d5db;
+    }
+
+    .clear-search:hover {
+        background: #e5e7eb;
+        color: #374151;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     /* Responsive Design */
@@ -293,6 +457,18 @@
         .page-title {
             font-size: 1.75rem;
         }
+        
+        .stats-cards {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .search-container {
+            padding: 20px;
+        }
+
+        .search-input-group {
+            min-width: 250px;
+        }
     }
 
     @media (max-width: 768px) {
@@ -300,39 +476,65 @@
             padding: 16px;
         }
         
-        .table-header,
-        .order-row {
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .stats-cards {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .search-container {
+            padding: 16px;
+        }
+
+        .search-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .search-input-group {
+            min-width: auto;
         }
         
+        .table-header,
+        .order-row {
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .order-type,
         .order-date,
         .info-icon {
-            grid-column: span 2;
+            grid-column: span 1;
             justify-self: start;
         }
         
         .info-icon {
             justify-self: end;
         }
-        
-        .stats-cards {
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
     }
 
     @media (max-width: 480px) {
-        .stats-cards {
-            grid-template-columns: 1fr;
-        }
-        
         .page-title {
             font-size: 1.5rem;
         }
         
         .page-subtitle {
             font-size: 1rem;
+        }
+        
+        .table-header th,
+        .order-row td {
+            padding: 12px 8px;
+        }
+        
+        .pagination-container {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+        
+        .pagination-info,
+        .per-page-selector {
+            justify-content: center;
         }
     }
 </style>
@@ -357,20 +559,49 @@
         </div>
     </div>
 
+    <!-- Search Form -->
+    <div class="search-container">
+        <form method="GET" action="{{ route('order-list') }}" class="search-form">
+            <div class="search-input-group">
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ $search }}" 
+                    placeholder="Cari berdasarkan nama customer, tipe order, ID, total amount, nama kasir, atau nama menu..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            @if(!empty($search))
+                <a href="{{ route('order-list') }}" class="clear-search">Clear Search</a>
+            @endif
+        </form>
+    </div>
+
     @if($orders->count() > 0)
         <div class="order-table">
             <div class="table-header">
+                <div>No.</div>
                 <div>Order ID</div>
-                <div>Total Order</div>
+                <div>Customer</div>
+                <div>Order Type</div>
                 <div>Date</div>
-                <div></div>
+                <div>Total Amount</div>
+                <div>Action</div>
             </div>
             
             @foreach($orders as $index => $order)
                 <div class="order-row" onclick="toggleOrderDetails({{ $index }})">
+                    <div class="order-number">{{ $loop->iteration }}</div>
                     <div class="order-id">{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
+                    <div class="customer-name">{{ $order->customer_name }}</div>
+                    <div class="order-type">{{ $order->order_type }}</div>
+                    <div class="order-date">{{ $order->created_at->format('n/j/Y H:i:s') }}</div>
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
-                    <div class="order-date">{{ $order->created_at->format('n/j/Y') }}</div>
                     <div class="info-icon">i</div>
                 </div>
                 
@@ -380,6 +611,7 @@
                         <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
                         <p><strong>Type:</strong> {{ $order->order_type }}</p>
                         <p><strong>Waktu:</strong> {{ $order->created_at->format('h:i:s A') }}</p>
+                        <p><strong>Kasir:</strong> {{ $order->user ? $order->user->name : 'Unknown' }}</p>
                     </div>
                     
                     <h4>Items Ordered:</h4>
@@ -393,7 +625,22 @@
         </div>
         
         <div class="pagination-container">
-            {{ $orders->links() }}
+            
+            <!-- <div class="per-page-selector" style="margin-left: 340px;">
+                <label for="per-page">Show:</label>
+                <select id="per-page" onchange="changePerPage(this.value)">
+                    <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                </select>
+                <span>entries</span>
+            </div> -->
+            
+            <div class="pagination-links">
+                {{ $orders->appends(['per_page' => $perPage, 'search' => $search])->links() }}
+            </div>
         </div>
     @else
         <div class="order-table">
@@ -442,5 +689,17 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Function to change per page
+function changePerPage(value) {
+    const url = new URL(window.location);
+    url.searchParams.set('per_page', value);
+    // Preserve search parameter if it exists
+    const searchParam = url.searchParams.get('search');
+    if (searchParam) {
+        url.searchParams.set('search', searchParam);
+    }
+    window.location.href = url.toString();
+}
 </script>
 @endsection

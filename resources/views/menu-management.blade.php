@@ -620,6 +620,7 @@
         <table class="menu-table">
             <thead>
                 <tr>
+                    <th style="width: 60px;">No</th>
                     <th>Name</th>
                     <th>Preview</th>
                     <th>Price</th>
@@ -628,8 +629,9 @@
                 </tr>
             </thead>
             <tbody id="menuTableBody">
-                @foreach($menus as $menu)
+                @foreach($menus as $index => $menu)
                 <tr>
+                    <td style="text-align: center; font-weight: 600; color: #2E4766;">{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}</td>
                     <td class="menu-name">{{ $menu->name }}</td>
                     <td><img src="{{ asset('storage/' . $menu->image_path) }}" alt="{{ $menu->name }}" class="menu-image"></td>
                     <td class="menu-price">Rp. {{ number_format($menu->price, 0, ',', '.') }}</td>
@@ -744,6 +746,14 @@ function showModal(action, id = null) {
 
 function hideModal() {
     document.getElementById('menuModal').style.display = 'none';
+}
+
+// Function to handle show entries change
+function changePerPage(value) {
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('per_page', value);
+    currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
+    window.location.href = currentUrl.toString();
 }
 
 document.getElementById('menuForm').addEventListener('submit', function(e) {

@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -42,7 +43,8 @@ class OrderController extends Controller
                 'order_type' => $request->order_type,
                 'total_amount' => $request->total_amount,
                 'cash_paid' => $request->cash_paid,
-                'balance' => $request->balance
+                'balance' => $request->balance,
+                'user_id' => Auth::id()
             ]);
 
             Log::info('Order berhasil dibuat dengan ID: ' . $order->id);
@@ -76,7 +78,7 @@ class OrderController extends Controller
 {
     $today = Carbon::today();
 
-    $orders = Order::with('items')
+    $orders = Order::with(['items', 'user'])
         ->whereDate('created_at', $today)
         ->orderBy('created_at', 'desc')
         ->get();
