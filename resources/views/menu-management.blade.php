@@ -18,10 +18,10 @@
         }
 
         .menu-section {
-            margin-left: 285px;
+            margin-left: 350px;
             padding: 40px;
             margin-top: -75px;
-            max-width: 2100px;
+            max-width: 1100px;
             position: relative;
         }
 
@@ -520,7 +520,106 @@
         .pagination-container {
             margin-top: 32px;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .per-page-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .per-page-selector label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .per-page-selector select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .per-page-selector select:hover {
+            border-color: #2E4766;
+        }
+
+        .per-page-selector select:focus {
+            outline: none;
+            border-color: #2E4766;
+            box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
+        }
+
+        .pagination-links {
+            display: flex;
             justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination-links .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 5px;
+        }
+
+        .pagination-links .page-item {
+            margin: 0;
+        }
+
+        .pagination-links .page-link {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .pagination-links .page-link:hover {
+            background: #f3f4f6;
+            border-color: #2E4766;
+            color: #2E4766;
+        }
+
+        .pagination-links .page-item.active .page-link {
+            background: #2E4766;
+            border-color: #2E4766;
+            color: white;
+        }
+
+        .pagination-links .page-item.disabled .page-link {
+            background: #f9fafb;
+            border-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
         }
 
         @media (max-width: 900px) {
@@ -651,8 +750,27 @@
             </tbody>
         </table>
     </div>
+    <!-- Show Entries and Pagination -->
     <div class="pagination-container">
-        {{ $menus->links() }}
+        <div class="pagination-info">
+            Showing {{ $menus->firstItem() ?? 0 }} to {{ $menus->lastItem() ?? 0 }} of {{ $menus->total() }} entries
+        </div>
+        
+        <div class="per-page-selector">
+            <label for="per_page">Show:</label>
+            <select id="per_page" onchange="changePerPage(this.value)">
+                <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
+                <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+            </select>
+            <span>entries</span>
+        </div>
+    </div>
+    
+    <div class="pagination-links">
+        {{ $menus->appends(['per_page' => request('per_page', 10)])->links() }}
     </div>
 </div>
 

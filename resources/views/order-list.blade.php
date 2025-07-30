@@ -302,6 +302,10 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 20px;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .pagination-info {
@@ -310,6 +314,7 @@
         gap: 10px;
         color: #64748b;
         font-size: 14px;
+        font-weight: 500;
     }
 
     .per-page-selector {
@@ -317,6 +322,12 @@
         align-items: center;
         gap: 10px;
         color: #64748b;
+        font-size: 14px;
+    }
+
+    .per-page-selector label {
+        font-weight: 600;
+        color: #495057;
         font-size: 14px;
     }
 
@@ -344,6 +355,49 @@
     .pagination-links {
         display: flex;
         justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination-links .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 5px;
+    }
+
+    .pagination-links .page-item {
+        margin: 0;
+    }
+
+    .pagination-links .page-link {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        background: white;
+        color: #374151;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        font-size: 14px;
+    }
+
+    .pagination-links .page-link:hover {
+        background: #f3f4f6;
+        border-color: #2E4766;
+        color: #2E4766;
+    }
+
+    .pagination-links .page-item.active .page-link {
+        background: #2E4766;
+        border-color: #2E4766;
+        color: white;
+    }
+
+    .pagination-links .page-item.disabled .page-link {
+        background: #f9fafb;
+        border-color: #e5e7eb;
+        color: #9ca3af;
+        cursor: not-allowed;
     }
 
     /* Search Form Styles */
@@ -530,10 +584,16 @@
             flex-direction: column;
             gap: 15px;
             text-align: center;
+            padding: 16px;
         }
         
         .pagination-info,
         .per-page-selector {
+            justify-content: center;
+        }
+        
+        .pagination-links .pagination {
+            flex-wrap: wrap;
             justify-content: center;
         }
     }
@@ -600,7 +660,7 @@
                     <div class="order-id">{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
                     <div class="customer-name">{{ $order->customer_name }}</div>
                     <div class="order-type">{{ $order->order_type }}</div>
-                    <div class="order-date">{{ $order->created_at->format('n/j/Y H:i:s') }}</div>
+                    <div class="order-date">{{ $order->created_at->format('m-d-Y') }}</div>
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
                     <div class="info-icon">i</div>
                 </div>
@@ -622,25 +682,30 @@
                     </ul>
                 </div>
             @endforeach
-        </div>
-        
-        <div class="pagination-container">
-            
-            <!-- <div class="per-page-selector" style="margin-left: 340px;">
-                <label for="per-page">Show:</label>
-                <select id="per-page" onchange="changePerPage(this.value)">
-                    <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
-                    <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                    <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                </select>
-                <span>entries</span>
-            </div> -->
-            
-            <div class="pagination-links">
-                {{ $orders->appends(['per_page' => $perPage, 'search' => $search])->links() }}
-            </div>
+         </div>
+         
+         <!-- Show Entries and Pagination -->
+         <div class="pagination-container">
+             <div class="pagination-info">
+                 Showing {{ $orders->firstItem() ?? 0 }} to {{ $orders->lastItem() ?? 0 }} of {{ $orders->total() }} entries
+             </div>
+             
+             <div class="per-page-selector">
+                 <label for="per_page">Show:</label>
+                 <select id="per_page" onchange="changePerPage(this.value)">
+                     <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                     <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                     <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                 </select>
+                 <span>entries</span>
+             </div>
+         </div>
+         
+         <div class="pagination-links">
+             {{ $orders->appends(['per_page' => $perPage, 'search' => $search])->links() }}
+         </div>
         </div>
     @else
         <div class="order-table">
@@ -692,14 +757,15 @@ document.head.appendChild(style);
 
 // Function to change per page
 function changePerPage(value) {
-    const url = new URL(window.location);
-    url.searchParams.set('per_page', value);
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('per_page', value);
+    currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
     // Preserve search parameter if it exists
-    const searchParam = url.searchParams.get('search');
+    const searchParam = currentUrl.searchParams.get('search');
     if (searchParam) {
-        url.searchParams.set('search', searchParam);
+        currentUrl.searchParams.set('search', searchParam);
     }
-    window.location.href = url.toString();
+    window.location.href = currentUrl.toString();
 }
 </script>
 @endsection

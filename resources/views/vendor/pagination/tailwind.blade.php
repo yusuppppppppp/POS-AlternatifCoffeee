@@ -354,7 +354,7 @@
 
 <nav role="navigation" aria-label="{{ __('Pagination Navigation') }}" class="modern-pagination-wrapper">
     <!-- Show Entries -->
-    <div class="show-entries-wrapper">
+    <!-- <div class="show-entries-wrapper">
         <span class="show-entries-label">Show</span>
         <select class="show-entries-select" onchange="changePerPage(this.value)">
             @php
@@ -371,9 +371,9 @@
             <option value="100" {{ $currentPerPage == 100 ? 'selected' : '' }}>100</option>
         </select>
         <span class="entries-text">entries</span>
-    </div>
+    </div> -->
 
-    <!-- Pagination Info -->
+    <!-- Pagination Info
     <div class="pagination-info">
         {!! __('Showing') !!}
         @if ($paginator->firstItem())
@@ -386,7 +386,7 @@
         {!! __('of') !!}
         <span class="highlight">{{ $paginator->total() }}</span>
         {!! __('results') !!}
-    </div>
+    </div> -->
 
     <!-- Desktop Pagination -->
     <div class="modern-pagination">

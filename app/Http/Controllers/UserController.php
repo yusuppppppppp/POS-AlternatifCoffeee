@@ -319,10 +319,70 @@ class UserController extends Controller
         }
     }
 
+    public function downloadSalesReportPdf(Request $request)
+    {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            $query = Order::with(['items', 'user']);
+            $period = $request->get('period', 'today');
+            $fileName = 'sales-report';
+            
+            switch ($period) {
+                case 'today':
+                    $query->whereDate('created_at', now()->toDateString());
+                    $fileName .= '-today-' . now()->format('Y-m-d');
+                    break;
+                case 'week':
+                    $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                    $fileName .= '-week-' . now()->format('Y-W');
+                    break;
+                case 'month':
+                    $query->whereYear('created_at', now()->year)
+                          ->whereMonth('created_at', now()->month);
+                    $fileName .= '-month-' . now()->format('Y-m');
+                    break;
+                case 'custom':
+                    if ($request->filled('start_date') && $request->filled('end_date')) {
+                        $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
+                        $fileName .= '-custom-' . $request->start_date . '-to-' . $request->end_date;
+                    }
+                    break;
+            }
+            
+            // Add search functionality if provided
+            $search = $request->get('search', '');
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('customer_name', 'LIKE', "%{$search}%")
+                      ->orWhere('order_type', 'LIKE', "%{$search}%")
+                      ->orWhere('id', 'LIKE', "%{$search}%")
+                      ->orWhere('total_amount', 'LIKE', "%{$search}%")
+                      ->orWhereHas('user', function($userQuery) use ($search) {
+                          $userQuery->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('items', function($itemQuery) use ($search) {
+                          $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+            
+            $orders = $query->orderBy('created_at', 'desc')->get();
+            
+            // Calculate summary statistics
+            $totalOrders = $orders->count();
+            $totalRevenue = $orders->sum('total_amount');
+            $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+            
+            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue'));
+            return $pdf->download($fileName . '.pdf');
+        } else {
+            return redirect()->route('login');
+        }
+    }
+
     public function salesReport(Request $request)
     {
         if (Auth::check() && Auth::user()->usertype == 'admin') {
-            $query = Order::with('items');
+            $query = Order::with(['items', 'user']);
 
             if ($request->filled('date')) {
                 $query->whereDate('created_at', $request->input('date'));
@@ -331,8 +391,27 @@ class UserController extends Controller
                 $query->whereYear('created_at', $request->input('year'));
             }
 
-            $orders = $query->orderBy('created_at', 'desc')->paginate(10);
-            return view('sales-report', compact('orders'));
+            // Add search functionality
+            $search = $request->get('search', '');
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('customer_name', 'LIKE', "%{$search}%")
+                      ->orWhere('order_type', 'LIKE', "%{$search}%")
+                      ->orWhere('id', 'LIKE', "%{$search}%")
+                      ->orWhere('total_amount', 'LIKE', "%{$search}%")
+                      ->orWhereHas('user', function($userQuery) use ($search) {
+                          $userQuery->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('items', function($itemQuery) use ($search) {
+                          $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            }
+
+            // Get per_page from request, default to 10
+            $perPage = $request->get('per_page', 10);
+            $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
+            return view('sales-report', compact('orders', 'perPage', 'search'));
         } else {
             return redirect()->route('login');
         }

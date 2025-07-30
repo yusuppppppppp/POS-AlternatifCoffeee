@@ -16,45 +16,7 @@
         min-height: 100vh;
     }
 
-    /* Header */
-    .header {
-        background: rgba(44, 62, 80, 0.95);
-        backdrop-filter: blur(10px);
-        color: white;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-    }
 
-    .logo {
-        width: 50px;
-        height: 50px;
-        background: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: #2c3e50;
-        font-size: 20px;
-    }
-
-    .brand-info h1 {
-        font-size: 24px;
-        margin-bottom: 2px;
-    }
-
-    .brand-info p {
-        font-size: 14px;
-        opacity: 0.8;
-    }
 
     /* Main Container */
     .container {
@@ -62,14 +24,15 @@
         padding: 20px;
         gap: 10px;
         max-width: 100%;
-        margin:40px 0 0 0;
-        min-height: calc(100vh - 80px);
+        margin: 0;
+        min-height: 100vh;
     }
 
     /* Menu Section */
     .menu-section {
         flex: 1;
         padding-left: 370px;
+        margin-top: -120px;
     }
 
     .category-filters {
@@ -157,8 +120,8 @@
         flex-shrink: 0;
         position: fixed;
         right: 20px;
-        top: 100px;
-        height: calc(100vh - 120px);
+        top: 20px;
+        height: calc(100vh - 40px);
         overflow-y: auto;
         box-shadow: 0 12px 40px 0 rgba(44, 62, 80, 0.25), 0 1.5px 8px 0 rgba(44, 62, 80, 0.10);
     }
@@ -318,10 +281,6 @@
     }
 
     @media (max-width: 768px) {
-        .header {
-            position: relative;
-        }
-
         .container {
             flex-direction: column;
             padding: 20px;
@@ -348,9 +307,7 @@
             height: auto;
         }
 
-        .brand-info h1 {
-            font-size: 20px;
-        }
+
 
         .checkout-btn {
             width: 100%;
@@ -386,146 +343,8 @@
         background: #2c3e50;
         border-radius: 10px;
     }
-</style>
 
-<!-- Header -->
-<div class="header">
-    <img class="logo" src="/images/logo.png" alt="Logo">
-    <div class="brand-info">
-        <h1>Alternatif Coffee</h1>
-        <p>
-            @auth
-                {{ Auth::user()->name }}
-            @else
-                Guest
-            @endauth
-        </p>
-    </div>
-</div>
-
-<div class="container" id="container">
-        <!-- Menu -->
-        <div class="menu-section">
-            <div class="category-filters">
-                <button class="category-btn active" onclick="filterCategory('All')">All Category</button>
-                <button class="category-btn" onclick="filterCategory('Coffee')">Coffee</button>
-                <button class="category-btn" onclick="filterCategory('Non Coffee')">Non Coffee</button>
-                <button class="category-btn" onclick="filterCategory('Food')">Food</button>
-            </div>
-
-            <div class="menu-grid" id="menuGrid">
-                <!-- Menu items will be loaded dynamically -->
-            </div>
-        </div>
-
-    <!-- Bills -->
-    <div class="bills-section">
-        <div class="bills-card">
-            <h2 class="bills-title">Bills</h2>
-            <div class="bill-items-container" id="bill-items"></div>
-            <div class="checkout-section">
-                <div class="total-section">
-                    <div class="total-label">Total</div>
-                    <div class="total-amount" id="total-amount">Rp. 0</div>
-                </div>
-                <button class="checkout-btn" onclick="checkoutAndPrint()">Checkout</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Payment Modal -->
-<div id="paymentModal" class="payment-modal" style="display:none;">
-    <div class="payment-modal-content">
-        <div class="payment-header">
-            <div class="payment-user">
-                <img class="payment-user-icon" src="/images/user_icon.png" alt="User Icon" style="width: 40px; height: 40px; border-radius: 50%;" />
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <label for="customerNameInput" style="font-size: 12px; color: #64748b; font-weight: 500;">Nama Customer <span style="color: #ef4444;">*</span></label>
-                    <input type="text" id="customerNameInput" class="payment-user-name" placeholder="Masukkan nama customer" style="font-weight:500; color:#2c3e50; border:none; background:transparent; outline:none; font-size:1rem; width: 200px;" required />
-                </div>
-            </div>
-        </div>
-        <div class="payment-summary">
-            <h3>Payment Summary</h3>
-            <div id="payment-items"></div>
-            <div class="payment-subtotal-row"><b>Subtotal</b> <span id="payment-subtotal"></span></div>
-            <div class="payment-balance-row"><b>Balance</b> <span id="payment-balance"></span></div>
-        </div>
-        <div class="payment-cash-input">
-            <label for="cashInput"><b>Cash</b></label>
-            <input id="cashInput" type="text" placeholder="Enter the amount of cash here" readonly />
-        </div>
-        <div class="payment-type-btns">
-            <button id="dineInBtn" class="type-btn active">Dine in</button>
-            <button id="takeAwayBtn" class="type-btn">Take Away</button>
-        </div>
-        <div class="payment-keypad">
-            <div class="keypad-row">
-                <button class="keypad-btn">1</button>
-                <button class="keypad-btn">2</button>
-                <button class="keypad-btn">3</button>
-            </div>
-            <div class="keypad-row">
-                <button class="keypad-btn">4</button>
-                <button class="keypad-btn">5</button>
-                <button class="keypad-btn">6</button>
-            </div>
-            <div class="keypad-row">
-                <button class="keypad-btn">7</button>
-                <button class="keypad-btn">8</button>
-                <button class="keypad-btn">9</button>
-            </div>
-            <div class="keypad-row">
-            <button class="keypad-btn" onclick="printReceiptAndReset()">Enter</button>
-                <button class="keypad-btn">0</button>
-                <button class="keypad-btn">⌫</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="receiptContent" style="display: none;">
-    <h2>Alternatif Coffee</h2>
-    <hr>
-    <ul id="receiptItems"></ul>
-    <hr>
-    <div class="line"><span>Total</span><span class="payment-total"></span></div>
-    <div class="line"><span>Cash</span><span class="payment-cash"></span></div>
-    <div class="line"><span>Balance</span><span class="payment-balance"></span></div>
-    <hr>
-    <div style="text-align:left; margin-bottom:2px;" id="receiptCustomerLabel"></div>
-    <div style="text-align:left;" id="receiptCashierLabel"></div>
-    <div style="text-align:left; margin-top:2px;" id="receiptOrderTypeLabel"></div>
-</div>
-
-<!-- Receipt Modal -->
-<div id="receiptModal">
-    <div class="modal-container">
-        <button class="close-icon" onclick="closeReceiptModal()">×</button>
-        
-        <div class="modal-header">
-            <h3 class="modal-title">Receipt</h3>
-            <p class="modal-subtitle">Detail transaksi pembayaran</p>
-        </div>
-        
-        <div id="receiptModalContent"></div>
-        
-        <div class="button-group">
-            <button class="modal-button print-button" onclick="printReceiptFromModal()">
-                <span class="loading" style="display:none;"></span>
-                Print Receipt
-            </button>
-            <button class="modal-button close-button" onclick="closeReceiptModal()">
-                Tutup
-            </button>
-        </div>
-    </div>
-</div>
-
-
-<style>
-/* Receipt Modal Styles */
+    /* Receipt Modal Styles */
 #receiptModal {
     display: none;
     position: fixed;
@@ -803,51 +622,54 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    max-height: 90vh;
 }
 .payment-header {
     display: flex;
     align-items: center;
-    margin-bottom: 18px;
+    gap: 16px;
+    margin-bottom: 10px;
+    margin-top: -10px;
 }
-.payment-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+
+.user-info {
+    flex: 1;
 }
-.payment-user-icon {
-    font-size: 2rem;
-    background: #2c3e50;
-    color: #fff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+.input-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 770;
+    color:rgb(0, 0, 0);
+    margin-bottom: 6px;
 }
+
+.required {
+    color: #ef4444;
+}
+
 .payment-user-name {
-    font-weight: 500;
-    color: #2c3e50;
-    border: 1px solid #e2e8f0;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    color: #111827;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
     border-radius: 8px;
-    padding: 8px 12px;
-    background: #f8fafc;
-    transition: all 0.3s ease;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
 .payment-user-name:focus {
-    border-color: #2c3e50;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+    border-color: #3b82f6;
+    background: white;
 }
 
 .payment-user-name::placeholder {
-    color: #94a3b8;
-    font-style: italic;
+    color: #9ca3af;
 }
 .payment-summary {
     background: #fff;
-    border-radius: 10px;
     padding: 10px 0 10px 0;
     margin-bottom: 10px;
     max-height: 180px;
@@ -921,6 +743,19 @@
     background: #2c3e50;
     color: #fff;
 }
+@media (max-width: 480px) {
+    .payment-header {
+        gap: 12px;
+    }
+    .payment-user-name {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 16px;
+        color: #111827;
+        background: #f9fafb;
+    }
+}
+
 @media (max-width: 400px) {
     .payment-modal-content { width: 98vw; padding: 10px 2vw; }
 }
@@ -930,6 +765,138 @@
     #receiptModal { position: static !important; background: none !important; box-shadow: none !important; }
     #receiptModalContent { box-shadow: none !important; background: #fff !important; }
 }
+</style>
+
+
+
+<div class="container" id="container">
+        <!-- Menu -->
+        <div class="menu-section">
+            <div class="category-filters">
+                <button class="category-btn active" onclick="filterCategory('All')">All Category</button>
+                <button class="category-btn" onclick="filterCategory('Coffee')">Coffee</button>
+                <button class="category-btn" onclick="filterCategory('Non Coffee')">Non Coffee</button>
+                <button class="category-btn" onclick="filterCategory('Food')">Food</button>
+            </div>
+
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be loaded dynamically -->
+            </div>
+        </div>
+
+    <!-- Bills -->
+    <div class="bills-section">
+        <div class="bills-card">
+            <h2 class="bills-title">Bills</h2>
+            <div class="bill-items-container" id="bill-items"></div>
+            <div class="checkout-section">
+                <div class="total-section">
+                    <div class="total-label">Total</div>
+                    <div class="total-amount" id="total-amount">Rp. 0</div>
+                </div>
+                <button class="checkout-btn" onclick="checkoutAndPrint()">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="payment-modal" style="display:none; margin-top: -80px;">
+    <div class="payment-modal-content">
+        <div class="payment-header">
+            <div class="user-info">
+                <label for="customerNameInput" class="input-label">
+                    Nama Customer <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="customerNameInput" 
+                    class="payment-user-name" 
+                    placeholder="Masukkan nama customer"
+                    required 
+                />
+            </div>
+        </div>
+        <div class="payment-summary">
+            <h3>Payment Summary</h3>
+            <div id="payment-items"></div>
+            <div class="payment-subtotal-row"><b>Subtotal</b> <span id="payment-subtotal"></span></div>
+            <div class="payment-balance-row"><b>Balance</b> <span id="payment-balance"></span></div>
+        </div>
+        <div class="payment-cash-input">
+            <label for="cashInput"><b>Cash</b></label>
+            <input id="cashInput" type="text" placeholder="Enter the amount of cash here" />
+        </div>
+        <div class="payment-type-btns">
+            <button id="dineInBtn" class="type-btn active">Dine in</button>
+            <button id="takeAwayBtn" class="type-btn">Take Away</button>
+        </div>
+        <div class="payment-keypad">
+            <div class="keypad-row">
+                <button class="keypad-btn">1</button>
+                <button class="keypad-btn">2</button>
+                <button class="keypad-btn">3</button>
+            </div>
+            <div class="keypad-row">
+                <button class="keypad-btn">4</button>
+                <button class="keypad-btn">5</button>
+                <button class="keypad-btn">6</button>
+            </div>
+            <div class="keypad-row">
+                <button class="keypad-btn">7</button>
+                <button class="keypad-btn">8</button>
+                <button class="keypad-btn">9</button>
+            </div>
+            <div class="keypad-row">
+            <button class="keypad-btn" onclick="printReceiptAndReset()">Enter</button>
+                <button class="keypad-btn">0</button>
+                <button class="keypad-btn">⌫</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="receiptContent" style="display: none;">
+    <h2>Alternatif Coffee</h2>
+    <hr>
+    <ul id="receiptItems"></ul>
+    <hr>
+    <div class="line"><span>Total</span><span class="payment-total"></span></div>
+    <div class="line"><span>Cash</span><span class="payment-cash"></span></div>
+    <div class="line"><span>Balance</span><span class="payment-balance"></span></div>
+    <hr>
+    <div style="text-align:left; margin-bottom:2px;" id="receiptCustomerLabel"></div>
+    <div style="text-align:left;" id="receiptCashierLabel"></div>
+    <div style="text-align:left; margin-top:2px;" id="receiptOrderTypeLabel"></div>
+</div>
+
+<!-- Receipt Modal -->
+<div id="receiptModal">
+    <div class="modal-container">
+        <button class="close-icon" onclick="closeReceiptModal()">×</button>
+        
+        <div class="modal-header">
+            <h3 class="modal-title">Receipt</h3>
+            <p class="modal-subtitle">Detail transaksi pembayaran</p>
+        </div>
+        
+        <div id="receiptModalContent"></div>
+        
+        <div class="button-group">
+            <button class="modal-button print-button" onclick="printReceiptFromModal()">
+                <span class="loading" style="display:none;"></span>
+                Print Receipt
+            </button>
+            <button class="modal-button close-button" onclick="closeReceiptModal()">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<style>
+
 </style>
 
 <script>
@@ -1093,12 +1060,20 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
                 const cash = parseInt(cashValue || '0');
                 const balance = cash - totalAmount;
                 document.getElementById('payment-balance').textContent = 'Rp. ' + (balance >= 0 ? balance.toLocaleString() : '0');
-                // Jika cash cukup, lakukan print dan reset
-                if (cash >= totalAmount) {
-                    setTimeout(() => {
-                        printReceiptAndReset(cash, balance);
-                    }, 500);
-                }
+                            // Jika cash cukup, lakukan print dan reset
+            if (cash >= totalAmount) {
+                setTimeout(() => {
+                    printReceiptAndReset(cash, balance);
+                }, 500);
+            } else {
+                // Tampilkan alert jika cash tidak cukup
+                alert('Uang cash tidak cukup! Total: Rp. ' + totalAmount.toLocaleString() + ', Cash: Rp. ' + cash.toLocaleString() + ', Kurang: Rp. ' + (totalAmount - cash).toLocaleString());
+                // Reset input cash
+                cashValue = '';
+                document.getElementById('cashInput').value = '';
+                document.getElementById('payment-balance').textContent = '';
+                document.getElementById('cashInput').focus();
+            }
             } else {
                 if (cashValue.length < 9) cashValue += val;
             }
@@ -1133,6 +1108,82 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
         } else {
             this.style.borderColor = '#10b981';
             label.style.color = '#10b981';
+        }
+    });
+
+    // Handle keyboard input for cash input field
+    document.getElementById('cashInput').addEventListener('input', function() {
+        // Remove non-numeric characters except for formatting
+        let value = this.value.replace(/[^\d]/g, '');
+        
+        // Limit to 9 digits
+        if (value.length > 9) {
+            value = value.substring(0, 9);
+        }
+        
+        // Update cashValue variable
+        cashValue = value;
+        
+        // Format display with commas
+        this.value = value ? parseInt(value).toLocaleString() : '';
+        
+        // Update balance in real-time
+        const cash = parseInt(value || '0');
+        const balance = cash - totalAmount;
+        document.getElementById('payment-balance').textContent = 'Rp. ' + (balance >= 0 ? balance.toLocaleString() : '0');
+    });
+
+    // Handle Enter key press on cash input
+    document.getElementById('cashInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            
+            // Validate customer name
+            const customerName = document.getElementById('customerNameInput').value.trim();
+            if (!customerName) {
+                alert('Nama Customer wajib diisi!');
+                document.getElementById('customerNameInput').focus();
+                return;
+            }
+            
+            if (customerName.length < 2) {
+                alert('Nama Customer minimal 2 karakter!');
+                document.getElementById('customerNameInput').focus();
+                return;
+            }
+            
+            if (customerName.length > 100) {
+                alert('Nama Customer maksimal 100 karakter!');
+                document.getElementById('customerNameInput').focus();
+                return;
+            }
+            
+            // Get cash value and process payment
+            const cash = parseInt(cashValue || '0');
+            const balance = cash - totalAmount;
+            
+            if (cash >= totalAmount) {
+                setTimeout(() => {
+                    printReceiptAndReset(cash, balance);
+                }, 500);
+            } else {
+                // Tampilkan alert jika cash tidak cukup
+                alert('Uang cash tidak cukup! Total: Rp. ' + totalAmount.toLocaleString() + ', Cash: Rp. ' + cash.toLocaleString() + ', Kurang: Rp. ' + (totalAmount - cash).toLocaleString());
+                // Reset input cash
+                cashValue = '';
+                document.getElementById('cashInput').value = '';
+                document.getElementById('payment-balance').textContent = '';
+                document.getElementById('cashInput').focus();
+            }
+        }
+    });
+
+    // Handle Enter key press on customer name input
+    document.getElementById('customerNameInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            // Move focus to cash input when Enter is pressed on customer name
+            document.getElementById('cashInput').focus();
         }
     });
 

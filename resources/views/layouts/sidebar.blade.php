@@ -39,6 +39,8 @@
             opacity: 0.3;
         }
 
+
+
         .menu-toggle {
             background: none;
             border: none;
@@ -270,11 +272,18 @@
 
     <div class="drawer" id="drawer">
         <div class="drawer-header" style="height: 80px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start;">
-            <div class="logo" style="margin-right: 10px; margin-bottom: 0;">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 70px; height: 70px;">
+            <div class="logo" style="margin-right: 10px; margin-bottom: 0; width: 40px; height: 40px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 40px; height: 40px;">
             </div>
-            <div class="brand-info">
-                <span style="color: #fff; font-size: 17px; font-weight: 750; letter-spacing: 0.5px;">Alternatif Coffee</span>
+            <div class="brand-info" style="display: flex; flex-direction: column;">
+                <h1 style="color: #fff; font-size: 20px; font-weight: 750; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">Alternatif Coffee</h1>
+                <p style="color: #fff; font-size: 12px; margin: 0; opacity: 0.9; line-height: 1.2; text-align: start;">
+                    @auth
+                        {{ Auth::user()->name }}
+                    @else
+                        Guest
+                    @endauth
+                </p>
             </div>
         </div>
         <div class="drawer-content">
