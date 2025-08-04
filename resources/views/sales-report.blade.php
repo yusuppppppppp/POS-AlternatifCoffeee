@@ -508,7 +508,7 @@
                 <div>Order Type</div>
                 <div>Date</div>
                 <div>Total Amount</div>
-                <div>Action</div>
+                <div>Actions</div>
             </div>
             @foreach($orders as $index => $order)
                 <div class="order-row" onclick="toggleOrderDetails({{ $index }})">

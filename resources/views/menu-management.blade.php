@@ -702,6 +702,184 @@
             border-top-color: #fff;
             animation: spin 0.8s ease-in-out infinite;
         }
+
+        /* Search Form Styles */
+        .search-container {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.06),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.4);
+            margin-bottom: 24px;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-group {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 50px 14px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #374151;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #2E4766;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+            border: none;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 12px rgba(46, 71, 102, 0.3);
+        }
+
+        .search-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .clear-search {
+            padding: 10px 16px;
+            background: #f3f4f6;
+            color: #6b7280;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid #d1d5db;
+        }
+
+        .clear-search:hover {
+            background: #e5e7eb;
+            color: #374151;
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Category Filter Styles */
+        .category-filters-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.06),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(226, 232, 240, 0.4);
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .category-filter-btn {
+            padding: 12px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+            color: #64748b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-filter-btn:hover {
+            border-color: #2E4766;
+            color: #2E4766;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 71, 102, 0.15);
+        }
+
+        .category-filter-btn.active {
+            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+            border-color: #2E4766;
+            color: white;
+            box-shadow: 
+                0 4px 15px rgba(46, 71, 102, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .category-filter-btn.active:hover {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 20px rgba(46, 71, 102, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design for Search */
+        @media (max-width: 900px) {
+            .search-container {
+                margin: 0 20px 24px 20px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input-group {
+                min-width: auto;
+            }
+            
+            .category-filters-container {
+                margin: 0 20px 24px 20px;
+            }
+            
+            .category-filters {
+                justify-content: center;
+            }
+            
+            .category-filter-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
 </style>
 
 <div class="menu-section">
@@ -714,6 +892,50 @@
         <div class="category-btn-icon">+</div>
         Add New Menu
     </button>
+    
+    <!-- Category Filters -->
+    <div class="category-filters-container" style="margin-bottom: 24px;">
+        <div class="category-filters">
+            <button class="category-filter-btn {{ !$category || $category === 'All' ? 'active' : '' }}" onclick="filterByCategory('All')">
+                All Category
+            </button>
+            <button class="category-filter-btn {{ $category === 'Coffee' ? 'active' : '' }}" onclick="filterByCategory('Coffee')">
+                Coffee
+            </button>
+            <button class="category-filter-btn {{ $category === 'Non Coffee' ? 'active' : '' }}" onclick="filterByCategory('Non Coffee')">
+                Non Coffee
+            </button>
+            <button class="category-filter-btn {{ $category === 'Food' ? 'active' : '' }}" onclick="filterByCategory('Food')">
+                Food
+            </button>
+        </div>
+    </div>
+    
+    <!-- Search Form -->
+    <div class="search-container">
+        <form method="GET" action="{{ route('menu-management') }}" class="search-form">
+            <div class="search-input-group">
+                <input 
+                    type="text" 
+                    name="search" 
+                    value="{{ $search ?? '' }}" 
+                    placeholder="Cari berdasarkan nama menu, kategori, atau harga..."
+                    class="search-input"
+                >
+                <button type="submit" class="search-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            @if(!empty($search ?? ''))
+                <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search">Clear Search</a>
+            @endif
+            @if($category && $category !== 'All')
+                <input type="hidden" name="category" value="{{ $category }}">
+            @endif
+        </form>
+    </div>
     
     <div class="table-container">
         <table class="menu-table">
@@ -770,7 +992,7 @@
     </div>
     
     <div class="pagination-links">
-        {{ $menus->appends(['per_page' => request('per_page', 10)])->links() }}
+        {{ $menus->appends(['per_page' => request('per_page', 10), 'search' => request('search'), 'category' => request('category')])->links() }}
     </div>
 </div>
 
@@ -866,11 +1088,33 @@ function hideModal() {
     document.getElementById('menuModal').style.display = 'none';
 }
 
+// Function to handle category filtering
+function filterByCategory(category) {
+    const currentUrl = new URL(window.location);
+    if (category === 'All') {
+        currentUrl.searchParams.delete('category');
+    } else {
+        currentUrl.searchParams.set('category', category);
+    }
+    currentUrl.searchParams.delete('page'); // Reset to first page when changing category
+    window.location.href = currentUrl.toString();
+}
+
 // Function to handle show entries change
 function changePerPage(value) {
     const currentUrl = new URL(window.location);
     currentUrl.searchParams.set('per_page', value);
     currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
+    // Preserve search parameter if it exists
+    const searchParam = currentUrl.searchParams.get('search');
+    if (searchParam) {
+        currentUrl.searchParams.set('search', searchParam);
+    }
+    // Preserve category parameter if it exists
+    const categoryParam = currentUrl.searchParams.get('category');
+    if (categoryParam) {
+        currentUrl.searchParams.set('category', categoryParam);
+    }
     window.location.href = currentUrl.toString();
 }
 

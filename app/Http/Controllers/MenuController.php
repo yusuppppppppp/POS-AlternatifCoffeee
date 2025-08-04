@@ -12,8 +12,26 @@ class MenuController extends Controller
     public function index()
     {
         $perPage = request()->get('per_page', 10);
-        $menus = Menu::orderBy('id', 'desc')->paginate($perPage);
-        return view('menu-management', compact('menus'));
+        $search = request()->get('search');
+        $category = request()->get('category');
+        
+        $query = Menu::query();
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('category', 'like', '%' . $search . '%')
+                  ->orWhere('price', 'like', '%' . $search . '%');
+            });
+        }
+        
+        if ($category && $category !== 'All') {
+            $query->where('category', $category);
+        }
+        
+        $menus = $query->orderBy('id', 'desc')->paginate($perPage);
+        
+        return view('menu-management', compact('menus', 'search', 'category'));
     }
 
     public function create()
