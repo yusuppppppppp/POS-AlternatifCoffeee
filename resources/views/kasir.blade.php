@@ -772,11 +772,9 @@
 <div class="container" id="container">
         <!-- Menu -->
         <div class="menu-section">
-            <div class="category-filters">
+            <div class="category-filters" id="categoryFilters">
                 <button class="category-btn active" onclick="filterCategory('All')">All Category</button>
-                <button class="category-btn" onclick="filterCategory('Coffee')">Coffee</button>
-                <button class="category-btn" onclick="filterCategory('Non Coffee')">Non Coffee</button>
-                <button class="category-btn" onclick="filterCategory('Food')">Food</button>
+                <!-- Categories will be loaded dynamically -->
             </div>
 
             <div class="menu-grid" id="menuGrid">
@@ -917,6 +915,25 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
             });
     }
 
+    function loadCategories() {
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(categories => {
+                const categoryFilters = document.getElementById('categoryFilters');
+                const allCategoryBtn = categoryFilters.querySelector('.category-btn');
+                categoryFilters.innerHTML = '';
+                categoryFilters.appendChild(allCategoryBtn);
+                
+                categories.forEach(category => {
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
+                    btn.onclick = () => filterCategory(category.name);
+                    btn.textContent = category.name;
+                    categoryFilters.appendChild(btn);
+                });
+            });
+    }
+
     function renderMenuItems(menus) {
         const grid = document.getElementById('menuGrid');
         grid.innerHTML = '';
@@ -942,7 +959,7 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
         
         const filtered = category === 'All'
             ? allMenus
-            : allMenus.filter(menu => menu.category === category);
+            : allMenus.filter(menu => menu.category && menu.category.name === category);
         renderMenuItems(filtered);
     }
 
@@ -1285,7 +1302,10 @@ function closeReceiptModal() {
     window.location.reload(); // refresh setelah tutup modal
 }
 
-window.onload = loadMenuItems;
+window.onload = function() {
+    loadMenuItems();
+    loadCategories();
+};
 
 </script>
 @endsection

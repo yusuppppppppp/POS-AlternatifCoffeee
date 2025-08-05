@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Login</title>
     <style>
         * {
@@ -208,5 +211,26 @@
             <button type="submit" class="login-btn">Login</button>
         </form>
     </div>
+
+    <script>
+        // Prevent back button access after logout
+        window.history.forward();
+        
+        // Disable browser back button
+        window.addEventListener('load', function() {
+            window.history.pushState({noBackExitsApp: true}, '');
+        });
+        
+        window.addEventListener('popstate', function(event) {
+            if (event.state && event.state.noBackExitsApp) {
+                window.history.pushState({noBackExitsApp: true}, '');
+            }
+        });
+        
+        // Clear any cached data
+        if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+            window.location.href = '{{ route("login") }}';
+        }
+    </script>
 </body>
 </html>

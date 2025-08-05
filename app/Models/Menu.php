@@ -14,7 +14,7 @@ class Menu extends Model
     protected $fillable = [
         'name',
         'price',
-        'category',
+        'category_id',
         'image_path', // kolom ini menyimpan path di storage/public
     ];
 
@@ -26,5 +26,10 @@ class Menu extends Model
     public function getImageUrlAttribute()
     {
         return asset('storage/' . $this->image_path);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

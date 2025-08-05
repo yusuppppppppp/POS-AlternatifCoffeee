@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -15,23 +16,28 @@ class MenuController extends Controller
         $search = request()->get('search');
         $category = request()->get('category');
         
-        $query = Menu::query();
+        $query = Menu::with('category');
         
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('category', 'like', '%' . $search . '%')
+                  ->orWhereHas('category', function($q2) use ($search) {
+                      $q2->where('name', 'like', '%' . $search . '%');
+                  })
                   ->orWhere('price', 'like', '%' . $search . '%');
             });
         }
         
         if ($category && $category !== 'All') {
-            $query->where('category', $category);
+            $query->whereHas('category', function($q) use ($category) {
+                $q->where('name', $category);
+            });
         }
         
         $menus = $query->orderBy('id', 'desc')->paginate($perPage);
+        $categories = Category::orderBy('name', 'asc')->get();
         
-        return view('menu-management', compact('menus', 'search', 'category'));
+        return view('menu-management', compact('menus', 'search', 'category', 'categories'));
     }
 
     public function create()
@@ -44,7 +50,7 @@ class MenuController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'category' => 'required|in:Coffee,Non Coffee,Food',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'required|image|max:2048',
         ]);
 
@@ -57,7 +63,7 @@ class MenuController extends Controller
         Menu::create([
             'name' => $request->name,
             'price' => $request->price,
-            'category' => $request->category,
+            'category_id' => $request->category_id,
             'image_path' => $imagePath,
         ]);
 
@@ -77,7 +83,7 @@ class MenuController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'category' => 'required|in:Coffee,Non Coffee,Food',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'image|max:2048',
         ]);
 
@@ -85,7 +91,7 @@ class MenuController extends Controller
             return response()->json(['message' => $validator->errors()->first()], 422);
         }
 
-        $data = $request->only(['name', 'price', 'category']);
+        $data = $request->only(['name', 'price', 'category_id']);
 
         if ($request->hasFile('image')) {
             if ($menu->image_path) {
@@ -113,7 +119,7 @@ class MenuController extends Controller
 
     public function apiIndex()
     {
-        $menus = Menu::orderBy('id', 'desc')->get();
+        $menus = Menu::with('category')->orderBy('id', 'desc')->get();
         $menus->each(function ($menu) {
             $menu->image_url = asset('storage/' . $menu->image_path);
         });
@@ -123,7 +129,7 @@ class MenuController extends Controller
 
     public function show($id)
     {
-        $menu = Menu::findOrFail($id);
+        $menu = Menu::with('category')->findOrFail($id);
         $menu->image_url = asset('storage/' . $menu->image_path);
 
         return response()->json($menu);

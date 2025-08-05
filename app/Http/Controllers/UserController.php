@@ -57,7 +57,20 @@ class UserController extends Controller
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('login');
+        
+        // Clear all session data
+        session()->flush();
+        session()->regenerate();
+        
+        // Create response with cache control headers
+        $response = redirect()->route('login');
+        
+        // Add headers to prevent caching
+        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', 'Thu, 01 Jan 1970 00:00:00 GMT');
+        
+        return $response;
     }
 
     public function goKasir()

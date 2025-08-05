@@ -4,7 +4,10 @@
 
 @section('content')
 <div class="dashboard-container">
-    <h1 class="dashboard-title">Dashboard</h1>
+    <div class="section-header">
+        <h1 class="section-title">Dashboard</h1>
+        <p class="section-subtitle">Monitor your coffee shop performance and analytics</p>
+    </div>
     
     <!-- Stats Cards Row -->
     <div class="stats-row">
@@ -235,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 .dashboard-container {
     max-width: 1100px;
-    margin-top: -25px;
+    margin-top: -60px;
     margin-left: 22rem;
     margin-right: auto;
     margin-bottom: 25px;    
@@ -245,13 +248,43 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 20px;
 }
 
-.dashboard-title {
-    font-size: 2.5rem;
+.section-header {
+    background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+    padding: 32px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    box-shadow: 
+        0 20px 40px rgba(46, 71, 102, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.section-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.6;
+}
+
+.section-title {
+    color: white;
+    font-size: 2rem;
     font-weight: 700;
-    color: #2E4766;
-    text-align: center;
-    margin-bottom: 2.5rem;
-    text-shadow: 0 2px 4px rgba(46, 71, 102, 0.1);
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.section-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .stats-row {
@@ -433,9 +466,13 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 1rem;
     }
     
-    .dashboard-title {
-        font-size: 2rem;
-        margin-bottom: 1.5rem;
+    .section-header {
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
     }
     
     .stats-row {
@@ -466,8 +503,13 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 0.75rem;
     }
     
-    .dashboard-title {
-        font-size: 1.75rem;
+    .section-header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
     }
     
     .stat-card {

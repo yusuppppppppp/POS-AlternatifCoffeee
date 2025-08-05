@@ -649,7 +649,7 @@
                 <div>Order ID</div>
                 <div>Customer</div>
                 <div>Order Type</div>
-                <div>Date</div>
+                <div>Time</div>
                 <div>Total Amount</div>
                 <div>Action</div>
             </div>
@@ -660,7 +660,7 @@
                     <div class="order-id">{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
                     <div class="customer-name">{{ $order->customer_name }}</div>
                     <div class="order-type">{{ $order->order_type }}</div>
-                    <div class="order-date">{{ $order->created_at->format('m-d-Y') }}</div>
+                    <div class="order-date">{{ $order->created_at->format('h:i:s A') }}</div>
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
                     <div class="info-icon">i</div>
                 </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Menu Management')
+@section('title', 'Category Management')
 
 @section('content')
 <style>
@@ -17,7 +17,7 @@
             color: #334155;
         }
 
-        .menu-section {
+        .category-section {
             margin-left: 350px;
             padding: 40px;
             margin-top: -75px;
@@ -64,7 +64,7 @@
             z-index: 1;
         }
 
-        .category-btn {
+        .add-category-btn {
             background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
             color: #fff;
             border: none;
@@ -85,7 +85,7 @@
             overflow: hidden;
         }
 
-        .category-btn::before {
+        .add-category-btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -96,22 +96,22 @@
             transition: left 0.5s;
         }
 
-        .category-btn:hover::before {
+        .add-category-btn:hover::before {
             left: 100%;
         }
 
-        .category-btn:hover {
+        .add-category-btn:hover {
             transform: translateY(-3px);
             box-shadow: 
                 0 12px 35px rgba(46, 71, 102, 0.35),
                 0 0 0 1px rgba(255, 255, 255, 0.1);
         }
 
-        .category-btn:active {
+        .add-category-btn:active {
             transform: translateY(-1px);
         }
 
-        .category-btn-icon {
+        .add-category-btn-icon {
             width: 24px;
             height: 24px;
             background: rgba(255, 255, 255, 0.2);
@@ -132,13 +132,13 @@
             border: 1px solid rgba(226, 232, 240, 0.3);
         }
 
-        .menu-table {
+        .category-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
         }
 
-        .menu-table th {
+        .category-table th {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             padding: 24px 20px;
             text-align: left;
@@ -149,76 +149,40 @@
             position: relative;
         }
 
-        .menu-table th:first-child {
+        .category-table th:first-child {
             border-top-left-radius: 20px;
         }
 
-        .menu-table th:last-child {
+        .category-table th:last-child {
             border-top-right-radius: 20px;
         }
 
-        .menu-table tbody tr {
+        .category-table tbody tr {
             border-bottom: 1px solid #f1f5f9;
             transition: all 0.3s ease;
         }
 
-        .menu-table tbody tr:hover {
+        .category-table tbody tr:hover {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             transform: scale(1.01);
             box-shadow: 0 4px 15px rgba(46, 71, 102, 0.1);
         }
 
-        .menu-table tbody tr:last-child {
+        .category-table tbody tr:last-child {
             border-bottom: none;
         }
 
-        .menu-table td {
+        .category-table td {
             padding: 20px;
             vertical-align: middle;
             color: #475569;
             font-weight: 500;
         }
 
-        .menu-table .menu-image {
-            border-radius: 12px;
-            object-fit: cover;
-            height: 56px;
-            width: 56px;
-            box-shadow: 
-                0 4px 12px rgba(0,0,0,0.15),
-                0 0 0 2px rgba(255, 255, 255, 1);
-            border: 2px solid #f1f5f9;
-            transition: all 0.3s ease;
-        }
-
-        .menu-table .menu-image:hover {
-            transform: scale(1.1);
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.2),
-                0 0 0 3px rgba(46, 71, 102, 0.1);
-        }
-
-        .menu-name {
+        .category-name {
             font-weight: 600;
             color: #2E4766;
             font-size: 16px;
-        }
-
-        .menu-price {
-            font-weight: 700;
-            color: #059669;
-            font-size: 16px;
-        }
-
-        .menu-category {
-            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            display: inline-block;
-            box-shadow: 0 2px 8px rgba(46, 71, 102, 0.2);
         }
 
         .action-buttons {
@@ -376,7 +340,7 @@
             font-size: 15px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e2e8f0;
@@ -387,58 +351,13 @@
             font-family: inherit;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #2E4766;
             box-shadow: 
                 0 0 0 3px rgba(46, 71, 102, 0.1),
                 0 4px 12px rgba(46, 71, 102, 0.1);
             transform: translateY(-1px);
-        }
-
-        .file-input-wrapper {
-            position: relative;
-        }
-
-        .file-input {
-            opacity: 0;
-            position: absolute;
-            z-index: -1;
-        }
-
-        .file-input-label {
-            display: block;
-            padding: 14px 16px;
-            border: 2px dashed #cbd5e1;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-            color: #64748b;
-        }
-
-        .file-input-label:hover {
-            border-color: #2E4766;
-            background: rgba(46, 71, 102, 0.05);
-            color: #2E4766;
-        }
-
-        .file-input:focus + .file-input-label {
-            border-color: #2E4766;
-            box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
-        }
-
-        .file-input-label::before {
-            content: '📁';
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
-        .file-input:valid + .file-input-label {
-            border-color: #059669;
-            background: rgba(5, 150, 105, 0.05);
-            color: #059669;
         }
 
         #modalSubmitBtn {
@@ -622,87 +541,6 @@
             cursor: not-allowed;
         }
 
-        @media (max-width: 900px) {
-            .menu-section {
-                margin-left: 0;
-                padding: 20px;
-                max-width: 100vw;
-                margin-top: 0;
-            }
-            
-            .section-header {
-                padding: 24px;
-                margin-bottom: 24px;
-            }
-            
-            .section-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .menu-section {
-                padding: 16px;
-            }
-            
-            .menu-table .menu-image {
-                height: 40px;
-                width: 40px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                padding: 24px;
-                margin: 2vh auto;
-            }
-            
-            .modal-title {
-                font-size: 1.5rem;
-            }
-            
-            .category-btn {
-                padding: 12px 24px;
-                font-size: 14px;
-            }
-            
-            .menu-table th,
-            .menu-table td {
-                padding: 12px 8px;
-                font-size: 14px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                gap: 4px;
-            }
-            
-            .edit-btn, .delete-btn {
-                width: 32px;
-                height: 32px;
-            }
-        }
-
-        /* Loading state for buttons */
-        .btn-loading {
-            position: relative;
-            color: transparent;
-        }
-
-        .btn-loading::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            top: 50%;
-            left: 50%;
-            margin-left: -8px;
-            margin-top: -8px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 0.8s ease-in-out infinite;
-        }
-
         /* Search Form Styles */
         .search-container {
             background: white;
@@ -798,124 +636,103 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Category Filter Styles */
-        .category-filters-container {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.06),
-                0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(226, 232, 240, 0.4);
+        /* Loading state for buttons */
+        .btn-loading {
+            position: relative;
+            color: transparent;
         }
 
-        .category-filters {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
         }
 
-        .category-filter-btn {
-            padding: 12px 24px;
-            border: 2px solid #e2e8f0;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            background: white;
-            color: #64748b;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-filter-btn:hover {
-            border-color: #2E4766;
-            color: #2E4766;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(46, 71, 102, 0.15);
-        }
-
-        .category-filter-btn.active {
-            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
-            border-color: #2E4766;
-            color: white;
-            box-shadow: 
-                0 4px 15px rgba(46, 71, 102, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-
-        .category-filter-btn.active:hover {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
-            transform: translateY(-2px);
-            box-shadow: 
-                0 6px 20px rgba(46, 71, 102, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Responsive Design for Search */
         @media (max-width: 900px) {
-            .search-container {
-                margin: 0 20px 24px 20px;
+            .category-section {
+                margin-left: 0;
+                padding: 20px;
+                max-width: 100vw;
+                margin-top: 0;
             }
             
-            .search-form {
+            .section-header {
+                padding: 24px;
+                margin-bottom: 24px;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .category-section {
+                padding: 16px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 24px;
+                margin: 2vh auto;
+            }
+            
+            .modal-title {
+                font-size: 1.5rem;
+            }
+            
+            .add-category-btn {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+            
+            .category-table th,
+            .category-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            
+            .action-buttons {
                 flex-direction: column;
-                align-items: stretch;
+                gap: 4px;
             }
             
-            .search-input-group {
-                min-width: auto;
-            }
-            
-            .category-filters-container {
-                margin: 0 20px 24px 20px;
-            }
-            
-            .category-filters {
-                justify-content: center;
-            }
-            
-            .category-filter-btn {
-                padding: 10px 20px;
-                font-size: 13px;
+            .edit-btn, .delete-btn {
+                width: 32px;
+                height: 32px;
             }
         }
 </style>
 
-<div class="menu-section">
+<div class="category-section">
     <div class="section-header">
-        <h1 class="section-title">Menu Management</h1>
-        <p class="section-subtitle">Manage your coffee shop menu items</p>
+        <h1 class="section-title">Category Management</h1>
+        <p class="section-subtitle">Manage your menu categories</p>
     </div>
     
-    <button class="category-btn" onclick="showModal('add')">
-        <div class="category-btn-icon">+</div>
-        Add New Menu
+    <button class="add-category-btn" onclick="showModal('add')">
+        <div class="add-category-btn-icon">+</div>
+        Add New Category
     </button>
-    
-    <!-- Category Filters -->
-    <div class="category-filters-container" style="margin-bottom: 24px;">
-        <div class="category-filters">
-            <button class="category-filter-btn {{ !$category || $category === 'All' ? 'active' : '' }}" onclick="filterByCategory('All')">
-                All Category
-            </button>
-            @foreach($categories as $cat)
-            <button class="category-filter-btn {{ $category === $cat->name ? 'active' : '' }}" onclick="filterByCategory('{{ $cat->name }}')">
-                {{ $cat->name }}
-            </button>
-            @endforeach
-        </div>
-    </div>
     
     <!-- Search Form -->
     <div class="search-container">
-        <form method="GET" action="{{ route('menu-management') }}" class="search-form">
+        <form method="GET" action="{{ route('category-management') }}" class="search-form">
             <div class="search-input-group">
                 <input 
                     type="text" 
                     name="search" 
                     value="{{ $search ?? '' }}" 
-                    placeholder="Cari berdasarkan nama menu, kategori, atau harga..."
+                    placeholder="Search categories..."
                     class="search-input"
                 >
                 <button type="submit" class="search-button">
@@ -925,40 +742,31 @@
                 </button>
             </div>
             @if(!empty($search ?? ''))
-                <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search">Clear Search</a>
-            @endif
-            @if($category && $category !== 'All')
-                <input type="hidden" name="category" value="{{ $category }}">
+                <a href="{{ route('category-management') }}" class="clear-search">Clear Search</a>
             @endif
         </form>
     </div>
     
     <div class="table-container">
-        <table class="menu-table">
+        <table class="category-table">
             <thead>
                 <tr>
                     <th style="width: 60px;">No</th>
-                    <th>Name</th>
-                    <th>Preview</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Actions</th>
+                    <th>Category Name</th>
+                    <th style="width: 120px;">Actions</th>
                 </tr>
             </thead>
-            <tbody id="menuTableBody">
-                @foreach($menus as $index => $menu)
+            <tbody id="categoryTableBody">
+                @foreach($categories as $index => $category)
                 <tr>
-                    <td style="text-align: center; font-weight: 600; color: #2E4766;">{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}</td>
-                    <td class="menu-name">{{ $menu->name }}</td>
-                    <td><img src="{{ asset('storage/' . $menu->image_path) }}" alt="{{ $menu->name }}" class="menu-image"></td>
-                    <td class="menu-price">Rp. {{ number_format($menu->price, 0, ',', '.') }}</td>
-                    <td><span class="menu-category">{{ $menu->category ? $menu->category->name : 'No Category' }}</span></td>
+                    <td style="text-align: center; font-weight: 600; color: #2E4766;">{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
+                    <td class="category-name">{{ $category->name }}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="edit-btn" onclick="showModal('edit', '{{ $menu->id }}')">
+                            <button class="edit-btn" onclick="showModal('edit', '{{ $category->id }}')">
                                 <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:18px;width:18px;">
                             </button>
-                            <button class="delete-btn" onclick="deleteMenu('{{ $menu->id }}')">
+                            <button class="delete-btn" onclick="deleteCategory('{{ $category->id }}')">
                                 <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:18px;width:18px;">
                             </button>
                         </div>
@@ -968,10 +776,11 @@
             </tbody>
         </table>
     </div>
+    
     <!-- Show Entries and Pagination -->
     <div class="pagination-container">
         <div class="pagination-info">
-            Showing {{ $menus->firstItem() ?? 0 }} to {{ $menus->lastItem() ?? 0 }} of {{ $menus->total() }} entries
+            Showing {{ $categories->firstItem() ?? 0 }} to {{ $categories->lastItem() ?? 0 }} of {{ $categories->total() }} entries
         </div>
         
         <div class="per-page-selector">
@@ -988,46 +797,24 @@
     </div>
     
     <div class="pagination-links">
-        {{ $menus->appends(['per_page' => request('per_page', 10), 'search' => request('search'), 'category' => request('category')])->links() }}
+        {{ $categories->appends(['per_page' => request('per_page', 10), 'search' => request('search')])->links() }}
     </div>
 </div>
 
 <!-- Modal -->
-<div id="menuModal" class="modal">
+<div id="categoryModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h2 class="modal-title" id="modalTitle"></h2>
             <button class="close-btn" onclick="hideModal()">×</button>
         </div>
         <div class="modal-body">
-            <form id="menuForm" enctype="multipart/form-data">
+            <form id="categoryForm">
                 @csrf
-                <input type="hidden" name="id" id="menuId">
+                <input type="hidden" name="id" id="categoryId">
                 <div class="form-group">
-                    <label for="name">Menu Name</label>
-                    <input type="text" name="name" id="name" required placeholder="Enter menu name">
-                </div>
-                <div class="form-group">
-                    <label for="price">Price (Rp)</label>
-                    <input type="number" name="price" id="price" required placeholder="Enter price">
-                </div>
-                <div class="form-group">
-                    <label for="category_id">Category</label>
-                    <select name="category_id" id="category_id" required>
-                        <option value="">Select category</option>
-                        @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="image">Menu Image</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" name="image" id="image" accept="image/*" class="file-input">
-                        <label for="image" class="file-input-label">
-                            Choose file or drag and drop
-                        </label>
-                    </div>
+                    <label for="name">Category Name</label>
+                    <input type="text" name="name" id="name" required placeholder="Enter category name">
                 </div>
                 <button type="submit" id="modalSubmitBtn">
                     <span class="loading" style="display: none;"></span>
@@ -1041,59 +828,44 @@
 
 <script>
 function showModal(action, id = null) {
-    const modal = document.getElementById('menuModal');
+    const modal = document.getElementById('categoryModal');
     const title = document.getElementById('modalTitle');
     const submitBtn = document.getElementById('modalSubmitBtn');
     const btnText = submitBtn.querySelector('.btn-text');
-    const form = document.getElementById('menuForm');
+    const form = document.getElementById('categoryForm');
     const errorMessage = document.getElementById('errorMessage');
 
     errorMessage.style.display = 'none';
     form.reset();
     modal.style.display = 'block';
-    document.getElementById('menuId').value = '';
-    document.getElementById('image').required = (action === 'add');
+    document.getElementById('categoryId').value = '';
 
     if (action === 'add') {
-        title.textContent = 'Add New Menu';
-        btnText.textContent = 'Add Menu';
-        form.setAttribute('data-action', '{{ route("menus.store") }}');
+        title.textContent = 'Add New Category';
+        btnText.textContent = 'Add Category';
+        form.setAttribute('data-action', '{{ route("categories.store") }}');
         form.setAttribute('data-method', 'POST');
     } else if (action === 'edit' && id) {
-        title.textContent = 'Edit Menu';
-        btnText.textContent = 'Update Menu';
-        form.setAttribute('data-action', '{{ url("menus") }}/' + id);
+        title.textContent = 'Edit Category';
+        btnText.textContent = 'Update Category';
+        form.setAttribute('data-action', '{{ url("categories") }}/' + id);
         form.setAttribute('data-method', 'PUT');
 
-        fetch('/api/menus/' + id)
+        fetch('/api/categories/' + id)
             .then(res => res.json())
-            .then(menu => {
-                document.getElementById('menuId').value = menu.id;
-                document.getElementById('name').value = menu.name;
-                document.getElementById('price').value = menu.price;
-                document.getElementById('category_id').value = menu.category_id;
+            .then(category => {
+                document.getElementById('categoryId').value = category.id;
+                document.getElementById('name').value = category.name;
             })
             .catch(() => {
-                errorMessage.textContent = 'Failed to load menu';
+                errorMessage.textContent = 'Failed to load category';
                 errorMessage.style.display = 'block';
             });
     }
 }
 
 function hideModal() {
-    document.getElementById('menuModal').style.display = 'none';
-}
-
-// Function to handle category filtering
-function filterByCategory(category) {
-    const currentUrl = new URL(window.location);
-    if (category === 'All') {
-        currentUrl.searchParams.delete('category');
-    } else {
-        currentUrl.searchParams.set('category', category);
-    }
-    currentUrl.searchParams.delete('page'); // Reset to first page when changing category
-    window.location.href = currentUrl.toString();
+    document.getElementById('categoryModal').style.display = 'none';
 }
 
 // Function to handle show entries change
@@ -1106,15 +878,10 @@ function changePerPage(value) {
     if (searchParam) {
         currentUrl.searchParams.set('search', searchParam);
     }
-    // Preserve category parameter if it exists
-    const categoryParam = currentUrl.searchParams.get('category');
-    if (categoryParam) {
-        currentUrl.searchParams.set('category', categoryParam);
-    }
     window.location.href = currentUrl.toString();
 }
 
-document.getElementById('menuForm').addEventListener('submit', function(e) {
+document.getElementById('categoryForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     const form = this;
@@ -1146,7 +913,7 @@ document.getElementById('menuForm').addEventListener('submit', function(e) {
     .then(async res => {
         if (!res.ok) {
             const errorData = await res.json();
-            throw new Error(errorData.message || 'Gagal menyimpan data');
+            throw new Error(errorData.message || 'Failed to save data');
         }
         return res.json();
     })
@@ -1168,26 +935,34 @@ document.getElementById('menuForm').addEventListener('submit', function(e) {
     });
 });
 
-function deleteMenu(id) {
-    if (!confirm('Yakin hapus menu ini?')) return;
+function deleteCategory(id) {
+    if (!confirm('Are you sure you want to delete this category?')) return;
 
-    fetch('/menus/' + id, {
+    fetch('/categories/' + id, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         }
     })
-    .then(res => {
-        if (!res.ok) throw new Error('Gagal hapus');
+    .then(async res => {
+        if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || 'Failed to delete');
+        }
+        return res.json();
+    })
+    .then(() => {
         location.reload();
     })
-    .catch(err => alert(err.message));
+    .catch(err => {
+        alert(err.message);
+    });
 }
 
 window.onclick = function(e) {
-    const modal = document.getElementById('menuModal');
+    const modal = document.getElementById('categoryModal');
     if (e.target == modal) hideModal();
 };
 </script>
 
-@endsection
+@endsection 

@@ -4,16 +4,19 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', fn() => view('login'));
 
 // Auth Routes
-Route::get('/login', [UserController::class, 'login'])->name('login');
-Route::get('/signup', [UserController::class, 'signup'])->name('register');
-Route::post('/login', [UserController::class, 'logincheck'])->name('logincheck');
-Route::post('/signup', [UserController::class, 'registercheck'])->name('registercheck');
+Route::middleware(['redirect.if.authenticated'])->group(function () {
+    Route::get('/login', [UserController::class, 'login'])->name('login');
+    Route::get('/signup', [UserController::class, 'signup'])->name('register');
+    Route::post('/login', [UserController::class, 'logincheck'])->name('logincheck');
+    Route::post('/signup', [UserController::class, 'registercheck'])->name('registercheck');
+});
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'prevent.back.history'])->group(function () {
     // Kasir dan Dashboard
     Route::get('/kasir', [UserController::class, 'goKasir'])->name('kasir');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -25,6 +28,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
     Route::put('/menus/{id}', [MenuController::class, 'update'])->name('menus.update'); 
     Route::delete('/menus/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
+
+    // Category Management
+    Route::get('/category-management', [CategoryController::class, 'index'])->name('category-management');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Order
     Route::get('/order-list', [UserController::class, 'orderList'])->name('order-list'); // Menampilkan halaman

@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Alternatif Coffee - @yield('title')</title>
     <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
 
@@ -83,6 +86,28 @@
             if (event.key === 'Escape' && isDrawerOpen) {
                 closeDrawer();
             }
+        });
+
+        // Prevent back button access after logout
+        window.addEventListener('load', function() {
+            // Clear any cached data and prevent back navigation
+            if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+                window.location.href = '{{ route("login") }}';
+            }
+        });
+
+        // Disable browser back button for authenticated pages
+        window.addEventListener('popstate', function(event) {
+            // If user tries to go back, redirect to appropriate page based on user type
+            @auth
+                @if(Auth::user()->usertype === 'admin')
+                    window.location.href = '{{ route("dashboard") }}';
+                @else
+                    window.location.href = '{{ route("kasir") }}';
+                @endif
+            @else
+                window.location.href = '{{ route("login") }}';
+            @endauth
         });
     </script>
 </body>

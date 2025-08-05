@@ -310,6 +310,10 @@
                         <div class="drawer-item-icon"><img src="/images/menu_management.png" alt="Menu Management" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Menu Management</div>
                     </div>
+                    <div class="drawer-item" onclick="navigateTo('category-management', this)">
+                        <div class="drawer-item-icon"><img src="/images/category-management.png" alt="Category Management" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Category Management</div>
+                    </div>
                     <div class="drawer-item" onclick="navigateTo('sales-report', this)">
                         <div class="drawer-item-icon"><img src="/images/sales_report.png" alt="Sales Report" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Sales Report</div>
