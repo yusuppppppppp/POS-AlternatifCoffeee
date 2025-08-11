@@ -759,12 +759,100 @@
 @media (max-width: 400px) {
     .payment-modal-content { width: 98vw; padding: 10px 2vw; }
 }
+
 @media print {
-    body * { display: none !important; }
-    #receiptModal, #receiptModal * { display: block !important; }
-    #receiptModal { position: static !important; background: none !important; box-shadow: none !important; }
-    #receiptModalContent { box-shadow: none !important; background: #fff !important; }
+  @page { 
+    size: 80mm auto;
+    margin: 0;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff !important;
+  }
+  body * { display: none !important; }
+  .receipt-paper {
+    width: 74mm !important;
+    max-width: 74mm !important;
+    min-width: 74mm !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+    overflow: visible !important;
+    page-break-inside: avoid !important;
+  }
+  h2 {
+    font-size: 13px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    margin: 0 0 8px 0 !important;
+    padding: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+  }
+  hr {
+    border: none !important;
+    border-top: 1px dashed #333 !important;
+    margin: 6px 0 !important;
+    width: 100% !important;
+  }
+  ul {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  ul li {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    font-size: 11px !important;
+    margin-bottom: 3px !important;
+    padding: 1px 0 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  ul li span:first-child {
+    flex: 1 !important;
+    padding-right: 8px !important;
+    max-width: 50mm !important;
+  }
+  ul li span:last-child {
+    min-width: 15mm !important;
+    text-align: right !important;
+    font-weight: normal !important;
+    flex-shrink: 0 !important;
+  }
+  .line {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 2px 0 !important;
+    font-size: 11px !important;
+    margin: 1px 0 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    border-bottom: 1px dotted #bbb !important;
+  }
+  .line:last-child { border-bottom: none !important; }
+  .line span:first-child {
+    flex: 1 !important;
+    padding-right: 8px !important;
+  }
+  .line span:last-child {
+    min-width: 15mm !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+  }
+  .datetime, .thank-you {
+    text-align: center !important;
+    font-size: 10px !important;
+    margin: 6px 0 0 0 !important;
+    color: #666 !important;
+    font-style: italic !important;
+  }
 }
+
 </style>
 
 
@@ -854,7 +942,7 @@
     </div>
 </div>
 
-<div id="receiptContent" style="display: none;">
+<div id="receiptContent" class="receipt-paper" style="display: none;">
     <h2>Alternatif Coffee</h2>
     <hr>
     <ul id="receiptItems"></ul>
@@ -878,7 +966,7 @@
             <p class="modal-subtitle">Detail transaksi pembayaran</p>
         </div>
         
-        <div id="receiptModalContent"></div>
+        <div id="receiptModalContent" class="receipt-paper"></div>
         
         <div class="button-group">
             <button class="modal-button print-button" onclick="printReceiptFromModal()">
@@ -1281,15 +1369,32 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
 }
 
 function printReceiptFromModal() {
-    // Print hanya area receiptModalContent tanpa reload atau mengganti body
     const printContents = document.getElementById('receiptModalContent').innerHTML;
-    const printWindow = window.open('', '', 'height=700,width=550'); 
+    const printWindow = window.open('', '', 'height=700,width=550');
     printWindow.document.write('<html><head><title>Print Receipt</title>');
-    printWindow.document.write('<style>@media print { body { margin:0; } .line { display:flex; justify-content:space-between; } #receiptModalContent { min-width:500px; max-width:90vw; margin:auto; } }</style>');
+    printWindow.document.write(`
+      <style>
+        .receipt-paper { font-family: 'Courier New', monospace; width: 74mm; margin: 0 auto; font-size: 11px; }
+        .receipt-paper h2 { font-size: 13px; font-weight: bold; text-align: center; margin: 0 0 8px 0; padding: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .receipt-paper hr { border: none; border-top: 1px dashed #333; margin: 6px 0; width: 100%; }
+        .receipt-paper ul { list-style: none; margin: 0; padding: 0; }
+        .receipt-paper ul li { display: flex; justify-content: space-between; align-items: flex-start; font-size: 11px; margin-bottom: 3px; padding: 1px 0; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
+        .receipt-paper ul li span:first-child { flex: 1; padding-right: 8px; max-width: 50mm; }
+        .receipt-paper ul li span:last-child { min-width: 15mm; text-align: right; font-weight: normal; flex-shrink: 0; }
+        .receipt-paper .line { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; font-size: 11px; margin: 1px 0; word-wrap: break-word; overflow-wrap: break-word; border-bottom: 1px dotted #bbb; }
+        .receipt-paper .line:last-child { border-bottom: none; }
+        .receipt-paper .line span:first-child { flex: 1; padding-right: 8px; }
+        .receipt-paper .line span:last-child { min-width: 15mm; text-align: right; flex-shrink: 0; }
+        .receipt-paper .datetime, .receipt-paper .thank-you { text-align: center; font-size: 10px; margin: 6px 0 0 0; color: #666; font-style: italic; }
+        @media print {
+          @page { size: 80mm auto; margin: 0; }
+          body { margin: 0; padding: 0; background: #fff !important; }
+          .receipt-paper { width: 74mm !important; max-width: 74mm !important; min-width: 74mm !important; }
+        }
+      </style>
+    `);
     printWindow.document.write('</head><body>');
-    printWindow.document.write('<div id="receiptModalContent" style="min-width:500px;max-width:90vw;margin:auto;">');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</div>');
+    printWindow.document.write('<div class="receipt-paper">' + printContents + '</div>');
     printWindow.document.write('</body></html>');
     printWindow.document.close();
     printWindow.focus();
