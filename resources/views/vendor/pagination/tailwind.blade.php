@@ -5,7 +5,8 @@
         flex-direction: column;
         align-items: center;
         gap: 20px;
-        margin: 40px 0;
+        margin: -20px 0;
+        margin-bottom: 20px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -37,6 +38,7 @@
         border: 1px solid #f0f4f8;
         position: relative;
         overflow: hidden;
+        margin-top: 10px;
     }
 
     .modern-pagination::before {

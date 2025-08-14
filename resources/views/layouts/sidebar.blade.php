@@ -24,8 +24,6 @@
         .drawer-header {
             background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             padding: 20px;
-            border-bottom-right-radius: 15px;
-            border-bottom-left-radius: 15px;
             text-align: center;
             position: relative;
         }

@@ -12,7 +12,7 @@
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: #f8fafc;
+        background:rgba(59, 131, 246, 0.14);
         min-height: 100vh;
     }
 
@@ -45,7 +45,7 @@
     .category-btn {
         padding: 12px 24px;
         border: none;
-        border-radius: 25px;
+        border-radius: 15px;
         cursor: pointer;
         font-weight: 600;
         font-size: 14px;
@@ -78,7 +78,7 @@
     .menu-item {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
-        border-radius: 20px;
+        border-radius: 10px;
         overflow: hidden;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -116,7 +116,7 @@
     /* Bills Section */
     .bills-section {
         width: 300px;
-        border-radius: 20px;
+        border-radius: 10px;
         flex-shrink: 0;
         position: fixed;
         right: 20px;
@@ -127,11 +127,10 @@
     }
 
     .bills-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: white;
         backdrop-filter: blur(10px);
-        border-radius: 25px;
+        border-radius: 10px;
         padding: 25px;
-
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -140,7 +139,7 @@
     .bills-title {
         font-size: 24px;
         font-weight: 700;
-        color: #2c3e50;
+        color: #2E4766;
         margin-bottom: 20px;
     }
 
@@ -157,8 +156,8 @@
         gap: 15px;
         margin-bottom: 15px;
         padding: 10px;
-        border-radius: 15px;
-        background: rgba(248, 249, 250, 0.8);
+        border-radius: 10px;
+        background:rgba(46, 71, 102, 0.18);
     }
 
     .quantity-controls {
@@ -208,17 +207,17 @@
 
     .bill-item-name {
         font-weight: 600;
-        color: #2c3e50;
+        color: #2E4766;
         margin-bottom: 3px;
     }
 
     .bill-item-price {
-        color: #7f8c8d;
+        color: #2E4766;
         font-size: 14px;
     }
 
     .checkout-section {
-        border-top: 2px solid #ecf0f1;
+        border-top: 4px solid #2E4766;
         padding-top: 20px;
         margin-top: auto;
     }
@@ -229,8 +228,8 @@
         align-items: center;
         margin-bottom: 20px;
         padding: 15px;
-        background: rgba(52, 73, 94, 0.1);
-        border-radius: 15px;
+        background:rgba(46, 71, 102, 0.09);
+        border-radius: 10px;
     }
 
     .total-label {
@@ -255,7 +254,8 @@
         font-size: 16px;
         cursor: pointer;
         transition: all 0.3s ease;
-        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        /* background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); */ 
+        background: #2c3e50;
         color: white;
         box-shadow: 0 5px 20px rgba(44, 62, 80, 0.3);
     }
@@ -760,8 +760,82 @@
     .payment-modal-content { width: 98vw; padding: 10px 2vw; }
 }
 
+.receipt-paper {
+  font-family: 'Courier New', monospace;
+  width: 74mm;
+  margin: 0 auto;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.receipt-paper h2 {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0 0 5px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.receipt-paper hr {
+  border: none;
+  border-top: 1px dashed #000;
+  margin: 4px 0;
+}
+
+.receipt-paper .item-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.receipt-paper .item-list th,
+.receipt-paper .item-list td {
+  padding: -10px 0;
+  vertical-align: top;
+}
+
+.receipt-paper .item-list th.qty,
+.receipt-paper .item-list td.qty {
+  width: 10mm;
+  text-align: center;
+}
+
+.receipt-paper .item-list th.name,
+.receipt-paper .item-list td.name {
+  width: 44mm;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+.receipt-paper .item-list th.price,
+.receipt-paper .item-list td.price {
+  width: 15mm;
+  text-align: right;
+}
+
+.receipt-paper .line {
+  display: flex;
+  justify-content: space-between;
+  padding: 1px 0;
+  font-size: 10px;
+  border-bottom: 1px dotted #000;
+}
+
+.receipt-paper .line:last-child {
+  border-bottom: none;
+}
+
+.receipt-paper .datetime {
+  text-align: center;
+  font-size: 9px;
+  margin: 4px 0 0 0;
+  color: #444;
+  font-style: italic;
+}
+
 @media print {
-  @page { 
+  @page {
     size: 80mm auto;
     margin: 0;
   }
@@ -770,88 +844,15 @@
     padding: 0;
     background: #fff !important;
   }
-  body * { display: none !important; }
   .receipt-paper {
     width: 74mm !important;
-    max-width: 74mm !important;
-    min-width: 74mm !important;
-    font-family: 'Courier New', monospace !important;
-    font-size: 11px !important;
-    line-height: 1.3 !important;
-    overflow: visible !important;
-    page-break-inside: avoid !important;
   }
-  h2 {
-    font-size: 13px !important;
-    font-weight: bold !important;
-    text-align: center !important;
-    margin: 0 0 8px 0 !important;
-    padding: 0 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
-  }
-  hr {
-    border: none !important;
-    border-top: 1px dashed #333 !important;
-    margin: 6px 0 !important;
-    width: 100% !important;
-  }
-  ul {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  ul li {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
-    font-size: 11px !important;
-    margin-bottom: 3px !important;
-    padding: 1px 0 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    hyphens: auto !important;
-  }
-  ul li span:first-child {
-    flex: 1 !important;
-    padding-right: 8px !important;
-    max-width: 50mm !important;
-  }
-  ul li span:last-child {
-    min-width: 15mm !important;
-    text-align: right !important;
-    font-weight: normal !important;
-    flex-shrink: 0 !important;
-  }
-  .line {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding: 2px 0 !important;
-    font-size: 11px !important;
-    margin: 1px 0 !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    border-bottom: 1px dotted #bbb !important;
-  }
-  .line:last-child { border-bottom: none !important; }
-  .line span:first-child {
-    flex: 1 !important;
-    padding-right: 8px !important;
-  }
-  .line span:last-child {
-    min-width: 15mm !important;
-    text-align: right !important;
-    flex-shrink: 0 !important;
-  }
-  .datetime, .thank-you {
-    text-align: center !important;
-    font-size: 10px !important;
-    margin: 6px 0 0 0 !important;
-    color: #666 !important;
-    font-style: italic !important;
+  .item-list {
+    page-break-inside: avoid;
   }
 }
+
+
 
 </style>
 
@@ -943,7 +944,8 @@
 </div>
 
 <div id="receiptContent" class="receipt-paper" style="display: none;">
-    <h2>Alternatif Coffee</h2>
+    <img src="{{ asset('images/logo.png') }}" alt="Alternatif Coffee Logo" style="width:80px; height:auto; display:block; margin:0 auto 6px;" />
+    <h2 style="text-align:center;">Alternatif Coffee</h2>
     <hr>
     <ul id="receiptItems"></ul>
     <hr>
@@ -951,9 +953,9 @@
     <div class="line"><span>Cash</span><span class="payment-cash"></span></div>
     <div class="line"><span>Balance</span><span class="payment-balance"></span></div>
     <hr>
-    <div style="text-align:left; margin-bottom:2px;" id="receiptCustomerLabel"></div>
-    <div style="text-align:left;" id="receiptCashierLabel"></div>
-    <div style="text-align:left; margin-top:2px;" id="receiptOrderTypeLabel"></div>
+    <div class="line"><span>Customer</span><span id="receiptCustomerValue" class="value"></span></div>
+    <div class="line"><span>Kasir</span><span id="receiptCashierValue" class="value"></span></div>
+    <div class="line"><span>Order</span><span id="receiptOrderTypeValue" class="value"></span></div>
 </div>
 
 <!-- Receipt Modal -->
@@ -982,7 +984,16 @@
 
 
 <style>
-
+    /* Receipt preview styles in modal */
+    .receipt-paper { width: 270px; }
+    #receiptItems { list-style: none; padding: 0; margin: 0; }
+    #receiptItems li { margin: 2px 0; }
+    #receiptItems .line { display: flex; justify-content: flex-start; gap: 8px; }
+    #receiptItems .item-info { flex: 1; text-align: left; }
+    #receiptItems .item-price { text-align: right; min-width: 80px; }
+    /* Ensure label/value rows align like totals */
+    .receipt-paper .line { display: flex; justify-content: space-between; }
+    .receipt-paper .line .value { text-align: right; }
 </style>
 
 <script>
@@ -1307,8 +1318,8 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
         const li = document.createElement('li');
         li.innerHTML = `
             <div class="line">
-                <span>${item.quantity}x ${item.name}</span>
-                <span>Rp. ${itemTotal.toLocaleString()}</span>
+                <span class="item-info">${item.quantity}x ${item.name}</span>
+                <span class="item-price">Rp. ${itemTotal.toLocaleString()}</span>
             </div>`;
         receiptItems.appendChild(li);
     }
@@ -1321,11 +1332,11 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
     document.querySelector('.payment-balance').textContent = `Rp. ${balance.toLocaleString()}`;
     // Set nama pembeli dan kasir di struk
     const customerName = document.getElementById('customerNameInput').value || 'Unknown';
-    document.getElementById('receiptCustomerLabel').textContent = 'Customer: ' + customerName;
-    document.getElementById('receiptCashierLabel').textContent = 'Kasir: ' + (window.currentCashierName || 'Guest');
+    document.getElementById('receiptCustomerValue').textContent = customerName;
+    document.getElementById('receiptCashierValue').textContent = (window.currentCashierName || 'Guest');
     // Set order type di struk
     const orderType = document.getElementById('dineInBtn')?.classList.contains('active') ? 'Dine in' : 'Take Away';
-    document.getElementById('receiptOrderTypeLabel').textContent = 'Order: ' + orderType;
+    document.getElementById('receiptOrderTypeValue').textContent = orderType;
     // Tampilkan struk di modal, bukan window baru
     const receiptModal = document.getElementById('receiptModal');
     const receiptModalContent = document.getElementById('receiptModalContent');
@@ -1371,36 +1382,69 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
 function printReceiptFromModal() {
     const printContents = document.getElementById('receiptModalContent').innerHTML;
     const printWindow = window.open('', '', 'height=700,width=550');
-    printWindow.document.write('<html><head><title>Print Receipt</title>');
+    
     printWindow.document.write(`
-      <style>
-        .receipt-paper { font-family: 'Courier New', monospace; width: 74mm; margin: 0 auto; font-size: 11px; }
-        .receipt-paper h2 { font-size: 13px; font-weight: bold; text-align: center; margin: 0 0 8px 0; padding: 0; text-transform: uppercase; letter-spacing: 1px; }
-        .receipt-paper hr { border: none; border-top: 1px dashed #333; margin: 6px 0; width: 100%; }
-        .receipt-paper ul { list-style: none; margin: 0; padding: 0; }
-        .receipt-paper ul li { display: flex; justify-content: space-between; align-items: flex-start; font-size: 11px; margin-bottom: 3px; padding: 1px 0; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
-        .receipt-paper ul li span:first-child { flex: 1; padding-right: 8px; max-width: 50mm; }
-        .receipt-paper ul li span:last-child { min-width: 15mm; text-align: right; font-weight: normal; flex-shrink: 0; }
-        .receipt-paper .line { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; font-size: 11px; margin: 1px 0; word-wrap: break-word; overflow-wrap: break-word; border-bottom: 1px dotted #bbb; }
-        .receipt-paper .line:last-child { border-bottom: none; }
-        .receipt-paper .line span:first-child { flex: 1; padding-right: 8px; }
-        .receipt-paper .line span:last-child { min-width: 15mm; text-align: right; flex-shrink: 0; }
-        .receipt-paper .datetime, .receipt-paper .thank-you { text-align: center; font-size: 10px; margin: 6px 0 0 0; color: #666; font-style: italic; }
-        @media print {
-          @page { size: 80mm auto; margin: 0; }
-          body { margin: 0; padding: 0; background: #fff !important; }
-          .receipt-paper { width: 74mm !important; max-width: 74mm !important; min-width: 74mm !important; }
-        }
-      </style>
+        <html>
+        <head>
+            <title>Print Receipt</title>
+            <base href="${window.location.origin}/">
+            <style>
+                body { font-family: Arial, sans-serif; font-size: 12px; }
+                .receipt-paper { width: 270px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { text-align: left; padding: 2px; }
+                .qty { width: 20%; }
+                .price { text-align: right; }
+                /* Default line layout for summary rows (Total/Cash/Balance) */
+                .line { display: flex; justify-content: space-between; }
+
+                /* Items list: remove bullets/indent and align left */
+                #receiptItems { list-style: none; padding: 0; margin: 0; }
+                #receiptItems li { margin: 2px 0; }
+                #receiptItems .line { justify-content: flex-start; gap: 8px; }
+                #receiptItems .item-info { flex: 1; text-align: left; }
+                #receiptItems .item-price { text-align: right; min-width: 80px; }
+                .receipt-paper img { display: block; margin: 0 auto 6px; max-width: 100%; height: auto; }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-paper">${printContents}</div>
+        </body>
+        </html>
     `);
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<div class="receipt-paper">' + printContents + '</div>');
-    printWindow.document.write('</body></html>');
+
     printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+
+    const doPrint = () => {
+        try { printWindow.focus(); } catch (e) {}
+        try { printWindow.print(); } catch (e) {}
+        try { printWindow.close(); } catch (e) {}
+    };
+
+    const images = () => Array.from(printWindow.document.images || []);
+    const imgs = images();
+    if (imgs.length === 0) {
+        doPrint();
+        return;
+    }
+
+    let loadedCount = 0;
+    const onDone = () => {
+        loadedCount += 1;
+        if (loadedCount >= imgs.length) {
+            doPrint();
+        }
+    };
+    imgs.forEach(img => {
+        if (img.complete) {
+            onDone();
+        } else {
+            img.addEventListener('load', onDone, { once: true });
+            img.addEventListener('error', onDone, { once: true });
+        }
+    });
 }
+
 
 function closeReceiptModal() {
     document.getElementById('receiptModal').style.display = 'none';
