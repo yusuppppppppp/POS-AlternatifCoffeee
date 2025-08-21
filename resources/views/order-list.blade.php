@@ -18,10 +18,16 @@
 
     .order-container {
         max-width: 1200px;
-        margin: -70px 150px 0px 430px;
+        margin: 0 auto;
         padding: 40px;
         background: transparent;
         min-height: 100vh;
+        transition: margin-left 0.3s ease;
+    }
+
+    .container.drawer-open .order-container {
+        margin-left: 0px !important;
+        margin-right: 80px !important;
     }
 
     .page-header {
@@ -415,19 +421,23 @@
     .search-form {
         display: flex;
         align-items: center;
+        margin-left: -10px;
         gap: 16px;
         flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .search-input-group {
         position: relative;
         flex: 1;
         min-width: 300px;
+        display: flex;
+        align-items: center;
     }
 
     .search-input {
         width: 100%;
-        padding: 14px 50px 14px 20px;
+        padding: 14px 56px 14px 20px;
         border: 2px solid #e2e8f0;
         border-radius: 12px;
         font-size: 14px;
@@ -449,20 +459,21 @@
 
     .search-button {
         position: absolute;
-        right: 8px;
-        top: 50%;
+        right: -10px;
+        top: 20px;
         transform: translateY(-50%);
         background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
         border: none;
         border-radius: 8px;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         cursor: pointer;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(46, 71, 102, 0.2);
     }
 
     .search-button:hover {
@@ -473,6 +484,11 @@
 
     .search-button:active {
         transform: translateY(-50%) scale(0.95);
+    }
+
+    .search-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.2);
     }
 
     .clear-search {
@@ -498,7 +514,7 @@
     /* Responsive Design */
     @media (max-width: 900px) {
         .order-container {
-            margin-left: 0;
+            margin-left: 0 !important;
             padding: 20px;
             margin-top: 0;
         }

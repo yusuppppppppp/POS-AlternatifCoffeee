@@ -238,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 .dashboard-container {
     max-width: 1100px;
-    margin-top: -60px;
-    margin-left: 22rem;
+    margin-top: 5px;
+    margin-left: 12rem;
     margin-right: auto;
     margin-bottom: 25px;    
     padding: 2rem;
@@ -247,6 +247,11 @@ document.addEventListener('DOMContentLoaded', function() {
     min-height: 100vh;
     border-radius: 20px;
 }
+
+.container.drawer-open .dashboard-container {
+    margin-left: 0px !important;
+    margin-right: 80px !important;
+    }
 
 .section-header {
     background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);

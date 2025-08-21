@@ -5,11 +5,17 @@
 <style>
     .order-container {
         max-width: 1000px;
-        margin: -100px 20px 0px 400px;
+        margin: -30px 0px 0px 15rem;
+        margin-bottom: -30px;
         padding: 20px;
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         min-height: 100vh;
         position: relative;
+    }
+
+    .container.drawer-open .order-container {
+        margin-left: 25px !important;
+        margin-right: 100px !important;
     }
     
     .order-container::before {
@@ -19,10 +25,9 @@
         left: 0;
         right: 0;
         height: 200px;
-        background: linear-gradient(135deg, #2E4766 0%, #1a2f42 100%);
+        background:rgba(147, 177, 214, 0.27);
         border-radius: 0 0 50px 50px;
         z-index: 0;
-        opacity: 0.08;
     }
     
     .order-table {
@@ -146,6 +151,7 @@
     
     .page-title {
         text-align: center;
+        margin-top: 20px;
         margin-bottom: 40px;
         font-weight: 700;
         font-size: 28px;

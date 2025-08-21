@@ -10,81 +10,11 @@
             background-color: #f5f5f5;
         }
 
-        .drawer {
-            width: 280px;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .drawer-header {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
-
-        .drawer-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            /* background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>'); */
-            opacity: 0.3;
-        }
-
-
-
-        .menu-toggle {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .menu-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .menu-lines {
-            width: 20px;
-            height: 2px;
-            background-color: currentColor;
-            position: relative;
-            display: block;
-        }
-
-        .menu-lines::before,
-        .menu-lines::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background-color: currentColor;
-            left: 0;
-        }
-
-        .menu-lines::before {
-            top: -6px;
-        }
-
-        .menu-lines::after {
-            bottom: -6px;
-        }
+        /* CSS untuk drawer sudah di-handle di app.blade.php */
 
         .drawer-content {
             padding: 0;
-            height: calc(100vh - 80px);
+            height: 100vh;
             overflow-y: auto;
         }
 
@@ -259,33 +189,12 @@
         .drawer-item:nth-child(5) { animation-delay: 0.5s; }
         .drawer-item:nth-child(6) { animation-delay: 0.6s; }
 
-        /* Demo content area */
-        .main-content {
-            margin-left: 280px;
-            padding: 20px;
-            min-height: 100vh;
-            background-color: #f8fafc;
-        }
+        /* CSS responsive untuk drawer sudah di-handle di app.blade.php */
     </style>
 </head>
 <body>
 
-    <div class="drawer" id="drawer">
-        <div class="drawer-header" style="height: 80px; display: flex; flex-direction: row; align-items: center; justify-content: flex-start;">
-            <div class="logo" style="margin-right: 10px; margin-bottom: 0; width: 40px; height: 40px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" style="width: 40px; height: 40px;">
-            </div>
-            <div class="brand-info" style="display: flex; flex-direction: column;">
-                <h1 style="color: #fff; font-size: 20px; font-weight: 750; letter-spacing: 0.5px; margin: 0; line-height: 1.2;">Alternatif Coffee</h1>
-                <p style="color: #fff; font-size: 12px; margin: 0; opacity: 0.9; line-height: 1.2; text-align: start;">
-                    @auth
-                        {{ Auth::user()->name }}
-                    @else
-                        Guest
-                    @endauth
-                </p>
-            </div>
-        </div>
+   <div class="drawer" id="drawer">
         <div class="drawer-content">
             @auth
                 @if(Auth::user()->usertype == 'user')

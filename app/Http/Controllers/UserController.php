@@ -84,14 +84,14 @@ class UserController extends Controller
         }
     }
 
-    // public function dashboard()
-    // {
-    //     if (Auth::check() && Auth::user()->usertype == 'admin') {
-    //         return view('dashboard');
-    //     } else {
-    //         return redirect()->route('login');
-    //     }
-    // }
+    public function dashboard()
+    {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            return view('dashboard');
+        } else {
+            return redirect()->route('login');
+        }
+    }
 
     public function accountManagement()
     {

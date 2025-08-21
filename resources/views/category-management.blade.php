@@ -18,11 +18,16 @@
         }
 
         .category-section {
-            margin-left: 350px;
+            margin-left: 12rem;
             padding: 40px;
-            margin-top: -75px;
+            margin-top: -30px;
             max-width: 1100px;
             position: relative;
+        }
+
+        .container.drawer-open .category-section {
+            margin-left: 0px !important;
+            margin-right: 80px !important;
         }
 
         .section-header {
@@ -556,27 +561,31 @@
         .search-form {
             display: flex;
             align-items: center;
+            margin-left: -10px;
             gap: 16px;
             flex-wrap: wrap;
+            justify-content: space-between;
         }
 
-        .search-input-group {
+            .search-input-group {
             position: relative;
             flex: 1;
             min-width: 300px;
+            display: flex;
+            align-items: center;
         }
 
         .search-input {
-            width: 100%;
-            padding: 14px 50px 14px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 14px;
-            color: #374151;
-            background: #f8fafc;
-            transition: all 0.3s ease;
-            outline: none;
-        }
+        width: 100%;
+        padding: 14px 56px 14px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 14px;
+        color: #374151;
+        background: #f8fafc;
+        transition: all 0.3s ease;
+        outline: none;
+    }
 
         .search-input:focus {
             border-color: #2E4766;
@@ -589,22 +598,23 @@
         }
 
         .search-button {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
-            border: none;
-            border-radius: 8px;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        position: absolute;
+        right: -10px;
+        top: 20px;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(46, 71, 102, 0.2);
+    }
 
         .search-button:hover {
             background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);

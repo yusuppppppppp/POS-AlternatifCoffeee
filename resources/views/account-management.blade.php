@@ -5,11 +5,18 @@
 @section('content')
 <style>
     .account-section {
-        margin-left: 285px;
+        margin-left: 5.5rem;
+        margin-right: 5rem;
         padding: 0px 40px 40px 40px;
-        margin-top: -75px;
+        margin-top: 10px;
         max-width: 2100px;
     }
+
+    .container.drawer-open .account-section {
+        margin-left: 0px !important;
+        margin-right: 40px !important;
+    }
+
     .category-btn {
         background-color: #2d4a70;
         color: #fff;
