@@ -134,4 +134,24 @@ class MenuController extends Controller
 
         return response()->json($menu);
     }
+
+    public function toggleStatus(Request $request, $id)
+    {
+        $menu = Menu::findOrFail($id);
+        
+        $validator = Validator::make($request->all(), [
+            'is_active' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $menu->update([
+            'is_active' => $request->is_active
+        ]);
+
+        $status = $request->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        return response()->json(['message' => "Menu berhasil {$status}"], 200);
+    }
 }

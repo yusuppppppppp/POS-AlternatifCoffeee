@@ -32,6 +32,7 @@
         flex: 1;
         padding-left: 120px;
         margin-top: 60px;
+        min-height: calc(100vh - 80px);
         transition: all 0.3s ease;
     }
 
@@ -72,7 +73,7 @@
         z-index: 1;
     }
     .menu-search-input:focus {
-        border-color: #2563eb; /* blue-600 */
+        border-color: #2E4766; /* blue-600 */
         box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
     }
     .menu-search-input::placeholder { color: #94a3b8; } /* slate-400 */
@@ -86,7 +87,7 @@
         opacity: 1;
         pointer-events: none;
         z-index: 20 !important;
-        color: #2563eb;
+        color: #2E4766;
         font-size: 16px;
         line-height: 1;
     }
@@ -142,7 +143,12 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 20px;
         max-width: 100%;
+        min-height: 800px !important;
+        height: auto;
         transition: grid-template-columns 0.3s ease;
+        align-content: start;
+        grid-auto-rows: max-content;
+        grid-template-rows: repeat(auto-fit, minmax(250px, auto));
     }
 
     .container.drawer-open .menu-grid {
@@ -157,6 +163,27 @@
         cursor: pointer;
         transition: all 0.3s ease;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item.inactive {
+        background: rgba(200, 200, 200, 0.6);
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .menu-item.inactive img {
+        filter: grayscale(100%);
+    }
+
+    .menu-item.inactive h3,
+    .menu-item.inactive .price {
+        color: #9ca3af;
+    }
+
+    .menu-item.inactive .menu-add-btn {
+        background: rgba(156, 163, 175, 0.5);
+        cursor: not-allowed;
+        pointer-events: none;
     }
 
     .menu-item:hover {
@@ -405,6 +432,7 @@
         
         .menu-grid {
             grid-template-columns: repeat(3, 1fr) !important;
+            min-height: 800px !important;
         }
         
         /* Pastikan sidebar tidak mempengaruhi layout di mobile */
@@ -416,6 +444,7 @@
     @media (max-width: 768px) {
         .menu-grid {
             grid-template-columns: repeat(2, 1fr) !important;
+            min-height: 600px !important;
         }
         
         .category-filters {
@@ -432,6 +461,7 @@
     @media (max-width: 480px) {
         .menu-grid {
             grid-template-columns: 1fr !important;
+            min-height: 500px !important;
         }
         
         .container {
@@ -804,7 +834,7 @@
         background: #fff;
         padding: 10px 0 10px 0;
         margin-bottom: 10px;
-        max-height: 180px;
+        max-height: 200px;
         overflow-y: auto;
     }
     #payment-items {
@@ -890,6 +920,36 @@
 
     @media (max-width: 400px) {
         .payment-modal-content { width: 98vw; padding: 10px 2vw; }
+    }
+
+    /* Payment Modal Close Icon */
+    .payment-close-icon {
+        position: absolute;
+        top: -15px;
+        left: 280px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(44, 62, 80, 0.1);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2c3e50;
+        font-size: 20px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .payment-close-icon:hover {
+        background: rgba(44, 62, 80, 0.2);
+        color: #1a252f;
+    }
+
+    .payment-modal-content {
+        position: relative;
     }
 
     .receipt-paper {
@@ -1028,6 +1088,7 @@
 <!-- Payment Modal -->
 <div id="paymentModal" class="payment-modal" style="display:none; margin-top: -80px;">
     <div class="payment-modal-content">
+        <button class="payment-close-icon" onclick="closePaymentModal()">×</button>
         <div class="payment-header">
             <div class="user-info">
                 <label for="customerNameInput" class="input-label">
@@ -1174,6 +1235,51 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
             });
     }
 
+    function renderAllMenuItems() {
+        const grid = document.getElementById('menuGrid');
+        grid.innerHTML = '';
+        
+        const escapeHtml = (unsafe) => {
+            if (unsafe == null) return '';
+            return String(unsafe)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        allMenus.forEach((menu, index) => {
+            const el = document.createElement('div');
+            el.className = menu.is_active ? 'menu-item' : 'menu-item inactive';
+            el.setAttribute('data-menu-id', menu.id);
+            el.setAttribute('data-category', menu.category ? menu.category.name : '');
+            el.setAttribute('data-name', menu.name.toLowerCase());
+            
+            if (menu.is_active) {
+                el.onclick = () => addToCart(menu.name, menu.price, menu.image_url);
+            } else {
+                el.onclick = () => {
+                    alert('Menu ini sedang tidak tersedia');
+                };
+            }
+            
+            const nameEsc = escapeHtml(menu.name);
+            el.innerHTML = `
+                <img src="${menu.image_url}" alt="${menu.name}">
+                <div class="menu-item-info">
+                    <h3>${nameEsc}</h3>
+                    <div class="price-row">
+                        <p class="price">Rp. ${parseInt(menu.price).toLocaleString()}</p>
+                        <button class="menu-add-btn" ${!menu.is_active ? 'disabled' : ''}>+</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(el);
+        });
+        menuItemsRendered = true;
+    }
+
     function renderMenuItems(menus, searchTerm = '') {
         const grid = document.getElementById('menuGrid');
         grid.innerHTML = '';
@@ -1200,8 +1306,16 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
 
         menus.forEach(menu => {
             const el = document.createElement('div');
-            el.className = 'menu-item';
-            el.onclick = () => addToCart(menu.name, menu.price, menu.image_url);
+            el.className = menu.is_active ? 'menu-item' : 'menu-item inactive';
+            
+            if (menu.is_active) {
+                el.onclick = () => addToCart(menu.name, menu.price, menu.image_url);
+            } else {
+                el.onclick = () => {
+                    alert('Menu ini sedang tidak tersedia');
+                };
+            }
+            
             const nameEsc = escapeHtml(menu.name);
             let nameHtml = nameEsc;
             el.innerHTML = `
@@ -1210,7 +1324,7 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
                     <h3>${nameHtml}</h3>
                     <div class="price-row">
                         <p class="price">Rp. ${parseInt(menu.price).toLocaleString()}</p>
-                        <button class="menu-add-btn">+</button>
+                        <button class="menu-add-btn" ${!menu.is_active ? 'disabled' : ''}>+</button>
                     </div>
                 </div>
             `;
@@ -1249,7 +1363,15 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
             const textOk = !search || (menu.name && menu.name.toLowerCase().includes(search));
             return categoryOk && textOk;
         });
-        renderMenuItems(filtered, search);
+        
+        // Sort menus: active first, then inactive
+        const sorted = filtered.sort((a, b) => {
+            if (a.is_active && !b.is_active) return -1;
+            if (!a.is_active && b.is_active) return 1;
+            return 0;
+        });
+        
+        renderMenuItems(sorted, search);
         const countEl = document.getElementById('menuResultCount');
         if (countEl) {
             const base = `${filtered.length} menu`;
@@ -1661,6 +1783,29 @@ function printReceiptFromModal() {
 function closeReceiptModal() {
     document.getElementById('receiptModal').style.display = 'none';
     window.location.reload(); // refresh setelah tutup modal
+}
+
+function closePaymentModal() {
+    // Reset cart
+    cart = {};
+    totalAmount = 0;
+    updateBillDisplay();
+    
+    // Reset payment modal inputs
+    document.getElementById('customerNameInput').value = '';
+    document.getElementById('cashInput').value = '';
+    cashValue = '';
+    document.getElementById('payment-balance').textContent = '';
+    
+    // Reset payment type to default (Dine in)
+    document.getElementById('dineInBtn').classList.add('active');
+    document.getElementById('takeAwayBtn').classList.remove('active');
+    
+    // Hide payment modal
+    document.getElementById('paymentModal').style.display = 'none';
+    
+    // Show bills section again
+    document.querySelector('.bills-section').style.display = 'block';
 }
 
 window.onload = function() {

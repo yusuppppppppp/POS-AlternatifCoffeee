@@ -27,6 +27,7 @@ Route::middleware(['auth', 'prevent.back.history'])->group(function () {
     Route::get('/menu-management', [MenuController::class, 'index'])->name('menu-management');
     Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
     Route::put('/menus/{id}', [MenuController::class, 'update'])->name('menus.update'); 
+    Route::patch('/menus/{id}/toggle-status', [MenuController::class, 'toggleStatus'])->name('menus.toggle-status');
     Route::delete('/menus/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
 
     // Category Management

@@ -231,7 +231,7 @@
             gap: 8px;
         }
 
-        .edit-btn, .delete-btn {
+        .edit-btn, .delete-btn, .active-btn, .inactive-btn {
             border: none;
             padding: 10px;
             border-radius: 12px;
@@ -275,6 +275,36 @@
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
             color: white;
             box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .active-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #059669;
+            box-shadow: 
+                0 4px 12px rgba(5, 150, 105, 0.2),
+                0 0 0 1px rgba(5, 150, 105, 0.1);
+        }
+
+        .inactive-btn {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #6b7280;
+            box-shadow: 
+                0 4px 12px rgba(107, 114, 128, 0.2),
+                0 0 0 1px rgba(107, 114, 128, 0.1);
+        }
+
+        .active-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.3);
+        }
+
+        .inactive-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
         }
 
         .modal {
@@ -681,7 +711,7 @@
                 gap: 4px;
             }
             
-            .edit-btn, .delete-btn {
+            .edit-btn, .delete-btn, .active-btn, .inactive-btn {
                 width: 32px;
                 height: 32px;
             }
@@ -952,6 +982,7 @@
                     <th>Preview</th>
                     <th>Price</th>
                     <th>Category</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -964,10 +995,28 @@
                     <td class="menu-price">Rp. {{ number_format($menu->price, 0, ',', '.') }}</td>
                     <td><span class="menu-category">{{ $menu->category ? $menu->category->name : 'No Category' }}</span></td>
                     <td>
+                        <span class="menu-category" style="background: {{ $menu->is_active ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #059669;' : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); color: #6b7280;' }}">
+                            {{ $menu->is_active ? 'Active' : 'Inactive' }}
+                        </span>
+                    </td>
+                    <td>
                         <div class="action-buttons">
                             <button class="edit-btn" onclick="showModal('edit', '{{ $menu->id }}')">
                                 <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:18px;width:18px;">
                             </button>
+                            @if($menu->is_active)
+                                <button class="active-btn" onclick="toggleMenuStatus('{{ $menu->id }}', false)" title="Set Inactive">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#059669">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </button>
+                            @else
+                                <button class="inactive-btn" onclick="toggleMenuStatus('{{ $menu->id }}', true)" title="Set Active">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7 13l3 3 7-7-1.41-1.42L10 13.17l-1.59-1.58L7 13z"/>
+                                    </svg>
+                                </button>
+                            @endif
                             <button class="delete-btn" onclick="deleteMenu('{{ $menu->id }}')">
                                 <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:18px;width:18px;">
                             </button>
@@ -1189,6 +1238,28 @@ function deleteMenu(id) {
     })
     .then(res => {
         if (!res.ok) throw new Error('Gagal hapus');
+        location.reload();
+    })
+    .catch(err => alert(err.message));
+}
+
+function toggleMenuStatus(id, isActive) {
+    const action = isActive ? 'mengaktifkan' : 'menonaktifkan';
+    if (!confirm(`Yakin ${action} menu ini?`)) return;
+
+    fetch('/menus/' + id + '/toggle-status', {
+        method: 'PATCH',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            is_active: isActive
+        })
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Gagal mengubah status menu');
         location.reload();
     })
     .catch(err => alert(err.message));

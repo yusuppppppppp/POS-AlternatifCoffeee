@@ -16,10 +16,12 @@ class Menu extends Model
         'price',
         'category_id',
         'image_path', // kolom ini menyimpan path di storage/public
+        'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'is_active' => 'boolean',
     ];
 
     // Tambahkan accessor agar bisa akses menu.image_url
