@@ -275,7 +275,7 @@
             padding: 40px;
             width: 90%;
             max-width: 500px;
-            margin: 5vh auto;
+            margin: 33vh auto;
             border-radius: 24px;
             box-shadow: 
                 0 25px 50px rgba(46, 71, 102, 0.25),
@@ -284,6 +284,11 @@
             animation: slideUp 0.4s ease-out;
             max-height: 90vh;
             overflow-y: auto;
+        }
+
+        .container.drawer-open .modal-content {
+            margin-left: auto;
+            margin-right: 380px;
         }
 
         .modal-header {

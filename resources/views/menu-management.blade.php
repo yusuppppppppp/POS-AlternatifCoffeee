@@ -341,15 +341,23 @@
             padding: 40px;
             width: 90%;
             max-width: 500px;
-            margin: 5vh auto;
+            margin: 15vh auto;
             border-radius: 24px;
             box-shadow: 
                 0 25px 50px rgba(46, 71, 102, 0.25),
                 0 0 0 1px rgba(255, 255, 255, 0.1);
             position: relative;
             animation: slideUp 0.4s ease-out;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            transition: margin 0.3s ease;
+        }
+
+        .container.drawer-open .modal-content {
+            margin-left: auto;
+            margin-right: 400px;
         }
 
         .modal-header {
@@ -370,6 +378,30 @@
             height: 2px;
             background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
             border-radius: 1px;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         .modal-title {
@@ -433,6 +465,7 @@
 
         .file-input-wrapper {
             position: relative;
+            margin-top: -50px;
         }
 
         .file-input {
@@ -462,12 +495,6 @@
         .file-input:focus + .file-input-label {
             border-color: #2E4766;
             box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
-        }
-
-        .file-input-label::before {
-            content: '📁';
-            margin-right: 8px;
-            font-size: 16px;
         }
 
         .file-input:valid + .file-input-label {
@@ -1084,7 +1111,7 @@
                     <div class="file-input-wrapper">
                         <input type="file" name="image" id="image" accept="image/*" class="file-input">
                         <label for="image" class="file-input-label">
-                            Choose file or drag and drop
+                            Choose file
                         </label>
                     </div>
                 </div>

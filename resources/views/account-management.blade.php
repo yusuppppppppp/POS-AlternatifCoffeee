@@ -4,162 +4,447 @@
 
 @section('content')
 <style>
-    .account-section {
-        margin-left: 5.5rem;
-        margin-right: 5rem;
-        padding: 0px 40px 40px 40px;
-        margin-top: 10px;
-        max-width: 2100px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .container.drawer-open .account-section {
-        margin-left: 0px !important;
-        margin-right: 40px !important;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #334155;
+        }
 
-    .category-btn {
-        background-color: #2d4a70;
-        color: #fff;
-        border: none;
-        padding: 12px 28px;
-        border-radius: 10px;
-        font-size: 15px;
-        cursor: pointer;
-        margin-bottom: 28px;
-        margin-left: 0;
-        font-weight: 500;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 16px rgba(44, 74, 112, 0.18), 0 1.5px 4px rgba(44,74,112,0.10);
-    }
-    .category-btn:hover {
-        background-color: #1c3552;
-    }
-    .account-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background-color: #fff;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
-        border-radius: 16px;
-        overflow: hidden;
-    }
-    .account-table th, .account-table td {
-        padding: 18px 18px;
-        text-align: left;
-    }
-    .account-table th {
-        background-color: #f7f9fb;
-        font-weight: 700;
-        color: #2d4a70;
-        font-size: 15px;
-        border-bottom: 2px solid #eaeaea;
-    }
-    .account-table tbody tr {
-        border-bottom: 1px solid #f0f0f0;
-    }
-    .account-table tbody tr:last-child {
-        border-bottom: none;
-    }
-    .account-table tbody tr:nth-child(even) {
-        background-color: #fcfdff;
-    }
-    .edit-btn, .delete-btn {
-        border: none;
-        padding: 7px 11px;
-        border-radius: 7px;
-        font-size: 18px;
-        cursor: pointer;
-        margin-right: 4px;
-        transition: background 0.2s, color 0.2s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .edit-btn {
-        background-color: #fffbe6;
-        color: #f0ad4e;
-        border: 1px solid #ffe6a1;
-    }
-    .delete-btn {
-        background-color: #fff0f0;
-        color: #d9534f;
-        border: 1px solid #ffd6d6;
-    }
-    .edit-btn:hover {
-        background-color: #ffe6a1;
-        color: #fff;
-    }
-    .delete-btn:hover {
-        background-color: #ffd6d6;
-        color: #fff;
-    }
-    .modal {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.4);
-        z-index: 1000;
-    }
-    .modal-content {
-        background: white;
-        padding: 25px;
-        width: 90%;
-        max-width: 500px;
-        margin: 80px auto;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        position: relative;
-    }
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-    .close-btn {
-        font-size: 24px;
-        cursor: pointer;
-        color: #aaa;
-    }
-    .close-btn:hover {
-        color: #000;
-    }
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        font-weight: 600;
-        display: block;
-        margin-bottom: 5px;
-    }
-    .form-group input {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-    }
-    #modalSubmitBtn {
-        background-color: #3d5a80;
-        color: white;
-        border: none;
-        padding: 10px;
-        border-radius: 6px;
-        width: 100%;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    #modalSubmitBtn:hover {
-        background-color: #2d4a70;
-    }
-    #errorMessage {
-        margin-top: 10px;
-        color: red;
-        font-size: 14px;
-    }
+        .account-section {
+            margin-left: 12rem;
+            padding: 40px;
+            margin-top: -30px;
+            max-width: 1100px;
+            position: relative;
+        }
+
+        .container.drawer-open .account-section {
+            margin-left: 0px !important;
+            margin-right: 80px !important;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            box-shadow: 
+                0 20px 40px rgba(46, 71, 102, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.6;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-btn {
+            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+            color: #fff;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 32px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 
+                0 8px 25px rgba(46, 71, 102, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-btn:hover::before {
+            left: 100%;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(46, 71, 102, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .category-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .category-btn-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.08),
+                0 0 0 1px rgba(226, 232, 240, 0.5);
+            border: 1px solid rgba(226, 232, 240, 0.3);
+        }
+
+        .account-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .account-table th {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 24px 20px;
+            text-align: left;
+            font-weight: 700;
+            color: #2E4766;
+            font-size: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .account-table th:first-child {
+            border-top-left-radius: 20px;
+        }
+
+        .account-table th:last-child {
+            border-top-right-radius: 20px;
+        }
+
+        .account-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .account-table tbody tr:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(46, 71, 102, 0.1);
+        }
+
+        .account-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .account-table td {
+            padding: 20px;
+            vertical-align: middle;
+            color: #475569;
+            font-weight: 500;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn, .delete-btn {
+            border: none;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #f59e0b;
+            box-shadow: 
+                0 4px 12px rgba(245, 158, 11, 0.2),
+                0 0 0 1px rgba(245, 158, 11, 0.1);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+            box-shadow: 
+                0 4px 12px rgba(220, 38, 38, 0.2),
+                0 0 0 1px rgba(220, 38, 38, 0.1);
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(46, 71, 102, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 3000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            margin: 19vh auto;
+            border-radius: 24px;
+            box-shadow: 
+                0 25px 50px rgba(46, 71, 102, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: slideUp 0.4s ease-out;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            transition: margin 0.3s ease;
+        }
+
+        .container.drawer-open .modal-content {
+            margin-left: auto;
+            margin-right: 360px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .modal-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
+            border-radius: 1px;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .modal-title {
+            color: #2E4766;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: rgba(46, 71, 102, 0.1);
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            color: #2E4766;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(46, 71, 102, 0.2);
+            transform: rotate(90deg);
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2E4766;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #2E4766;
+            box-shadow: 
+                0 0 0 3px rgba(46, 71, 102, 0.1),
+                0 4px 12px rgba(46, 71, 102, 0.1);
+            transform: translateY(-1px);
+        }
+        #modalSubmitBtn {
+            background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 15px rgba(46, 71, 102, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #modalSubmitBtn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        #modalSubmitBtn:hover::before {
+            left: 100%;
+        }
+
+        #modalSubmitBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(46, 71, 102, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        #modalSubmitBtn:active {
+            transform: translateY(0);
+        }
+
+        #modalSubmitBtn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #errorMessage {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #fca5a5;
+            display: none;
+        }
     .pagination-container {
         margin-top: 20px;
         display: flex;
@@ -221,11 +506,20 @@
 </style>
 
 <div class="account-section">
+    <div class="section-header">
+        <h1 class="section-title">Account Management</h1>
+        <p class="section-subtitle">Manage user accounts and permissions</p>
+    </div>
+    
     <button class="category-btn" onclick="openModal('add')">
-        Add Account <img src="{{ asset('images/tambah.png') }}" alt="Add" style="height:22px;width:22px;margin-right:0px;vertical-align:middle;">
+        <div class="category-btn-icon">+</div>
+        Add Account
     </button>
+    
     <div id="alert" class="alert" style="display:none;"></div>
-    <table class="account-table">
+    
+    <div class="table-container">
+        <table class="account-table">
         <thead>
             <tr>
                 <th>Name</th>
@@ -241,12 +535,14 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ str_repeat('*', 8) }}</td>
                 <td>
-                    <button class="edit-btn" onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
-                        <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:20px;width:20px;vertical-align:middle;">
-                    </button>
-                    <button class="delete-btn" onclick="deleteUser({{ $user->id }})">
-                        <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:20px;width:20px;vertical-align:middle;">
-                    </button>
+                    <div class="action-buttons">
+                        <button class="edit-btn" onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
+                            <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:18px;width:18px;">
+                        </button>
+                        <button class="delete-btn" onclick="deleteUser({{ $user->id }})">
+                            <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:18px;width:18px;">
+                        </button>
+                    </div>
                 </td>
             </tr>
             @empty
@@ -257,7 +553,8 @@
             </tr>
             @endforelse
         </tbody>
-    </table>
+        </table>
+    </div>
     <div class="pagination-container">
         {{ $users->links() }}
     </div>
@@ -267,8 +564,8 @@
 <div id="userModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalTitle">Add Account</h2>
-            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title" id="modalTitle">Add Account</h2>
+            <button class="close-btn" onclick="closeModal()">×</button>
         </div>
         <div class="modal-body">
             <form id="userForm">
