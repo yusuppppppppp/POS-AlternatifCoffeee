@@ -496,7 +496,7 @@
             border-color: #2E4766;
             box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
         }
-
+ 
         .file-input:valid + .file-input-label {
             border-color: #059669;
             background: rgba(5, 150, 105, 0.05);
@@ -766,29 +766,15 @@
         }
 
         /* Search Form Styles */
-        .search-container {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 
-                0 4px 20px rgba(0, 0, 0, 0.06),
-                0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(226, 232, 240, 0.4);
-            margin-bottom: 24px;
-        }
-
         .search-form {
             display: flex;
             align-items: center;
-            margin-left: -10px;
             gap: 16px;
             flex-wrap: wrap;
-            justify-content: space-between;
         }
 
-            .search-input-group {
+        .search-input-group {
             position: relative;
-            flex: 1;
             min-width: 300px;
             display: flex;
             align-items: center;
@@ -874,12 +860,22 @@
                 0 4px 20px rgba(0, 0, 0, 0.06),
                 0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(226, 232, 240, 0.4);
+            margin-bottom: 24px;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .category-filters {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            flex: 1;
         }
 
         .category-filter-btn {
@@ -921,21 +917,23 @@
 
         /* Responsive Design for Search */
         @media (max-width: 900px) {
-            .search-container {
+            .category-filters-container {
                 margin: 0 20px 24px 20px;
             }
             
-            .search-form {
+            .menu-header {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 16px;
+            }
+            
+            .search-form {
+                justify-content: center;
             }
             
             .search-input-group {
                 min-width: auto;
-            }
-            
-            .category-filters-container {
-                margin: 0 20px 24px 20px;
+                flex: 1;
             }
             
             .category-filters {
@@ -960,44 +958,43 @@
         Add New Menu
     </button>
     
-    <!-- Category Filters -->
-    <div class="category-filters-container" style="margin-bottom: 24px;">
-        <div class="category-filters">
-            <button class="category-filter-btn {{ !$category || $category === 'All' ? 'active' : '' }}" onclick="filterByCategory('All')">
-                All Category
-            </button>
-            @foreach($categories as $cat)
-            <button class="category-filter-btn {{ $category === $cat->name ? 'active' : '' }}" onclick="filterByCategory('{{ $cat->name }}')">
-                {{ $cat->name }}
-            </button>
-            @endforeach
-        </div>
-    </div>
-    
-    <!-- Search Form -->
-    <div class="search-container">
-        <form method="GET" action="{{ route('menu-management') }}" class="search-form">
-            <div class="search-input-group">
-                <input 
-                    type="text" 
-                    name="search" 
-                    value="{{ $search ?? '' }}" 
-                    placeholder="Cari berdasarkan nama menu, kategori, atau harga..."
-                    class="search-input"
-                >
-                <button type="submit" class="search-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+    <!-- Menu Header with Category Filters and Search -->
+    <div class="category-filters-container">
+        <div class="menu-header">
+            <div class="category-filters">
+                <button class="category-filter-btn {{ !$category || $category === 'All' ? 'active' : '' }}" onclick="filterByCategory('All')">
+                    All Category
                 </button>
+                @foreach($categories as $cat)
+                <button class="category-filter-btn {{ $category === $cat->name ? 'active' : '' }}" onclick="filterByCategory('{{ $cat->name }}')">
+                    {{ $cat->name }}
+                </button>
+                @endforeach
             </div>
-            @if(!empty($search ?? ''))
-                <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search">Clear Search</a>
-            @endif
-            @if($category && $category !== 'All')
-                <input type="hidden" name="category" value="{{ $category }}">
-            @endif
-        </form>
+            
+            <form method="GET" action="{{ route('menu-management') }}" class="search-form">
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ $search ?? '' }}" 
+                        placeholder="Cari berdasarkan nama menu, kategori, atau harga..."
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                @if(!empty($search ?? ''))
+                    <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search">Clear Search</a>
+                @endif
+                @if($category && $category !== 'All')
+                    <input type="hidden" name="category" value="{{ $category }}">
+                @endif
+            </form>
+        </div>
     </div>
     
     <div class="table-container">

@@ -30,14 +30,21 @@
     /* Menu Section */
     .menu-section {
         flex: 1;
-        padding-left: 120px;
+        padding-left: 50px;
         margin-top: 60px;
+        min-width: 65rem;
         min-height: calc(100vh - 80px);
         transition: all 0.3s ease;
     }
 
     .container.drawer-open .menu-section {
-        margin-left: -165px;
+        margin-left: -8rem;
+        min-width: 55rem;
+    }
+
+    .container.drawer-open .menu-search-input {
+        max-width: 200px;
+        transition: max-width 0.3s ease;
     }
 
     .category-filters {
