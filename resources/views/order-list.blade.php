@@ -618,7 +618,7 @@
 <div class="order-container">
     <!-- Enhanced Header -->
     <div class="page-header">
-        <h2 class="page-title">History Pembelian</h2>
+        <h2 class="page-title">Order List</h2>
         <p class="page-subtitle">Kelola dan pantau semua transaksi penjualan</p>
         <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
     </div>
