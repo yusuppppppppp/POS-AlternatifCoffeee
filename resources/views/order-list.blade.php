@@ -619,7 +619,7 @@
     <!-- Enhanced Header -->
     <div class="page-header">
         <h2 class="page-title">Order List</h2>
-        <p class="page-subtitle">Kelola dan pantau semua transaksi penjualan</p>
+        <p class="page-subtitle">Manage and monitor all sales transactions</p>
         <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
     </div>
 
