@@ -204,8 +204,8 @@
     }
 
     .info-icon:hover {
-        border-color: #007bff;
-        color: #007bff;
+        border-color: #2E4766;
+        color: #2E4766;
         background-color: #f0f8ff;
     }
     
@@ -308,21 +308,51 @@
     }
     
     
+    /* Simplified Order Details Section */
     .order-details {
         display: none;
         padding: 20px;
         background-color: #f8f9fa;
-        border-top: 1px solid #e9ecef;
+        border-top: 2px solid #2E4766;
+        border-bottom: 1px solid #e9ecef;
     }
 
     .order-details.show {
         display: block;
     }
 
-    .order-details h4 {
+    .customer-info {
         margin-bottom: 15px;
-        color: #495057;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        border-left: 4px solid #2E4766;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .customer-info h4 {
+        margin-bottom: 10px;
+        color: #2E4766;
         font-size: 16px;
+        font-weight: 600;
+    }
+
+    .customer-info p {
+        margin: 5px 0;
+        color: #495057;
+        font-size: 14px;
+    }
+
+    .customer-info p strong {
+        color: #2E4766;
+        font-weight: 600;
+    }
+
+    .order-details h4 {
+        margin-bottom: 10px;
+        color: #2E4766;
+        font-size: 16px;
+        font-weight: 600;
     }
 
     .order-details ul {
@@ -332,26 +362,36 @@
     }
 
     .order-details li {
-        padding: 8px 0;
-        border-bottom: 1px solid #dee2e6;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        background-color: #fff;
+        border-radius: 6px;
+        border-left: 3px solid #2E4766;
         color: #495057;
+        font-size: 14px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .order-details li:last-child {
-        border-bottom: none;
+        margin-bottom: 0;
     }
 
-    .customer-info {
-        margin-bottom: 15px;
-        padding: 10px;
-        background-color: #fff;
-        border-radius: 6px;
-        border-left: 3px solid #007bff;
+    .item-quantity {
+        background: #2E4766;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 8px;
     }
 
-    .customer-info p {
-        margin: 5px 0;
-        color: #495057;
+    .item-price {
+        color: #2E4766;
+        font-weight: 600;
     }
 
     /* Search Container */
@@ -914,17 +954,26 @@
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
                     <div class="info-icon">i</div>
                 </div>
+                <!-- Simplified order details -->
                 <div class="order-details" id="details-{{ $index }}">
                     <div class="customer-info">
+                        <h4>Customer Information</h4>
                         <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
-                        <p><strong>Type:</strong> {{ $order->order_type }}</p>
-                        <p><strong>Waktu:</strong> {{ $order->created_at->format('h:i:s A') }}</p>
-                        <p><strong>Kasir:</strong> {{ $order->user ? $order->user->name : 'Unknown' }}</p>
+                        <p><strong>Type:</strong> {{ ucfirst($order->order_type) }}</p>
+                        <p><strong>Time:</strong> {{ $order->created_at->format('h:i:s A') }}</p>
+                        <p><strong>Cashier:</strong> {{ $order->user ? $order->user->name : 'Unknown' }}</p>
                     </div>
+                    
                     <h4>Items Ordered:</h4>
                     <ul>
                         @foreach($order->items as $item)
-                            <li>{{ $item->quantity }}x {{ $item->menu_name }} - Rp. {{ number_format($item->price, 0, ',', '.') }}</li>
+                            <li>
+                                <span>
+                                    <span class="item-quantity">{{ $item->quantity }}x</span>
+                                    {{ $item->menu_name }}
+                                </span>
+                                <span class="item-price">Rp. {{ number_format($item->price, 0, ',', '.') }}</span>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

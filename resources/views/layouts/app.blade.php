@@ -86,8 +86,8 @@
         }
 
         .logo {
-            width: 40px;
-            height: 40px;
+            width: 37px;
+            height: 37px;
             margin-right: 15px;
             background-color: white;
             border-radius: 50%;
@@ -98,8 +98,9 @@
         }
 
         .logo img {
-            width: 30px;
-            height: 30px;
+            width: 43px;
+            height: 43px;
+            margin-top: -2px;
             object-fit: contain;
         }
 

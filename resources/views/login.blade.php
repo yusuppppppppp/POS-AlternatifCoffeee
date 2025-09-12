@@ -73,6 +73,7 @@
         .logo img {
             width: 90px;
             height: 90px;
+            margin-top: -2px;
             object-fit: contain;
         }
 

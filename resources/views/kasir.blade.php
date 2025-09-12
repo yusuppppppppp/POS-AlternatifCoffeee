@@ -308,7 +308,7 @@
         margin-bottom: 15px;
         padding: 10px;
         border-radius: 10px;
-        background:rgba(46, 71, 102, 0.18);
+        background:rgba(85, 118, 158, 0.23);
     }
 
     .quantity-controls {
