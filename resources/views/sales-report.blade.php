@@ -394,6 +394,337 @@
         font-weight: 600;
     }
 
+    /* Print Receipt Button Styles */
+    .print-receipt-section {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #e2e8f0;
+        text-align: end;
+    }
+
+    .print-receipt-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        color: white;
+        border: none;
+        border-radius: 7px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(46, 71, 102, 0.3);
+    }
+
+    .print-receipt-btn:hover {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(46, 71, 102, 0.4);
+    }
+
+    .print-receipt-btn:active {
+        transform: translateY(0);
+    }
+
+    /* Receipt Modal Styles */
+    #receiptModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(46, 71, 102, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 3000;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .modal-container {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border-radius: 24px;
+        margin-top: 70px;
+        padding: 40px 32px;
+        min-width: 380px;
+        max-width: 90vw;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 
+            0 25px 50px rgba(46, 71, 102, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        animation: slideUp 0.4s ease-out;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .modal-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .modal-header {
+        text-align: center;
+        margin-bottom: 32px;
+        position: relative;
+    }
+
+    .modal-header::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #2E4766, #4a6b8a);
+        border-radius: 2px;
+    }
+
+    .modal-title {
+        color: #2E4766;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        margin-bottom: 8px;
+    }
+
+    .modal-subtitle {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    #receiptModalContent {
+        background: #fff;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: inset 0 2px 4px rgba(46, 71, 102, 0.05);
+        min-height: 200px;
+        position: relative;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    #receiptModalContent::-webkit-scrollbar {
+        display: none;
+    }
+
+    #receiptModalContent::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
+        overflow-y: auto;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .modal-button {
+        padding: 14px 0;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modal-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .modal-button:hover::before {
+        left: 100%;
+    }
+
+    .print-button {
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        color: #fff;
+        box-shadow: 
+            0 4px 15px rgba(46, 71, 102, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .print-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 6px 20px rgba(46, 71, 102, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .print-button:active {
+        transform: translateY(0);
+    }
+
+    .close-button {
+        background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        color: #fff;
+        box-shadow: 
+            0 4px 15px rgba(100, 116, 139, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .close-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 6px 20px rgba(100, 116, 139, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        background: linear-gradient(135deg, #475569 0%, #334155 100%);
+    }
+
+    .close-button:active {
+        transform: translateY(0);
+    }
+
+    .close-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(46, 71, 102, 0.1);
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2E4766;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+    .close-icon:hover {
+        background: rgba(46, 71, 102, 0.2);
+        transform: rotate(90deg);
+    }
+
+    .receipt-paper {
+        font-family: 'Courier New', monospace;
+        width: 270px;
+        margin: 0 auto;
+        font-size: 10px;
+        line-height: 1.2;
+        color: #2E4766;
+    }
+
+    .receipt-paper h2 {
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        margin: 0 0 5px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .receipt-paper hr {
+        border: none;
+        border-top: 1px dashed #000;
+        margin: 4px 0;
+    }
+
+    .receipt-paper .line {
+        display: flex;
+        justify-content: space-between;
+        padding: 1px 0;
+        font-size: 10px;
+        border-bottom: 1px dotted #000;
+    }
+
+    .receipt-paper .line:last-child {
+        border-bottom: none;
+    }
+
+    .receipt-paper .datetime {
+        text-align: center;
+        font-size: 9px;
+        margin: 4px 0 0 0;
+        color: #444;
+        font-style: italic;
+    }
+
+    #receiptItems {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #receiptItems li {
+        margin: 2px 0;
+    }
+
+    #receiptItems .line {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    #receiptItems .item-info {
+        flex: 1;
+        text-align: left;
+    }
+
+    #receiptItems .item-price {
+        text-align: right;
+        min-width: 80px;
+    }
+
+    .receipt-address {
+        text-align: center;
+        font-size: 10px;
+        margin: 2px 0;
+    }
+
+    .receipt-instagram {
+        text-align: center;
+        font-size: 10px;
+        margin: 2px 0 20px 0;
+        font-style: italic;
+    }
+
     /* Search Container */
     .search-container {
         background: white;
@@ -847,7 +1178,7 @@
     <!-- Enhanced Header -->
     <div class="page-header">
         <h2 class="page-title">Sales Report</h2>
-        <p class="page-subtitle">Kelola dan pantau semua transaksi penjualan</p>
+        <p class="page-subtitle">Manage and monitor all sales transactions</p>
     </div>
 
     <!-- Stats Cards -->
@@ -869,9 +1200,9 @@
             <div class="period-selector">
                 <label for="period">Period:</label>
                 <select name="period" id="period">
-                    <option value="today">Hari Ini</option>
-                    <option value="week">Minggu Ini</option>
-                    <option value="month">Bulan Ini</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
                     <option value="custom">Custom Range</option>
                 </select>
             </div>
@@ -898,15 +1229,45 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="filter-section">
-        <h4>Filter Options</h4>
-        <form method="GET" class="filter-form">
-            <input type="date" name="date" value="{{ request('date') }}" placeholder="Tanggal">
+    <div class="pdf-download-section">
+        <h3>Filter Options</h3>
+        <form method="GET" class="pdf-download-form">
+            <div class="period-selector">
+                <label for="filter_type">Filter Type:</label>
+                <select name="filter_type" id="filter_type">
+                    <option value="single" {{ request('filter_type', 'single') == 'single' ? 'selected' : '' }}>Single Date</option>
+                    <option value="range" {{ request('filter_type') == 'range' ? 'selected' : '' }}>Date Range</option>
+                </select>
+            </div>
+            
+            <div class="single-date-filter" id="singleDateFilter" style="{{ request('filter_type') == 'range' ? 'display: none;' : 'display: flex;' }} gap: 8px; align-items: center;">
+                <input type="date" name="date" value="{{ request('date') }}" placeholder="Tanggal">
+            </div>
+            
+            <div class="custom-date-range" id="dateRangeFilter" style="{{ request('filter_type') == 'range' ? 'display: flex;' : 'display: none;' }}">
+                <input type="date" name="start_date" value="{{ request('start_date') }}" placeholder="Tanggal Mulai">
+                <span>to</span>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" placeholder="Tanggal Akhir">
+            </div>
+            
             @if(!empty($search ?? ''))
                 <input type="hidden" name="search" value="{{ $search }}">
             @endif
-            <button type="submit">Filter</button>
-            <a href="{{ route('sales-report') }}" class="reset-btn">Reset</a>
+            
+            <button type="submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 12H16M8 8H16M8 16H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Apply Filter
+            </button>
+            
+            <a href="{{ route('sales-report') }}" style="padding: 12px 24px; background: #f3f4f6; color: #6b7280; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; border: 1px solid #d1d5db; display: inline-flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Reset
+            </a>
         </form>
     </div>
     
@@ -918,7 +1279,7 @@
                     type="text" 
                     name="search" 
                     value="{{ $search ?? '' }}" 
-                    placeholder="Cari berdasarkan nama customer, tipe order, ID, total amount, nama kasir, atau nama menu..."
+                    placeholder="Search by customer name, order type, ID, total amount, cashier name, or menu name..."
                     class="search-input"
                 >
                 <button type="submit" class="search-button">
@@ -976,6 +1337,19 @@
                             </li>
                         @endforeach
                     </ul>
+                    
+                    <!-- Print Receipt Button -->
+                    <div class="print-receipt-section">
+                        <button class="print-receipt-btn" onclick="printReceiptDirectly({{ $order->id }})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 9V2C6 1.44772 6.44772 1 7 1H17C17.5523 1 18 1.44772 18 2V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 18H4C3.44772 18 3 17.5523 3 17V11C3 10.4477 3.44772 10 4 10H20C20.5523 10 21 10.4477 21 11V17C21 17.5523 20.5523 18 20 18H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M18 14H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 14C6 13.4477 6.44772 13 7 13H17C17.5523 13 18 13.4477 18 14V20C18 20.5523 17.5523 21 17 21H7C6.44772 21 6 20.5523 6 20V14Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Print Receipt
+                        </button>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -999,7 +1373,14 @@
          </div>
          
          <div class="pagination-links">
-             {{ $orders->appends(['per_page' => $perPage, 'search' => $search ?? '', 'date' => request('date')])->links() }}
+             {{ $orders->appends([
+                 'per_page' => $perPage, 
+                 'search' => $search ?? '', 
+                 'date' => request('date'),
+                 'filter_type' => request('filter_type'),
+                 'start_date' => request('start_date'),
+                 'end_date' => request('end_date')
+             ])->links() }}
          </div>
     @else
         <div class="order-table">
@@ -1007,7 +1388,151 @@
         </div>
     @endif
 </div>
+
+
 <script>
+// Make orders data available to JavaScript
+window.ordersData = @json($orders ?? []);
+
+// Direct Print Receipt Function
+function printReceiptDirectly(orderId) {
+    // Find the order data
+    const order = window.ordersData.data ? window.ordersData.data.find(o => o.id === orderId) : null;
+    
+    if (!order) {
+        alert('Order data not found');
+        return;
+    }
+    
+    // Format date and time
+    const orderDate = new Date(order.created_at);
+    const formattedTime = orderDate.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+    
+    const formattedDate = orderDate.toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+    
+    // Generate items list
+    let itemsHtml = '';
+    order.items.forEach(item => {
+        itemsHtml += `
+            <li>
+                <div class="line">
+                    <span class="item-info">${item.quantity}x ${item.menu_name}</span>
+                    <span class="item-price">Rp. ${parseInt(item.price).toLocaleString()}</span>
+                </div>
+            </li>
+        `;
+    });
+    
+    // Calculate total from items
+    const totalAmount = order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+    
+    // Generate receipt content
+    let receiptContent = `
+        <img src="{{ asset('images/LOGO2.png') }}" alt="Alternatif Coffee Logo" style="width:80px; height:auto; display:block; margin:0 auto 6px;" />
+        <h2 style="text-align:center;">ALTERNATIF COFFEE</h2>
+        <div class="receipt-address">Jalan P. Galang 7, Kasin, Klojen, Ciptomulyo, Kec. Sukun, Kota Malang, Jawa Timur 65117</div>
+        <div class="receipt-instagram">@alternatifngopi</div>
+        <hr>
+        <ul id="receiptItems">
+            ${itemsHtml}
+        </ul>
+        <hr>
+        <div class="line"><span>Total</span><span>Rp. ${totalAmount.toLocaleString()}</span></div>
+        <div class="line"><span>Cash</span><span>Rp. ${totalAmount.toLocaleString()}</span></div>
+        <div class="line"><span>Balance</span><span>Rp. 0</span></div>
+        <hr>
+        <div class="line"><span>Customer</span><span>${order.customer_name}</span></div>
+        <div class="line"><span>Kasir</span><span>${order.user ? order.user.name : 'Unknown'}</span></div>
+        <div class="line"><span>Order</span><span>${order.order_type}</span></div>
+    `;
+    
+    // Add transaction info to receiptItems list
+    receiptContent = receiptContent.replace(
+        /<\/ul>/,
+        '<hr><li><div class="line"><span class="item-info">ID Transaksi</span><span class="item-price">' + String(order.id).padStart(3, '0') + '</span></div></li><li><div class="line"><span class="item-info">Waktu</span><span class="item-price">' + formattedTime + '</span></div></li></ul>'
+    );
+    
+    // Open print window and print directly
+    const printWindow = window.open('', '', 'height=700,width=550');
+    
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Print Receipt</title>
+            <base href="${window.location.origin}/">
+            <style>
+                body { font-family: Arial, sans-serif; font-size: 12px; }
+                .receipt-paper { width: 270px; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { text-align: left; padding: 2px; }
+                .qty { width: 20%; }
+                .price { text-align: right; }
+                /* Default line layout for summary rows (Total/Cash/Balance) */
+                .line { display: flex; justify-content: space-between; }
+
+
+                /* Items list: remove bullets/indent and align left */
+                #receiptItems { list-style: none; padding: 0; margin: 0; }
+                #receiptItems li { margin: 2px 0; }
+                #receiptItems .line { justify-content: flex-start; gap: 8px; }
+                #receiptItems .item-info { flex: 1; text-align: left; }
+                #receiptItems .item-price { text-align: right; min-width: 80px; }
+                .receipt-paper img { display: block; margin: 0 auto 6px; max-width: 100%; height: auto; }
+                
+                /* Header info styling */
+                .receipt-paper h2 { margin-bottom: 2px; }
+                .receipt-address { text-align: center; font-size: 10px; margin: 2px 0;}
+                .receipt-instagram { text-align: center; font-size: 10px; margin: 2px 0 20px 0; font-style: italic; }
+                
+            </style>
+        </head>
+        <body>
+            <div class="receipt-paper">${receiptContent}</div>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    const doPrint = () => {
+        try { printWindow.focus(); } catch (e) {}
+        try { printWindow.print(); } catch (e) {}
+        try { printWindow.close(); } catch (e) {}
+    };
+
+    const images = () => Array.from(printWindow.document.images || []);
+    const imgs = images();
+    if (imgs.length === 0) {
+        doPrint();
+        return;
+    }
+
+    let loadedCount = 0;
+    const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount === imgs.length) {
+            setTimeout(doPrint, 100);
+        }
+    };
+
+    imgs.forEach(img => {
+        if (img.complete) {
+            checkAllLoaded();
+        } else {
+            img.onload = checkAllLoaded;
+            img.onerror = checkAllLoaded;
+        }
+    });
+}
 function toggleOrderDetails(index) {
     const details = document.getElementById('details-' + index);
     const isShowing = details.classList.contains('show');
@@ -1024,16 +1549,33 @@ function changePerPage(value) {
     const currentUrl = new URL(window.location);
     currentUrl.searchParams.set('per_page', value);
     currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
-    // Preserve search parameter if it exists
+    
+    // Preserve all filter parameters
     const searchParam = currentUrl.searchParams.get('search');
     if (searchParam) {
         currentUrl.searchParams.set('search', searchParam);
     }
-    // Preserve date parameter if it exists
+    
     const dateParam = currentUrl.searchParams.get('date');
     if (dateParam) {
         currentUrl.searchParams.set('date', dateParam);
     }
+    
+    const filterTypeParam = currentUrl.searchParams.get('filter_type');
+    if (filterTypeParam) {
+        currentUrl.searchParams.set('filter_type', filterTypeParam);
+    }
+    
+    const startDateParam = currentUrl.searchParams.get('start_date');
+    if (startDateParam) {
+        currentUrl.searchParams.set('start_date', startDateParam);
+    }
+    
+    const endDateParam = currentUrl.searchParams.get('end_date');
+    if (endDateParam) {
+        currentUrl.searchParams.set('end_date', endDateParam);
+    }
+    
     window.location.href = currentUrl.toString();
 }
 
@@ -1051,6 +1593,185 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Function to handle filter type selection
+    const filterTypeSelect = document.getElementById('filter_type');
+    const singleDateFilter = document.getElementById('singleDateFilter');
+    const dateRangeFilter = document.getElementById('dateRangeFilter');
+    
+    if (filterTypeSelect) {
+        filterTypeSelect.addEventListener('change', function() {
+            if (this.value === 'range') {
+                singleDateFilter.style.display = 'none';
+                dateRangeFilter.style.display = 'flex';
+            } else {
+                singleDateFilter.style.display = 'flex';
+                dateRangeFilter.style.display = 'none';
+            }
+        });
+    }
+
+    // Receipt Modal Functions
+    function showReceiptModal(orderId) {
+        // Find the order data
+        const order = window.ordersData.data ? window.ordersData.data.find(o => o.id === orderId) : null;
+        
+        if (!order) {
+            alert('Order data not found');
+            return;
+        }
+        
+        // Store current order data for printing
+        window.currentOrderData = order;
+        
+        // Generate receipt content
+        generateReceiptContent(order);
+        
+        // Show modal
+        const modal = document.getElementById('receiptModal');
+        modal.style.display = 'flex';
+    }
+    
+    function closeReceiptModal() {
+        const modal = document.getElementById('receiptModal');
+        modal.style.display = 'none';
+    }
+    
+    function generateReceiptContent(order) {
+        const receiptContent = document.getElementById('receiptModalContent');
+        
+        // Format date and time
+        const orderDate = new Date(order.created_at);
+        const formattedTime = orderDate.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
+        
+        const formattedDate = orderDate.toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        
+        // Generate items list
+        let itemsHtml = '';
+        order.items.forEach(item => {
+            itemsHtml += `
+                <li>
+                    <div class="line">
+                        <span class="item-info">${item.quantity}x ${item.menu_name}</span>
+                        <span class="item-price">Rp ${parseInt(item.price).toLocaleString()}</span>
+                    </div>
+                </li>
+            `;
+        });
+        
+        // Calculate total from items
+        const totalAmount = order.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+        
+        receiptContent.innerHTML = `
+            <img src="{{ asset('images/logo.png') }}" alt="Alternatif Coffee Logo" style="width:80px; height:auto; display:block; margin:0 auto 6px;" />
+            <h2 style="text-align:center;">ALTERNATIF COFFEE</h2>
+            <div class="receipt-address">Jalan P. Galang 7, Kasin, Klojen, Ciptomulyo, Kec. Sukun, Kota Malang, Jawa Timur 65117</div>
+            <div class="receipt-instagram">@alternatifngopi</div>
+            <hr>
+            <ul id="receiptItems">
+                ${itemsHtml}
+                <hr>
+                <li><div class="line"><span class="item-info">ID Transaksi</span><span class="item-price">${String(order.id).padStart(3, '0')}</span></div></li>
+                <li><div class="line"><span class="item-info">Waktu</span><span class="item-price">${formattedTime}</span></div></li>
+            </ul>
+            <hr>
+            <div class="line"><span>Total</span><span>Rp ${totalAmount.toLocaleString()}</span></div>
+            <div class="line"><span>Customer</span><span>${order.customer_name}</span></div>
+            <div class="line"><span>Kasir</span><span>${order.user ? order.user.name : 'Unknown'}</span></div>
+            <div class="line"><span>Order</span><span>${order.order_type}</span></div>
+            <div class="datetime">${formattedDate} ${formattedTime}</div>
+        `;
+    }
+    
+    function printReceiptFromModal() {
+        // Get the modal content and replace logo for printing
+        let printContents = document.getElementById('receiptModalContent').innerHTML;
+        // Replace logo.png with LOGO2.png for printing only
+        printContents = printContents.replace(/images\/logo\.png/g, 'images/LOGO2.png');
+        
+        const printWindow = window.open('', '', 'height=700,width=550');
+        
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>Print Receipt</title>
+                <base href="${window.location.origin}/">
+                <style>
+                    body { font-family: Arial, sans-serif; font-size: 12px; }
+                    .receipt-paper { width: 270px; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { text-align: left; padding: 2px; }
+                    .qty { width: 20%; }
+                    .price { text-align: right; }
+                    .line { display: flex; justify-content: space-between; }
+                    #receiptItems { list-style: none; padding: 0; margin: 0; }
+                    #receiptItems li { margin: 2px 0; }
+                    #receiptItems .line { justify-content: flex-start; gap: 8px; }
+                    #receiptItems .item-info { flex: 1; text-align: left; }
+                    #receiptItems .item-price { text-align: right; min-width: 80px; }
+                    .receipt-paper img { display: block; margin: 0 auto 6px; max-width: 100%; height: auto; }
+                    .receipt-paper h2 { margin-bottom: 2px; }
+                    .receipt-address { text-align: center; font-size: 10px; margin: 2px 0;}
+                    .receipt-instagram { text-align: center; font-size: 10px; margin: 2px 0 20px 0; font-style: italic; }
+                    .datetime { text-align: center; font-size: 9px; margin: 4px 0 0 0; color: #444; font-style: italic; }
+                    hr { border: none; border-top: 1px dashed #000; margin: 4px 0; }
+                </style>
+            </head>
+            <body>
+                <div class="receipt-paper">${printContents}</div>
+            </body>
+            </html>
+        `);
+
+        printWindow.document.close();
+
+        const doPrint = () => {
+            try { printWindow.focus(); } catch (e) {}
+            try { printWindow.print(); } catch (e) {}
+            try { printWindow.close(); } catch (e) {}
+        };
+
+        const images = () => Array.from(printWindow.document.images || []);
+        const imgs = images();
+        if (imgs.length === 0) {
+            doPrint();
+            return;
+        }
+
+        let loadedCount = 0;
+        const checkAllLoaded = () => {
+            loadedCount++;
+            if (loadedCount === imgs.length) {
+                setTimeout(doPrint, 100);
+            }
+        };
+
+        imgs.forEach(img => {
+            if (img.complete) {
+                checkAllLoaded();
+            } else {
+                img.onload = checkAllLoaded;
+                img.onerror = checkAllLoaded;
+            }
+        });
+    }
+    
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+        const modal = document.getElementById('receiptModal');
+        if (event.target === modal) {
+            closeReceiptModal();
+        }
+    });
 });
 </script>
 @endsection

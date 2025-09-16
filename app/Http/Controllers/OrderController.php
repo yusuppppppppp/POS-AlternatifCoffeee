@@ -61,7 +61,13 @@ class OrderController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true]);
+            return response()->json([
+                'success' => true,
+                'order' => [
+                    'id' => $order->id,
+                    'created_at' => $order->created_at->toISOString()
+                ]
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Gagal menyimpan order: ' . $e->getMessage());

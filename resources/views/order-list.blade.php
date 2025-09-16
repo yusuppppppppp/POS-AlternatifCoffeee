@@ -657,7 +657,7 @@
 <div class="order-container">
     <!-- Enhanced Header -->
     <div class="page-header">
-        <h2 class="page-title">Order List</h2>
+        <h2 class="page-title">Daily Sales Report</h2>
         <p class="page-subtitle">Manage and monitor all sales transactions</p>
         <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
     </div>
@@ -682,7 +682,7 @@
                     type="text" 
                     name="search" 
                     value="{{ $search }}" 
-                    placeholder="Cari berdasarkan nama customer, tipe order, ID, total amount, nama kasir, atau nama menu..."
+                    placeholder="Search by customer name, order type, ID, total amount, cashier name, or menu name..."
                     class="search-input"
                 >
                 <button type="submit" class="search-button">

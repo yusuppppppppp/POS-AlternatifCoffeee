@@ -32,7 +32,8 @@
         flex: 1;
         padding-left: 50px;
         margin-top: 60px;
-        min-width: 65rem;
+        min-width: 65.5rem;
+        max-width: 65.5rem;
         min-height: calc(100vh - 80px);
         transition: all 0.3s ease;
     }
@@ -562,6 +563,14 @@
             0 0 0 1px rgba(255, 255, 255, 0.1);
         position: relative;
         animation: slideUp 0.4s ease-out;
+        /* Hide scrollbar but keep scrolling functionality */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+
+    /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+    .modal-container::-webkit-scrollbar {
+        display: none;
     }
 
     .modal-header {
@@ -606,6 +615,14 @@
         min-height: 200px;
         position: relative;
         overflow-y: auto;
+        /* Hide scrollbar but keep scrolling functionality */
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+
+    /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+    #receiptModalContent::-webkit-scrollbar {
+        display: none;
     }
 
     #receiptModalContent::before {
@@ -1099,13 +1116,13 @@
         <div class="payment-header">
             <div class="user-info">
                 <label for="customerNameInput" class="input-label">
-                    Nama Customer <span class="required">*</span>
+                    Customer Name <span class="required">*</span>
                 </label>
                 <input 
                     type="text" 
                     id="customerNameInput" 
                     class="payment-user-name" 
-                    placeholder="Masukkan nama customer"
+                    placeholder="Enter the customer's name"
                     required 
                 />
             </div>
@@ -1702,8 +1719,13 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
     })
     .then(res => res.json())
     .then(data => {
-        // Order berhasil disimpan, tidak perlu refresh langsung
-        // Bisa refresh setelah tutup modal jika diinginkan
+        if (data.success && data.order) {
+            // Store order data for receipt
+            window.currentOrderData = {
+                id: data.order.id,
+                created_at: data.order.created_at
+            };
+        }
     })
     .catch(error => {
         console.error('Error saving order:', error);
@@ -1721,7 +1743,49 @@ window.currentCashierName = @json(Auth::user()->name ?? 'Guest');
 }
 
 function printReceiptFromModal() {
-    const printContents = document.getElementById('receiptModalContent').innerHTML;
+    // Get the modal content and replace logo for printing
+    let printContents = document.getElementById('receiptModalContent').innerHTML;
+    // Replace logo.png with LOGO2.png for printing only
+    printContents = printContents.replace(/images\/logo\.png/g, 'images/LOGO2.png');
+    
+    // Add address and Instagram after the title
+    printContents = printContents.replace(
+        /<h2[^>]*>ALTERNATIF COFFEE<\/h2>/i,
+        '<h2 style="text-align:center;">ALTERNATIF COFFEE</h2><div class="receipt-address">Jalan P. Galang 7, Kasin, Klojen, Ciptomulyo, Kec. Sukun, Kota Malang, Jawa Timur 65117</div><div class="receipt-instagram">@alternatifngopi</div>'
+    );
+    
+    // Get transaction ID and datetime from saved order data
+    let transactionId = 'TRX000';
+    let transactionDateTime = new Date().toLocaleString('id-ID', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    // Use actual order data if available (same format as order list)
+    if (window.currentOrderData) {
+        // Format ID same as order list: pad with zeros to 3 digits
+        transactionId = String(window.currentOrderData.id).padStart(3, '0');
+        
+        // Format datetime same as order list: h:i:s A format
+        const orderDate = new Date(window.currentOrderData.created_at);
+        transactionDateTime = orderDate.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
+    }
+    
+    // Add transaction info to receiptItems list
+    printContents = printContents.replace(
+        /<\/ul>/,
+        '<hr><li><div class="line"><span class="item-info">ID Transaksi</span><span class="item-price">' + transactionId + '</span></div></li><li><div class="line"><span class="item-info">Waktu</span><span class="item-price">' + transactionDateTime + '</span></div></li></ul>'
+    );
+    
     const printWindow = window.open('', '', 'height=700,width=550');
     
     printWindow.document.write(`
@@ -1746,6 +1810,12 @@ function printReceiptFromModal() {
                 #receiptItems .item-info { flex: 1; text-align: left; }
                 #receiptItems .item-price { text-align: right; min-width: 80px; }
                 .receipt-paper img { display: block; margin: 0 auto 6px; max-width: 100%; height: auto; }
+                
+                /* Header info styling */
+                .receipt-paper h2 { margin-bottom: 2px; }
+                .receipt-address { text-align: center; font-size: 10px; margin: 2px 0;}
+                .receipt-instagram { text-align: center; font-size: 10px; margin: 2px 0 20px 0; font-style: italic; }
+                
             </style>
         </head>
         <body>

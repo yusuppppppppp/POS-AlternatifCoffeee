@@ -94,16 +94,16 @@
         $periodText = '';
         switch($period) {
             case 'today':
-                $periodText = 'Hari Ini (' . now()->format('d-m-Y') . ')';
+                $periodText = 'Today (' . now()->format('d-m-Y') . ')';
                 break;
             case 'week':
-                $periodText = 'Minggu Ini (' . now()->startOfWeek()->format('d-m-Y') . ' - ' . now()->endOfWeek()->format('d-m-Y') . ')';
+                $periodText = 'This Week (' . now()->startOfWeek()->format('d-m-Y') . ' - ' . now()->endOfWeek()->format('d-m-Y') . ')';
                 break;
             case 'month':
-                $periodText = 'Bulan Ini (' . now()->format('F Y') . ')';
+                $periodText = 'This Month (' . now()->format('F Y') . ')';
                 break;
             case 'custom':
-                $periodText = 'Periode Kustom';
+                $periodText = 'Custom Range';
                 break;
         }
     @endphp
@@ -163,7 +163,7 @@
     </table>
     
     <div class="footer">
-        Generated on {{ now()->format('d-m-Y H:i:s') }} | Alternatif Coffee
+        Generated on {{ now()->format('d-m-Y H:i:s') }} by {{ $downloadedBy }} | Alternatif Coffee
     </div>
 </body>
-</html> 
+</html>

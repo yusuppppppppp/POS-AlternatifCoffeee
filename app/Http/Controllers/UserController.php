@@ -325,7 +325,16 @@ class UserController extends Controller
                 ->whereDate('created_at', now()->toDateString())
                 ->orderBy('created_at', 'desc')
                 ->get();
-            $pdf = Pdf::loadView('order-list-pdf', compact('orders'));
+            
+            // Calculate summary statistics
+            $totalOrders = $orders->count();
+            $totalRevenue = $orders->sum('total_amount');
+            $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+            
+            // Get the admin who is downloading the report
+            $downloadedBy = Auth::user()->name;
+            
+            $pdf = Pdf::loadView('order-list-pdf', compact('orders', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy'));
             return $pdf->download('order-list-' . now()->format('Y-m-d') . '.pdf');
         } else {
             return redirect()->route('login');
@@ -385,7 +394,10 @@ class UserController extends Controller
             $totalRevenue = $orders->sum('total_amount');
             $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
             
-            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue'));
+            // Get the admin who is downloading the report
+            $downloadedBy = Auth::user()->name;
+            
+            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy'));
             return $pdf->download($fileName . '.pdf');
         } else {
             return redirect()->route('login');
@@ -397,9 +409,24 @@ class UserController extends Controller
         if (Auth::check() && Auth::user()->usertype == 'admin') {
             $query = Order::with(['items', 'user']);
 
-            if ($request->filled('date')) {
-                $query->whereDate('created_at', $request->input('date'));
+            // Handle date filtering based on filter type
+            $filterType = $request->get('filter_type', 'single');
+            
+            if ($filterType === 'range') {
+                // Date range filtering
+                if ($request->filled('start_date')) {
+                    $query->whereDate('created_at', '>=', $request->input('start_date'));
+                }
+                if ($request->filled('end_date')) {
+                    $query->whereDate('created_at', '<=', $request->input('end_date'));
+                }
+            } else {
+                // Single date filtering (existing functionality)
+                if ($request->filled('date')) {
+                    $query->whereDate('created_at', $request->input('date'));
+                }
             }
+            
             if ($request->filled('year')) {
                 $query->whereYear('created_at', $request->input('year'));
             }

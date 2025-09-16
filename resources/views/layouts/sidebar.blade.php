@@ -126,7 +126,6 @@
         /* Special styling for logout */
         .drawer-section-logout {
             margin-top: 20px;
-            border-top: 1px solid #fee2e2;
         }
 
         .drawer-section-logout:hover {
@@ -164,6 +163,19 @@
 
         .drawer-content::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
+        }
+
+        /* Hamburger menu icon transformation for perfect X */
+        .menu-icon.active .menu-line:nth-child(1) {
+            transform: rotate(45deg) translate(4.5px, 4.5px) !important;
+        }
+
+        .menu-icon.active .menu-line:nth-child(2) {
+            opacity: 0 !important;
+        }
+
+        .menu-icon.active .menu-line:nth-child(3) {
+            transform: rotate(-45deg) translate(4.5px, -4.5px) !important;
         }
 
         /* Animation for smooth transitions */
@@ -205,7 +217,7 @@
                     </div>
                     <div class="drawer-item" onclick="navigateTo('order-list', this)">
                         <div class="drawer-item-icon"><img src="/images/order_list.png" alt="Order List" class="drawer-item-icon-img"></div>
-                        <div class="drawer-item-text">Order List</div>
+                        <div class="drawer-item-text">Daily Sales Report</div>
                     </div>
                 </div>
                 @endif
