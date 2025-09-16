@@ -22,6 +22,9 @@ Route::middleware(['auth', 'prevent.back.history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/sales-report', [UserController::class, 'salesReport'])->name('sales-report');
     Route::get('/account-management', [UserController::class, 'accountManagement'])->name('account-management');
+    Route::get('/change-password', [UserController::class, 'changePassword'])->name('change-password');
+    Route::post('/change-password', [UserController::class, 'updatePassword'])->name('update-password');
+    Route::put('/update-profile', [UserController::class, 'updateProfile'])->name('update.profile');
 
     // Menu Management
     Route::get('/menu-management', [MenuController::class, 'index'])->name('menu-management');

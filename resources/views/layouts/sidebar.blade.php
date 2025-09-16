@@ -243,6 +243,10 @@
                         <div class="drawer-item-icon"><img src="/images/account_management.png" alt="Account Management" class="drawer-item-icon-img"></div>
                         <div class="drawer-item-text">Account Management</div>
                     </div>
+                    <div class="drawer-item" onclick="navigateTo('change-password', this)">
+                        <div class="drawer-item-icon"><img src="/images/change_password.png" alt="Change Password" class="drawer-item-icon-img"></div>
+                        <div class="drawer-item-text">Change Password</div>
+                    </div>
                 </div>
                 @endif
             @endauth

@@ -103,6 +103,121 @@ class UserController extends Controller
         }
     }
 
+    public function changePassword()
+    {
+        if (Auth::check()) {
+            return view('change_password');
+        } else {
+            return redirect()->route('login');
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => 'required|min:6|confirmed',
+        ], [
+            'current_password.required' => 'Password saat ini harus diisi',
+            'new_password.required' => 'Password baru harus diisi',
+            'new_password.min' => 'Password baru minimal 6 karakter',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $user = Auth::user();
+
+        // Check if current password is correct
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini tidak benar'])->withInput();
+        }
+
+        // Update password
+        try {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            return back()->with('success', 'Password berhasil diubah!');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat mengubah password'])->withInput();
+        }
+    }
+
+    public function updateProfile(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        // Validation rules
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+        ];
+
+        // Add password validation only if user wants to change password
+        if ($request->filled('current_password') || $request->filled('new_password') || $request->filled('new_password_confirmation')) {
+            $rules['current_password'] = 'required';
+            $rules['new_password'] = 'required|min:6|confirmed';
+        }
+
+        $messages = [
+            'name.required' => 'Nama harus diisi',
+            'name.max' => 'Nama maksimal 255 karakter',
+            'email.required' => 'Email harus diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan oleh pengguna lain',
+            'current_password.required' => 'Password saat ini harus diisi untuk mengubah password',
+            'new_password.required' => 'Password baru harus diisi',
+            'new_password.min' => 'Password baru minimal 6 karakter',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            // Update name and email
+            $user->name = $request->name;
+            $user->email = $request->email;
+
+            // Update password if provided
+            if ($request->filled('current_password')) {
+                // Check if current password is correct
+                if (!Hash::check($request->current_password, $user->password)) {
+                    return back()->withErrors(['current_password' => 'Password saat ini tidak benar'])->withInput();
+                }
+
+                // Update password
+                $user->password = Hash::make($request->new_password);
+            }
+
+            $user->save();
+
+            $message = 'Profil berhasil diperbarui!';
+            if ($request->filled('current_password')) {
+                $message = 'Profil dan password berhasil diperbarui!';
+            }
+
+            return back()->with('success', $message);
+
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui profil: ' . $e->getMessage()])->withInput();
+        }
+    }
+
     // ==== USER CRUD (API) ====
 
     public function store(Request $request)
