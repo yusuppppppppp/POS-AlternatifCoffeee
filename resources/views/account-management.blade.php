@@ -522,6 +522,7 @@
         <table class="account-table">
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Password</th>
@@ -529,8 +530,9 @@
             </tr>
         </thead>
         <tbody id="userTableBody">
-            @forelse($users as $user)
+            @forelse($users as $index => $user)
             <tr data-id="{{ $user->id }}">
+                <td>{{ $users->firstItem() + $index }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ str_repeat('*', 8) }}</td>
@@ -547,7 +549,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="4" style="text-align:center;color:#888;padding:40px 0;">
+                <td colspan="5" style="text-align:center;color:#888;padding:40px 0;">
                     <div style="font-size:18px;">No users found.<br>Click "Add Account" to create your first user account.</div>
                 </td>
             </tr>
@@ -644,7 +646,7 @@
                     if (tbody.children.length === 0) {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="4" style="text-align:center;color:#888;padding:40px 0;">
+                                <td colspan="5" style="text-align:center;color:#888;padding:40px 0;">
                                     <div style="font-size:18px;">No users found.<br>Click \"Add Account\" to create your first user account.</div>
                                 </td>
                             </tr>
@@ -699,15 +701,17 @@
                 if (isEdit) {
                     const row = document.querySelector(`tr[data-id="${userId}"]`);
                     if (row) {
-                        row.children[0].textContent = data.user.name;
-                        row.children[1].textContent = data.user.email;
+                        row.children[1].textContent = data.user.name;
+                        row.children[2].textContent = data.user.email;
                     }
                 } else {
-                    const emptyState = tbody.querySelector('td[colspan="4"]');
+                    const emptyState = tbody.querySelector('td[colspan="5"]');
                     if (emptyState) tbody.innerHTML = '';
                     const newRow = document.createElement('tr');
                     newRow.setAttribute('data-id', data.user.id);
+                    const rowCount = tbody.children.length + 1;
                     newRow.innerHTML = `
+                        <td>${rowCount}</td>
                         <td>${data.user.name}</td>
                         <td>${data.user.email}</td>
                         <td>${'*'.repeat(8)}</td>

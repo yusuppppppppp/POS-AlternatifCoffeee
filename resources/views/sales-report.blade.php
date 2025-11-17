@@ -1184,12 +1184,12 @@
     <!-- Stats Cards -->
     <div class="stats-cards">
         <div class="stat-card orders">
-            <h3>{{ $orders->total() ?? 0 }}</h3>
-            <p>Total Orders</p>
+            <h3>{{ $totalOrdersThisMonth ?? 0 }}</h3>
+            <p>Total Orders This Month</p>
         </div>
         <div class="stat-card revenue">
-            <h3>Rp {{ number_format($orders->sum('total_amount') ?? 0, 0, ',', '.') }}</h3>
-            <p>Total Revenue</p>
+            <h3>Rp {{ number_format($totalRevenueThisMonth ?? 0, 0, ',', '.') }}</h3>
+            <p>Total Income This Month</p>
         </div>
     </div>
 

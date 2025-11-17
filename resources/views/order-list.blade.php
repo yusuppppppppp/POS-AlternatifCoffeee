@@ -666,11 +666,11 @@
     <div class="stats-cards">
         <div class="stat-card orders">
             <h3>{{ $totalOrdersToday }}</h3>
-            <p>Total Orders Hari Ini</p>
+            <p>Total Orders Today</p>
         </div>
         <div class="stat-card revenue">
             <h3>Rp {{ number_format($totalRevenueToday, 0, ',', '.') }}</h3>
-            <p>Total Revenue</p>
+            <p>Total Income Today</p>
         </div>
     </div>
 

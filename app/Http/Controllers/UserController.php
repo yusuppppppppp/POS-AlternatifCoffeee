@@ -566,7 +566,21 @@ class UserController extends Controller
             // Get per_page from request, default to 10
             $perPage = $request->get('per_page', 10);
             $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
-            return view('sales-report', compact('orders', 'perPage', 'search'));
+            
+            // Calculate monthly totals (same as dashboard)
+            $currentMonth = \Carbon\Carbon::now()->startOfMonth();
+            
+            // Total orders this month (same as dashboard)
+            $totalOrdersThisMonth = Order::whereYear('created_at', $currentMonth->year)
+                ->whereMonth('created_at', $currentMonth->month)
+                ->count();
+                
+            // Total revenue this month (same as dashboard)
+            $totalRevenueThisMonth = Order::whereYear('created_at', $currentMonth->year)
+                ->whereMonth('created_at', $currentMonth->month)
+                ->sum('total_amount');
+            
+            return view('sales-report', compact('orders', 'perPage', 'search', 'totalOrdersThisMonth', 'totalRevenueThisMonth'));
         } else {
             return redirect()->route('login');
         }
