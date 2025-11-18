@@ -81,19 +81,30 @@ class OrderController extends Controller
     }
 
     public function todayOrders()
-{
-    $today = Carbon::today();
+    {
+        $today = Carbon::today()->toDateString();
 
-    $orders = Order::with(['items', 'user'])
-        ->whereDate('created_at', $today)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $orders = \DB::select("CALL get_daily_orders(?)", [$today]);
 
-    // KEMBALIKAN DALAM BENTUK JSON
-    return response()->json([
-        'success' => true,
-        'data' => $orders
-    ]);
-}
+        return response()->json([
+            'success' => true,
+            'data' => $orders
+        ]);
+    }
+ 
+//     public function todayOrders()
+// {
+//     $today = Carbon::today();
 
+//     $orders = Order::with(['items', 'user'])
+//         ->whereDate('created_at', $today)
+//         ->orderBy('created_at', 'desc')
+//         ->get();
+
+//     // KEMBALIKAN DALAM BENTUK JSON
+//     return response()->json([
+//         'success' => true,
+//         'data' => $orders
+//     ]);
+// }
 }

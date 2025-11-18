@@ -13,7 +13,7 @@ Route::middleware(['redirect.if.authenticated'])->group(function () {
     Route::get('/login', [UserController::class, 'login'])->name('login');
     Route::get('/signup', [UserController::class, 'signup'])->name('register');
     Route::post('/login', [UserController::class, 'logincheck'])->name('logincheck');
-    Route::post('/signup', [UserController::class, 'registercheck'])->name('registercheck');
+    Route::post('/signup', [UserController::class, 'registercheck'])->name('registercheck');    
 });
 
 Route::middleware(['auth', 'prevent.back.history'])->group(function () {

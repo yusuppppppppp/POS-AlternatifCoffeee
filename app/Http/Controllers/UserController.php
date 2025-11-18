@@ -460,29 +460,76 @@ class UserController extends Controller
     {
         if (Auth::check() && Auth::user()->usertype == 'admin') {
             $query = Order::with(['items', 'user']);
-            $period = $request->get('period', 'today');
             $fileName = 'sales-report';
+            $period = 'custom'; // Default period for filter-based downloads
             
-            switch ($period) {
-                case 'today':
+            // Handle date filtering based on filter type (same as salesReport method)
+            $filterType = $request->get('filter_type', 'single');
+            
+            if ($filterType === 'range') {
+                // Date range filtering
+                if ($request->filled('start_date') && $request->filled('end_date')) {
+                    $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
+                    $fileName .= '-range-' . $request->start_date . '-to-' . $request->end_date;
+                    $period = 'custom';
+                } elseif ($request->filled('start_date')) {
+                    $query->whereDate('created_at', '>=', $request->input('start_date'));
+                    $fileName .= '-from-' . $request->start_date;
+                    $period = 'custom';
+                } elseif ($request->filled('end_date')) {
+                    $query->whereDate('created_at', '<=', $request->input('end_date'));
+                    $fileName .= '-until-' . $request->end_date;
+                    $period = 'custom';
+                }
+            } elseif ($filterType === 'week') {
+                // Weekly filtering (this week)
+                $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                $fileName .= '-week-' . now()->format('Y-W');
+                $period = 'week';
+            } elseif ($filterType === 'month') {
+                // Monthly filtering (this month)
+                $query->whereYear('created_at', now()->year)
+                      ->whereMonth('created_at', now()->month);
+                $fileName .= '-month-' . now()->format('Y-m');
+                $period = 'month';
+            } else {
+                // Single date filtering
+                if ($request->filled('date')) {
+                    $query->whereDate('created_at', $request->input('date'));
+                    $fileName .= '-date-' . $request->date;
+                    $period = 'single';
+                } else {
+                    // If no date filter, default to today
                     $query->whereDate('created_at', now()->toDateString());
                     $fileName .= '-today-' . now()->format('Y-m-d');
-                    break;
-                case 'week':
-                    $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-                    $fileName .= '-week-' . now()->format('Y-W');
-                    break;
-                case 'month':
-                    $query->whereYear('created_at', now()->year)
-                          ->whereMonth('created_at', now()->month);
-                    $fileName .= '-month-' . now()->format('Y-m');
-                    break;
-                case 'custom':
-                    if ($request->filled('start_date') && $request->filled('end_date')) {
-                        $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
-                        $fileName .= '-custom-' . $request->start_date . '-to-' . $request->end_date;
-                    }
-                    break;
+                    $period = 'today';
+                }
+            }
+            
+            // Support legacy period parameter for backward compatibility
+            if ($request->filled('period') && !$request->filled('filter_type')) {
+                $period = $request->get('period', 'today');
+                switch ($period) {
+                    case 'today':
+                        $query->whereDate('created_at', now()->toDateString());
+                        $fileName = 'sales-report-today-' . now()->format('Y-m-d');
+                        break;
+                    case 'week':
+                        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                        $fileName = 'sales-report-week-' . now()->format('Y-W');
+                        break;
+                    case 'month':
+                        $query->whereYear('created_at', now()->year)
+                              ->whereMonth('created_at', now()->month);
+                        $fileName = 'sales-report-month-' . now()->format('Y-m');
+                        break;
+                    case 'custom':
+                        if ($request->filled('start_date') && $request->filled('end_date')) {
+                            $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
+                            $fileName = 'sales-report-custom-' . $request->start_date . '-to-' . $request->end_date;
+                        }
+                        break;
+                }
             }
             
             // Add search functionality if provided
@@ -500,6 +547,7 @@ class UserController extends Controller
                           $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
                       });
                 });
+                $fileName .= '-search-' . substr($search, 0, 20);
             }
             
             $orders = $query->orderBy('created_at', 'desc')->get();
@@ -512,7 +560,20 @@ class UserController extends Controller
             // Get the admin who is downloading the report
             $downloadedBy = Auth::user()->name;
             
-            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy'));
+            // Pass filter_type to view for proper title display
+            // Use the filterType from the request, or determine from period
+            $filterType = $request->get('filter_type', 'single');
+            if (!$request->filled('filter_type')) {
+                // If filter_type not provided, use period to determine
+                $filterType = $period;
+            }
+            
+            // Pass date information for single date display
+            $selectedDate = $request->get('date');
+            $startDate = $request->get('start_date');
+            $endDate = $request->get('end_date');
+            
+            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy', 'filterType', 'selectedDate', 'startDate', 'endDate'));
             return $pdf->download($fileName . '.pdf');
         } else {
             return redirect()->route('login');
@@ -535,6 +596,13 @@ class UserController extends Controller
                 if ($request->filled('end_date')) {
                     $query->whereDate('created_at', '<=', $request->input('end_date'));
                 }
+            } elseif ($filterType === 'week') {
+                // Weekly filtering (this week)
+                $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+            } elseif ($filterType === 'month') {
+                // Monthly filtering (this month)
+                $query->whereYear('created_at', now()->year)
+                      ->whereMonth('created_at', now()->month);
             } else {
                 // Single date filtering (existing functionality)
                 if ($request->filled('date')) {

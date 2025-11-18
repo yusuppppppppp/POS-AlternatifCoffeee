@@ -226,24 +226,54 @@
     }
 
     .info-icon {
-        width: 24px;
-        height: 24px;
-        border: 2px solid #6c757d;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6c757d;
-        font-size: 14px;
-        font-weight: bold;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        box-shadow: 
+            0 2px 8px rgba(37, 99, 235, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-icon img {
+        filter: brightness(0) saturate(100%) invert(40%) sepia(95%) saturate(2000%) hue-rotate(210deg) brightness(0.95) contrast(1.1);
+        transition: all 0.3s ease;
+    }
+
+    .info-icon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .info-icon:hover {
-        border-color: #2E4766;
-        color: #2E4766;
-        background-color: #f0f8ff;
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+        box-shadow: 
+            0 4px 16px rgba(37, 99, 235, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .info-icon:hover img {
+        filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2000%) hue-rotate(210deg) brightness(0.85) contrast(1.2);
+    }
+
+    .info-icon:hover::before {
+        opacity: 1;
     }
 
     /* Order details modal/expandable section (optional) */
@@ -655,7 +685,7 @@
 </style>
 
 <div class="order-container">
-    <!-- Enhanced Header -->
+    <!-- Header -->
     <div class="page-header">
         <h2 class="page-title">Daily Sales Report</h2>
         <p class="page-subtitle">Manage and monitor all sales transactions</p>
@@ -717,7 +747,9 @@
                     <div class="order-type">{{ $order->order_type }}</div>
                     <div class="order-date">{{ $order->created_at->format('h:i:s A') }}</div>
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
-                    <div class="info-icon">i</div>
+                    <div class="info-icon">
+                        <img src="{{ asset('images/info.png') }}" alt="Info" style="height:24px;width:24px;">
+                    </div>
                 </div>
                 
                 <!-- Simplified order details -->

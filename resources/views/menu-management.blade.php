@@ -263,6 +263,22 @@
                 0 0 0 1px rgba(220, 38, 38, 0.1);
         }
 
+        .active-btn {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #059669;
+            box-shadow: 
+                0 4px 12px rgba(5, 150, 105, 0.2),
+                0 0 0 1px rgba(5, 150, 105, 0.1);
+        }
+
+        .inactive-btn {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #64748b;
+            box-shadow: 
+                0 4px 12px rgba(100, 116, 139, 0.2),
+                0 0 0 1px rgba(100, 116, 139, 0.1);
+        }
+
         .edit-btn:hover {
             transform: translateY(-2px);
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
@@ -277,22 +293,6 @@
             box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
         }
 
-        .active-btn {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #059669;
-            box-shadow: 
-                0 4px 12px rgba(5, 150, 105, 0.2),
-                0 0 0 1px rgba(5, 150, 105, 0.1);
-        }
-
-        .inactive-btn {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            color: #6b7280;
-            box-shadow: 
-                0 4px 12px rgba(107, 114, 128, 0.2),
-                0 0 0 1px rgba(107, 114, 128, 0.1);
-        }
-
         .active-btn:hover {
             transform: translateY(-2px);
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -302,9 +302,9 @@
 
         .inactive-btn:hover {
             transform: translateY(-2px);
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
             color: white;
-            box-shadow: 0 8px 20px rgba(107, 114, 128, 0.3);
+            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.3);
         }
 
         .modal {
@@ -1030,13 +1030,13 @@
                             </button>
                             @if($menu->is_active)
                                 <button class="active-btn" onclick="toggleMenuStatus('{{ $menu->id }}', false)" title="Set Inactive">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#059669">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                     </svg>
                                 </button>
                             @else
                                 <button class="inactive-btn" onclick="toggleMenuStatus('{{ $menu->id }}', true)" title="Set Active">
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#6b7280">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7 13l3 3 7-7-1.41-1.42L10 13.17l-1.59-1.58L7 13z"/>
                                     </svg>
                                 </button>

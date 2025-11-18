@@ -189,24 +189,54 @@
     }
 
     .info-icon {
-        width: 24px;
-        height: 24px;
-        border: 2px solid #6c757d;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #6c757d;
-        font-size: 14px;
-        font-weight: bold;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        box-shadow: 
+            0 2px 8px rgba(37, 99, 235, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-icon img {
+        filter: brightness(0) saturate(100%) invert(40%) sepia(95%) saturate(2000%) hue-rotate(210deg) brightness(0.95) contrast(1.1);
+        transition: all 0.3s ease;
+    }
+
+    .info-icon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .info-icon:hover {
-        border-color: #2E4766;
-        color: #2E4766;
-        background-color: #f0f8ff;
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+        box-shadow: 
+            0 4px 16px rgba(37, 99, 235, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .info-icon:hover img {
+        filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(2000%) hue-rotate(210deg) brightness(0.85) contrast(1.2);
+    }
+
+    .info-icon:hover::before {
+        opacity: 1;
     }
     
     .no-orders {
@@ -856,7 +886,8 @@
 
     .filter-form input[type="date"], 
     .filter-form input[type="number"],
-    .pdf-download-form select {
+    .pdf-download-form select,
+    .pdf-download-form input[type="date"] {
         padding: 10px 14px;
         border-radius: 8px;
         border: 2px solid #e2e8f0;
@@ -869,16 +900,28 @@
     
     .filter-form input[type="date"]:focus,
     .filter-form input[type="number"]:focus,
-    .pdf-download-form select:focus {
+    .pdf-download-form select:focus,
+    .pdf-download-form input[type="date"]:focus {
         border-color: #2E4766;
         background: white;
         box-shadow: 0 0 0 3px rgba(46, 71, 102, 0.1);
         outline: none;
     }
 
+    .pdf-download-form input[type="date"] {
+        color: #374151;
+        min-width: 150px;
+    }
+
+    .pdf-download-form input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(30%) sepia(12%) saturate(760%) hue-rotate(166deg) brightness(92%) contrast(89%);
+        cursor: pointer;
+    }
+
     .filter-form button, 
     .filter-form a.reset-btn,
-    .pdf-download-form button {
+    .pdf-download-form button,
+    .pdf-download-form a.reset-btn {
         padding: 12px 24px;
         font-weight: 600;
         font-size: 14px;
@@ -894,26 +937,40 @@
     }
 
     .filter-form button,
-    .pdf-download-form button {
+    .pdf-download-form button[type="submit"] {
         background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
         color: white;
         box-shadow: 0 2px 8px rgba(46, 71, 102, 0.2);
     }
 
     .filter-form button:hover,
-    .pdf-download-form button:hover {
+    .pdf-download-form button[type="submit"]:hover {
         background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(46, 71, 102, 0.3);
     }
 
-    .filter-form a.reset-btn {
+    .pdf-download-form button[type="button"] {
+        background: linear-gradient(135deg, #2E4766 0%,rgb(21, 28, 37) 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(71, 96, 127, 0.2);
+    }
+
+    .pdf-download-form button[type="button"]:hover {
+        background: linear-gradient(135deg, #2E47667 0%,rgb(8, 12, 17) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(71, 96, 127, 0.2);
+    }
+
+    .filter-form a.reset-btn,
+    .pdf-download-form a.reset-btn {
         background: #f3f4f6;
         color: #6b7280;
         border: 1px solid #d1d5db;
     }
 
-    .filter-form a.reset-btn:hover {
+    .filter-form a.reset-btn:hover,
+    .pdf-download-form a.reset-btn:hover {
         background: #e5e7eb;
         color: #374151;
         transform: translateY(-1px);
@@ -1193,54 +1250,21 @@
         </div>
     </div>
 
-    <!-- PDF Download Section -->
+    <!-- Filter & Download Section -->
     <div class="pdf-download-section">
-        <h3>Download PDF Report</h3>
-        <form method="GET" action="{{ route('sales-report.download-pdf') }}" class="pdf-download-form">
-            <div class="period-selector">
-                <label for="period">Period:</label>
-                <select name="period" id="period">
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                    <option value="custom">Custom Range</option>
-                </select>
-            </div>
-            
-            <div class="custom-date-range" id="customDateRange">
-                <input type="date" name="start_date" id="start_date">
-                <span>to</span>
-                <input type="date" name="end_date" id="end_date">
-            </div>
-            
-            @if(!empty($search ?? ''))
-                <input type="hidden" name="search" value="{{ $search }}">
-            @endif
-            
-            <button type="submit">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Download PDF
-            </button>
-        </form>
-    </div>
-
-    <!-- Filter Section -->
-    <div class="pdf-download-section">
-        <h3>Filter Options</h3>
-        <form method="GET" class="pdf-download-form">
+        <h3>Filter & Download PDF</h3>
+        <form method="GET" action="{{ route('sales-report') }}" class="pdf-download-form" id="filterForm">
             <div class="period-selector">
                 <label for="filter_type">Filter Type:</label>
                 <select name="filter_type" id="filter_type">
                     <option value="single" {{ request('filter_type', 'single') == 'single' ? 'selected' : '' }}>Single Date</option>
                     <option value="range" {{ request('filter_type') == 'range' ? 'selected' : '' }}>Date Range</option>
+                    <option value="week" {{ request('filter_type') == 'week' ? 'selected' : '' }}>Mingguan</option>
+                    <option value="month" {{ request('filter_type') == 'month' ? 'selected' : '' }}>Bulanan</option>
                 </select>
             </div>
             
-            <div class="single-date-filter" id="singleDateFilter" style="{{ request('filter_type') == 'range' ? 'display: none;' : 'display: flex;' }} gap: 8px; align-items: center;">
+            <div class="single-date-filter" id="singleDateFilter" style="{{ in_array(request('filter_type'), ['range', 'week', 'month']) ? 'display: none;' : 'display: flex;' }} gap: 8px; align-items: center;">
                 <input type="date" name="date" value="{{ request('date') }}" placeholder="Tanggal">
             </div>
             
@@ -1254,7 +1278,7 @@
                 <input type="hidden" name="search" value="{{ $search }}">
             @endif
             
-            <button type="submit">
+            <button type="submit" name="action" value="filter">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" stroke="currentColor" stroke-width="2"/>
                     <path d="M8 12H16M8 8H16M8 16H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1262,7 +1286,16 @@
                 Apply Filter
             </button>
             
-            <a href="{{ route('sales-report') }}" style="padding: 12px 24px; background: #f3f4f6; color: #6b7280; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; transition: all 0.3s ease; border: 1px solid #d1d5db; display: inline-flex; align-items: center; gap: 8px;">
+            <button type="button" onclick="downloadPDF()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download PDF
+            </button>
+            
+            <a href="{{ route('sales-report') }}" class="reset-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -1313,7 +1346,9 @@
                     <div class="order-type">{{ $order->order_type }}</div>
                     <div class="order-date">{{ $order->created_at->format('n/j/Y') }}</div>
                     <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
-                    <div class="info-icon">i</div>
+                    <div class="info-icon">
+                        <img src="{{ asset('images/info.png') }}" alt="Info" style="height:24px;width:24px;">
+                    </div>
                 </div>
                 <!-- Simplified order details -->
                 <div class="order-details" id="details-{{ $index }}">
@@ -1579,31 +1614,57 @@ function changePerPage(value) {
     window.location.href = currentUrl.toString();
 }
 
-// Function to handle period selection for PDF download
-document.addEventListener('DOMContentLoaded', function() {
-    const periodSelect = document.getElementById('period');
-    const customDateRange = document.getElementById('customDateRange');
+// Function to download PDF with current filter values
+function downloadPDF() {
+    const form = document.getElementById('filterForm');
+    const formData = new FormData(form);
     
-    if (periodSelect) {
-        periodSelect.addEventListener('change', function() {
-            if (this.value === 'custom') {
-                customDateRange.style.display = 'flex';
-            } else {
-                customDateRange.style.display = 'none';
-            }
-        });
+    // Get current URL parameters
+    const currentParams = new URLSearchParams(window.location.search);
+    
+    // Build query string from form data
+    const params = new URLSearchParams();
+    
+    // Add filter_type
+    const filterType = formData.get('filter_type') || 'single';
+    params.append('filter_type', filterType);
+    
+    // Add date fields based on filter type
+    if (filterType === 'range') {
+        const startDate = formData.get('start_date');
+        const endDate = formData.get('end_date');
+        if (startDate) params.append('start_date', startDate);
+        if (endDate) params.append('end_date', endDate);
+    } else if (filterType === 'week' || filterType === 'month') {
+        // Week and month don't need date parameters
+    } else {
+        const date = formData.get('date');
+        if (date) params.append('date', date);
     }
     
-    // Function to handle filter type selection
+    // Add search from form or current URL
+    const search = formData.get('search') || currentParams.get('search');
+    if (search) params.append('search', search);
+    
+    // Redirect to PDF download route with parameters
+    window.location.href = '{{ route("sales-report.download-pdf") }}?' + params.toString();
+}
+
+// Function to handle filter type selection
+document.addEventListener('DOMContentLoaded', function() {
     const filterTypeSelect = document.getElementById('filter_type');
     const singleDateFilter = document.getElementById('singleDateFilter');
     const dateRangeFilter = document.getElementById('dateRangeFilter');
     
     if (filterTypeSelect) {
         filterTypeSelect.addEventListener('change', function() {
-            if (this.value === 'range') {
+            const filterType = this.value;
+            if (filterType === 'range') {
                 singleDateFilter.style.display = 'none';
                 dateRangeFilter.style.display = 'flex';
+            } else if (filterType === 'week' || filterType === 'month') {
+                singleDateFilter.style.display = 'none';
+                dateRangeFilter.style.display = 'none';
             } else {
                 singleDateFilter.style.display = 'flex';
                 dateRangeFilter.style.display = 'none';

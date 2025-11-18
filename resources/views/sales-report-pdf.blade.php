@@ -92,19 +92,53 @@
     
     @php
         $periodText = '';
-        switch($period) {
+        // Use filterType if available, otherwise fall back to period
+        $displayType = $filterType ?? $period ?? 'single';
+        
+        switch($displayType) {
+            case 'single':
+                // Check if we have a specific date from request or orders
+                if (isset($selectedDate) && !empty($selectedDate)) {
+                    $dateObj = \Carbon\Carbon::parse($selectedDate);
+                    $periodText = 'Single Date (' . $dateObj->format('d-m-Y') . ')';
+                } elseif (isset($orders) && $orders->count() > 0) {
+                    $firstOrderDate = $orders->first()->created_at->format('d-m-Y');
+                    $periodText = 'Single Date (' . $firstOrderDate . ')';
+                } else {
+                    $periodText = 'Single Date';
+                }
+                break;
+            case 'range':
+                $periodText = 'Date Range';
+                if (isset($startDate) && isset($endDate) && !empty($startDate) && !empty($endDate)) {
+                    $startDateObj = \Carbon\Carbon::parse($startDate);
+                    $endDateObj = \Carbon\Carbon::parse($endDate);
+                    $periodText .= ' (' . $startDateObj->format('d-m-Y') . ' - ' . $endDateObj->format('d-m-Y') . ')';
+                } elseif (isset($orders) && $orders->count() > 0) {
+                    $firstDate = $orders->last()->created_at->format('d-m-Y');
+                    $lastDate = $orders->first()->created_at->format('d-m-Y');
+                    $periodText .= ' (' . $firstDate . ' - ' . $lastDate . ')';
+                }
+                break;
+            case 'week':
+                $periodText = 'Mingguan (' . now()->startOfWeek()->format('d-m-Y') . ' - ' . now()->endOfWeek()->format('d-m-Y') . ')';
+                break;
+            case 'month':
+                $periodText = 'Bulanan (' . now()->format('F Y') . ')';
+                break;
             case 'today':
                 $periodText = 'Today (' . now()->format('d-m-Y') . ')';
                 break;
-            case 'week':
-                $periodText = 'This Week (' . now()->startOfWeek()->format('d-m-Y') . ' - ' . now()->endOfWeek()->format('d-m-Y') . ')';
-                break;
-            case 'month':
-                $periodText = 'This Month (' . now()->format('F Y') . ')';
-                break;
             case 'custom':
                 $periodText = 'Custom Range';
+                if (isset($orders) && $orders->count() > 0) {
+                    $firstDate = $orders->last()->created_at->format('d-m-Y');
+                    $lastDate = $orders->first()->created_at->format('d-m-Y');
+                    $periodText .= ' (' . $firstDate . ' - ' . $lastDate . ')';
+                }
                 break;
+            default:
+                $periodText = 'Sales Report';
         }
     @endphp
     
