@@ -1306,11 +1306,12 @@
     
     <!-- Search Form -->
     <div class="search-container">
-        <form method="GET" action="{{ route('sales-report') }}" class="search-form">
+        <form id="salesSearchForm" method="GET" action="{{ route('sales-report') }}" class="search-form">
             <div class="search-input-group">
                 <input 
                     type="text" 
                     name="search" 
+                    id="salesSearchInput"
                     value="{{ $search ?? '' }}" 
                     placeholder="Search by customer name, order type, ID, total amount, cashier name, or menu name..."
                     class="search-input"
@@ -1322,11 +1323,12 @@
                 </button>
             </div>
             @if(!empty($search ?? ''))
-                <a href="{{ route('sales-report') }}" class="clear-search">Clear Search</a>
+                <a href="{{ route('sales-report') }}" class="clear-search" id="salesClearSearch">Clear Search</a>
             @endif
         </form>
     </div>
 
+    <div id="salesReportContainer">
     @if(isset($orders) && $orders->count() > 0)
         <div class="order-table">
             <div class="table-header">
@@ -1422,12 +1424,147 @@
             <p class="no-orders">Tidak ada data penjualan.</p>
         </div>
     @endif
+    </div>
 </div>
 
 
 <script>
 // Make orders data available to JavaScript
 window.ordersData = @json($orders ?? []);
+
+// ==== AJAX Search/Filter/Pagination for Sales Report ====
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('salesReportContainer');
+    const searchForm = document.getElementById('salesSearchForm');
+    const searchInput = document.getElementById('salesSearchInput');
+    const perPageSelect = document.getElementById('per_page');
+    const clearSearchLink = document.getElementById('salesClearSearch');
+    const filterTypeSelect = document.getElementById('filter_type');
+    const singleDateInput = document.getElementById('date');
+    const startDateInput = document.getElementById('start_date');
+    const endDateInput = document.getElementById('end_date');
+    let typingTimer;
+    const doneTypingInterval = 10;
+
+    function buildSalesUrl() {
+        const url = new URL('{{ route("sales-report") }}', window.location.origin);
+        const q = (searchInput?.value || '').trim();
+        if (q) url.searchParams.set('search', q);
+        if (perPageSelect) url.searchParams.set('per_page', perPageSelect.value);
+        // preserve current filter selections
+        const ft = filterTypeSelect?.value || (new URLSearchParams(window.location.search)).get('filter_type');
+        if (ft) url.searchParams.set('filter_type', ft);
+        if (ft === 'range') {
+            const sd = startDateInput?.value;
+            const ed = endDateInput?.value;
+            if (sd) url.searchParams.set('start_date', sd);
+            if (ed) url.searchParams.set('end_date', ed);
+        } else if (ft === 'week' || ft === 'month') {
+            // nothing extra
+        } else {
+            const d = singleDateInput?.value;
+            if (d) url.searchParams.set('date', d);
+        }
+        return url;
+    }
+
+    function pushStateFrom(url) {
+        const newUrl = new URL(window.location.href);
+        newUrl.search = url.search;
+        window.history.pushState({}, '', newUrl);
+    }
+
+    function tryUpdateOrdersDataFrom(html) {
+        try {
+            const match = html.match(/window\.ordersData\s*=\s*(\{[\s\S]*?\}|\[[\s\S]*?\]);/);
+            if (match && match[1]) {
+                const parsed = JSON.parse(match[1]);
+                window.ordersData = parsed;
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    function fetchSalesPage(url) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            }
+        })
+        .then(res => res.text())
+        .then(html => {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const newContainer = temp.querySelector('#salesReportContainer') || temp;
+            if (container) container.innerHTML = newContainer.innerHTML;
+            tryUpdateOrdersDataFrom(html);
+        })
+        .catch(err => console.error('Sales AJAX error:', err));
+    }
+
+    function performSalesSearch() {
+        const url = buildSalesUrl();
+        url.searchParams.delete('page');
+        fetchSalesPage(url);
+        pushStateFrom(url);
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performSalesSearch();
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(performSalesSearch, doneTypingInterval);
+        });
+    }
+
+    if (clearSearchLink) {
+        clearSearchLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (searchInput) searchInput.value = '';
+            performSalesSearch();
+        });
+    }
+
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            performSalesSearch();
+        });
+    }
+
+    // Intercept pagination clicks inside the container
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('.pagination a');
+        if (a && container && container.contains(a)) {
+            e.preventDefault();
+            const url = new URL(a.href);
+            // rebuild current params from inputs
+            const base = buildSalesUrl();
+            for (const [k, v] of base.searchParams.entries()) {
+                if (v) url.searchParams.set(k, v);
+            }
+            fetchSalesPage(url);
+            pushStateFrom(url);
+        }
+    });
+
+    // Override global changePerPage to use AJAX when available
+    window.changePerPage = function(value) {
+        if (perPageSelect) perPageSelect.value = value;
+        const url = buildSalesUrl();
+        url.searchParams.set('per_page', value);
+        url.searchParams.delete('page');
+        fetchSalesPage(url);
+        pushStateFrom(url);
+    };
+});
 
 // Direct Print Receipt Function
 function printReceiptDirectly(orderId) {

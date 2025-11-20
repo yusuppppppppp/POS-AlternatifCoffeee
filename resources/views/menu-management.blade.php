@@ -972,11 +972,12 @@
                 @endforeach
             </div>
             
-            <form method="GET" action="{{ route('menu-management') }}" class="search-form">
+            <form id="menuSearchForm" class="search-form">
                 <div class="search-input-group">
                     <input 
                         type="text" 
                         name="search" 
+                        id="menuSearchInput"
                         value="{{ $search ?? '' }}" 
                         placeholder="Search by menu name, category, or price..."
                         class="search-input"
@@ -988,7 +989,7 @@
                     </button>
                 </div>
                 @if(!empty($search ?? ''))
-                    <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search">Clear Search</a>
+                    <a href="{{ route('menu-management') }}{{ $category ? '?category=' . $category : '' }}" class="clear-search" id="menuClearSearch">Clear Search</a>
                 @endif
                 @if($category && $category !== 'All')
                     <input type="hidden" name="category" value="{{ $category }}">
@@ -997,6 +998,7 @@
         </div>
     </div>
     
+    <div id="menuListContainer">
     <div class="table-container">
         <table class="menu-table">
             <thead>
@@ -1073,6 +1075,7 @@
     <div class="pagination-links">
         {{ $menus->appends(['per_page' => request('per_page', 10), 'search' => request('search'), 'category' => request('category')])->links() }}
     </div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -1123,6 +1126,138 @@
 </div>
 
 <script>
+// ==== AJAX Search/Filter/Pagination for Menu Management ====
+document.addEventListener('DOMContentLoaded', function() {
+    const listContainer = document.getElementById('menuListContainer');
+    const searchForm = document.getElementById('menuSearchForm');
+    const searchInput = document.getElementById('menuSearchInput');
+    const perPageSelect = document.getElementById('per_page');
+    const clearSearchLink = document.getElementById('menuClearSearch');
+    let typingTimer;
+    const doneTypingInterval = 10;
+
+    function buildUrl() {
+        const url = new URL('{{ route("menu-management") }}', window.location.origin);
+        const searchVal = (searchInput?.value || '').trim();
+        if (searchVal) url.searchParams.set('search', searchVal);
+        // category from active button, if any
+        const activeCatBtn = document.querySelector('.category-filter-btn.active');
+        if (activeCatBtn) {
+            const catText = activeCatBtn.textContent.trim();
+            if (catText && catText !== 'All Category') {
+                url.searchParams.set('category', catText);
+            }
+        }
+        if (perPageSelect) url.searchParams.set('per_page', perPageSelect.value);
+        return url;
+    }
+
+    function pushStateFrom(url) {
+        const newUrl = new URL(window.location.href);
+        // Reset and set
+        newUrl.search = url.search;
+        window.history.pushState({}, '', newUrl);
+    }
+
+    function fetchMenuPage(url) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            }
+        })
+        .then(res => res.text())
+        .then(html => {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const newContainer = temp.querySelector('#menuListContainer') || temp;
+            listContainer.innerHTML = newContainer.innerHTML;
+        })
+        .catch(err => console.error('Menu AJAX error:', err));
+    }
+
+    function performMenuSearch() {
+        const url = buildUrl();
+        // ensure first page when changing params
+        url.searchParams.delete('page');
+        fetchMenuPage(url);
+        pushStateFrom(url);
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performMenuSearch();
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(performMenuSearch, doneTypingInterval);
+        });
+    }
+
+    if (clearSearchLink) {
+        clearSearchLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (searchInput) searchInput.value = '';
+            performMenuSearch();
+        });
+    }
+
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            performMenuSearch();
+        });
+    }
+
+    // Handle pagination clicks
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('.pagination a');
+        if (a && listContainer.contains(a)) {
+            e.preventDefault();
+            const url = new URL(a.href);
+            // preserve current search/category/per_page from inputs/active states
+            const base = buildUrl();
+            url.searchParams.set('search', base.searchParams.get('search') || '');
+            if (!base.searchParams.get('search')) url.searchParams.delete('search');
+            const cat = base.searchParams.get('category');
+            if (cat) url.searchParams.set('category', cat); else url.searchParams.delete('category');
+            const pp = base.searchParams.get('per_page');
+            if (pp) url.searchParams.set('per_page', pp);
+            fetchMenuPage(url);
+            pushStateFrom(url);
+        }
+    });
+
+    // Override global functions to use AJAX
+    window.filterByCategory = function(category) {
+        // set active button UI
+        document.querySelectorAll('.category-filter-btn').forEach(btn => btn.classList.remove('active'));
+        // Find button by text
+        const buttons = Array.from(document.querySelectorAll('.category-filter-btn'));
+        const target = buttons.find(b => b.textContent.trim() === (category === 'All' ? 'All Category' : category));
+        if (target) target.classList.add('active');
+        // Build and fetch
+        const url = buildUrl();
+        if (category === 'All') url.searchParams.delete('category');
+        else url.searchParams.set('category', category);
+        url.searchParams.delete('page');
+        fetchMenuPage(url);
+        pushStateFrom(url);
+    };
+
+    window.changePerPage = function(value) {
+        if (perPageSelect) perPageSelect.value = value;
+        const url = buildUrl();
+        url.searchParams.set('per_page', value);
+        url.searchParams.delete('page');
+        fetchMenuPage(url);
+        pushStateFrom(url);
+    };
+});
+// ==== End AJAX block ====
 function showModal(action, id = null) {
     const modal = document.getElementById('menuModal');
     const title = document.getElementById('modalTitle');

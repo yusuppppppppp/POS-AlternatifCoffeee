@@ -706,14 +706,16 @@
 
     <!-- Search Form -->
     <div class="search-container">
-        <form method="GET" action="{{ route('order-list') }}" class="search-form">
+        <form id="searchForm" class="search-form">
             <div class="search-input-group">
                 <input 
                     type="text" 
                     name="search" 
+                    id="searchInput"
                     value="{{ $search }}" 
                     placeholder="Search by customer name, order type, ID, total amount, cashier name, or menu name..."
                     class="search-input"
+                    autocomplete="off"
                 >
                 <button type="submit" class="search-button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -722,12 +724,12 @@
                 </button>
             </div>
             @if(!empty($search))
-                <a href="{{ route('order-list') }}" class="clear-search">Clear Search</a>
+                <a href="{{ route('order-list') }}" class="clear-search" id="clearSearch">Clear Search</a>
             @endif
         </form>
     </div>
 
-    @if($orders->count() > 0)
+    <div id="orderListContainer">
         <div class="order-table">
             <div class="table-header">
                 <div>No.</div>
@@ -739,127 +741,239 @@
                 <div>Action</div>
             </div>
             
-            @foreach($orders as $index => $order)
-                <div class="order-row" onclick="toggleOrderDetails({{ $index }})">
-                    <div class="order-number">{{ $loop->iteration }}</div>
-                    <div class="order-id">{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
-                    <div class="customer-name">{{ $order->customer_name }}</div>
-                    <div class="order-type">{{ $order->order_type }}</div>
-                    <div class="order-date">{{ $order->created_at->format('h:i:s A') }}</div>
-                    <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
-                    <div class="info-icon">
-                        <img src="{{ asset('images/info.png') }}" alt="Info" style="height:24px;width:24px;">
-                    </div>
-                </div>
-                
-                <!-- Simplified order details -->
-                <div class="order-details" id="details-{{ $index }}">
-                    <div class="customer-info">
-                        <h4>Customer Information</h4>
-                        <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
-                        <p><strong>Type:</strong> {{ ucfirst($order->order_type) }}</p>
-                        <p><strong>Time:</strong> {{ $order->created_at->format('h:i:s A') }}</p>
-                        <p><strong>Cashier:</strong> {{ $order->user ? $order->user->name : 'Unknown' }}</p>
+            @if($orders->count() > 0)
+                @foreach($orders as $index => $order)
+                    <div class="order-row" data-order-id="{{ $index }}">
+                        <div class="order-number">{{ $loop->iteration }}</div>
+                        <div class="order-id">{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}</div>
+                        <div class="customer-name">{{ $order->customer_name }}</div>
+                        <div class="order-type">{{ $order->order_type }}</div>
+                        <div class="order-date">{{ $order->created_at->format('h:i:s A') }}</div>
+                        <div class="total-amount">Rp. {{ number_format($order->total_amount, 0, ',', '.') }}</div>
+                        <div class="info-icon">
+                            <img src="{{ asset('images/info.png') }}" alt="Info" style="height:24px;width:24px;">
+                        </div>
                     </div>
                     
-                    <h4>Items Ordered:</h4>
-                    <ul>
-                        @foreach($order->items as $item)
-                            <li>
-                                <span>
-                                    <span class="item-quantity">{{ $item->quantity }}x</span>
-                                    {{ $item->menu_name }}
-                                </span>
-                                <span class="item-price">Rp. {{ number_format($item->price, 0, ',', '.') }}</span>
-                            </li>
-                        @endforeach
-                    </ul>
+                    <!-- Order details -->
+                    <div class="order-details" id="details-{{ $index }}">
+                        <div class="customer-info">
+                            <h4>Customer Information</h4>
+                            <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
+                            <p><strong>Type:</strong> {{ ucfirst($order->order_type) }}</p>
+                            <p><strong>Time:</strong> {{ $order->created_at->format('h:i:s A') }}</p>
+                            <p><strong>Cashier:</strong> {{ $order->user ? $order->user->name : 'Unknown' }}</p>
+                        </div>
+                        
+                        <h4>Items Ordered:</h4>
+                        <ul>
+                            @foreach($order->items as $item)
+                                <li>
+                                    <span>
+                                        <span class="item-quantity">{{ $item->quantity }}x</span>
+                                        {{ $item->menu_name }}
+                                    </span>
+                                    <span class="item-price">Rp. {{ number_format($item->price, 0, ',', '.') }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
+            @else
+                <div class="no-orders">
+                    <p>Tidak ada pesanan hari ini.</p>
                 </div>
-            @endforeach
-         </div>
-         
-         <!-- Show Entries and Pagination -->
-         <div class="pagination-container">
-             <div class="pagination-info">
-                 Showing {{ $orders->firstItem() ?? 0 }} to {{ $orders->lastItem() ?? 0 }} of {{ $orders->total() }} entries
-             </div>
-             
-             <div class="per-page-selector">
-                 <label for="per_page">Show:</label>
-                 <select id="per_page" onchange="changePerPage(this.value)">
-                     <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
-                     <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
-                     <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
-                     <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
-                     <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
-                 </select>
-                 <span>entries</span>
-             </div>
-         </div>
-         
-         <div class="pagination-links">
-             {{ $orders->appends(['per_page' => $perPage, 'search' => $search])->links() }}
-         </div>
+            @endif
         </div>
-    @else
-        <div class="order-table">
-            <p class="no-orders">Tidak ada pesanan hari ini.</p>
-        </div>
-    @endif
+        
+        @if($orders->count() > 0)
+            <!-- Show Entries and Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing {{ $orders->firstItem() ?? 0 }} to {{ $orders->lastItem() ?? 0 }} of {{ $orders->total() }} entries
+                </div>
+                
+                <div class="per-page-selector">
+                    <label for="per_page">Show:</label>
+                    <select id="per_page" name="per_page">
+                        <option value="5" {{ $perPage == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ $perPage == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ $perPage == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ $perPage == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ $perPage == 100 ? 'selected' : '' }}>100</option>
+                    </select>
+                    <span>entries</span>
+                </div>
+            </div>
+            
+            <div class="pagination-links">
+                {{ $orders->appends(['per_page' => $perPage, 'search' => $search])->links() }}
+            </div>
+        @endif
+    </div>
+
+    <script>
+    // Pindahkan fungsi ke global scope agar bisa dipanggil dari mana saja
+    function toggleOrderDetails(index) {
+        const details = document.getElementById('details-' + index);
+        if (!details) return;
+        
+        const isShowing = details.classList.contains('show');
+        
+        // Sembunyikan semua detail terlebih dahulu
+        document.querySelectorAll('.order-details').forEach(detail => {
+            detail.classList.remove('show');
+        });
+        
+        // Toggle detail yang diklik
+        if (!isShowing) {
+            details.classList.add('show');
+        }
+    }
+    
+    // Event delegation untuk klik pada order-row
+    function attachRowDelegation() {
+        const container = document.getElementById('orderListContainer');
+        if (!container) return;
+        // Pastikan tidak double-binding
+        if (container.__rowDelegationAttached) return;
+        container.__rowDelegationAttached = true;
+        container.addEventListener('click', function(e) {
+            const row = e.target.closest('.order-row');
+            if (row && container.contains(row)) {
+                const id = row.getAttribute('data-order-id');
+                toggleOrderDetails(id);
+            }
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const orderListContainer = document.getElementById('orderListContainer');
+        const clearSearch = document.getElementById('clearSearch');
+        let typingTimer;
+        const doneTypingInterval = 10;
+
+        // Inisialisasi event delegation agar bekerja di initial load
+        attachRowDelegation();
+
+        // Handle form submission
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+
+        // Handle clear search
+        if (clearSearch) {
+            clearSearch.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchInput.value = '';
+                performSearch();
+            });
+        }
+
+        // Handle input with debounce
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(performSearch, doneTypingInterval);
+        });
+
+        // Handle per page change
+        const perPageSelect = document.querySelector('.per-page-selector select');
+        if (perPageSelect) {
+            perPageSelect.addEventListener('change', function() {
+                performSearch();
+            });
+        }
+
+        // Handle pagination clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.pagination a')) {
+                e.preventDefault();
+                const url = e.target.closest('a').href;
+                fetchPage(url);
+            }
+        });
+
+        function performSearch() {
+            const searchValue = searchInput.value.trim();
+            const perPage = perPageSelect ? perPageSelect.value : 10;
+            const url = new URL('{{ route("order-list") }}');
+            
+            if (searchValue) {
+                url.searchParams.set('search', searchValue);
+            }
+            
+            url.searchParams.set('per_page', perPage);
+            url.searchParams.set('ajax', '1');
+            
+            fetchPage(url);
+            
+            // Update URL without page reload
+            const newUrl = new URL(window.location.href);
+            if (searchValue) {
+                newUrl.searchParams.set('search', searchValue);
+            } else {
+                newUrl.searchParams.delete('search');
+            }
+            newUrl.searchParams.set('per_page', perPage);
+            window.history.pushState({}, '', newUrl);
+        }
+
+        function fetchPage(url) {
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html',
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Create a temporary container to parse the response
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                
+                // Extract and update the order list container
+                const newOrderList = tempDiv.querySelector('#orderListContainer') || tempDiv;
+                orderListContainer.innerHTML = newOrderList.innerHTML;
+                
+                // Delegation cukup dipasang sekali, tidak perlu re-init
+                attachRowDelegation();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+
+    // Add loading animation for download button
+    document.addEventListener('DOMContentLoaded', function() {
+        const downloadBtn = document.querySelector('.btn-download-pdf');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', function(e) {
+                const btn = this;
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite;margin-right:8px;"></span>Generating...';
+                btn.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.pointerEvents = 'auto';
+                }, 2000);
+            });
+        }
+
+        // Add CSS animation for loading spinner
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+    </script>
 </div>
-
-<script>
-function toggleOrderDetails(index) {
-    const details = document.getElementById('details-' + index);
-    const isShowing = details.classList.contains('show');
-    
-    // Hide all other details first
-    document.querySelectorAll('.order-details').forEach(detail => {
-        detail.classList.remove('show');
-    });
-    
-    // Toggle current details
-    if (!isShowing) {
-        details.classList.add('show');
-    }
-}
-
-// Add loading animation for download button
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('.btn-download-pdf').addEventListener('click', function(e) {
-        const btn = this;
-        const originalText = btn.innerHTML;
-        
-        btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin 0.8s linear infinite;margin-right:8px;"></span>Generating...';
-        btn.style.pointerEvents = 'none';
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.pointerEvents = 'auto';
-        }, 2000);
-    });
-});
-
-// Add CSS animation for loading spinner
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes spin {
-        to { transform: rotate(360deg); }
-    }
-`;
-document.head.appendChild(style);
-
-// Function to change per page
-function changePerPage(value) {
-    const currentUrl = new URL(window.location);
-    currentUrl.searchParams.set('per_page', value);
-    currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
-    // Preserve search parameter if it exists
-    const searchParam = currentUrl.searchParams.get('search');
-    if (searchParam) {
-        currentUrl.searchParams.set('search', searchParam);
-    }
-    window.location.href = currentUrl.toString();
-}
-</script>
 @endsection

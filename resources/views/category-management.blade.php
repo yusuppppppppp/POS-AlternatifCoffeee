@@ -741,11 +741,12 @@
     
     <!-- Search Form -->
     <div class="search-container">
-        <form method="GET" action="{{ route('category-management') }}" class="search-form">
+        <form id="categorySearchForm" class="search-form">
             <div class="search-input-group">
                 <input 
                     type="text" 
                     name="search" 
+                    id="categorySearchInput"
                     value="{{ $search ?? '' }}" 
                     placeholder="Search categories..."
                     class="search-input"
@@ -757,62 +758,64 @@
                 </button>
             </div>
             @if(!empty($search ?? ''))
-                <a href="{{ route('category-management') }}" class="clear-search">Clear Search</a>
+                <a href="{{ route('category-management') }}" class="clear-search" id="categoryClearSearch">Clear Search</a>
             @endif
         </form>
     </div>
     
-    <div class="table-container">
-        <table class="category-table">
-            <thead>
-                <tr>
-                    <th style="width: 60px;">No</th>
-                    <th>Category Name</th>
-                    <th style="width: 120px;">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="categoryTableBody">
-                @foreach($categories as $index => $category)
-                <tr>
-                    <td style="text-align: center; font-weight: 600; color: #2E4766;">{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
-                    <td class="category-name">{{ $category->name }}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="edit-btn" onclick="showModal('edit', '{{ $category->id }}')">
-                                <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:18px;width:18px;">
-                            </button>
-                            <button class="delete-btn" onclick="deleteCategory('{{ $category->id }}')">
-                                <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:18px;width:18px;">
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Show Entries and Pagination -->
-    <div class="pagination-container">
-        <div class="pagination-info">
-            Showing {{ $categories->firstItem() ?? 0 }} to {{ $categories->lastItem() ?? 0 }} of {{ $categories->total() }} entries
+    <div id="categoryListContainer">
+        <div class="table-container">
+            <table class="category-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">No</th>
+                        <th>Category Name</th>
+                        <th style="width: 120px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                    @foreach($categories as $index => $category)
+                    <tr>
+                        <td style="text-align: center; font-weight: 600; color: #2E4766;">{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
+                        <td class="category-name">{{ $category->name }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="edit-btn" onclick="showModal('edit', '{{ $category->id }}')">
+                                    <img src="{{ asset('images/edit.png') }}" alt="Edit" style="height:18px;width:18px;">
+                                </button>
+                                <button class="delete-btn" onclick="deleteCategory('{{ $category->id }}')">
+                                    <img src="{{ asset('images/hapus.png') }}" alt="Delete" style="height:18px;width:18px;">
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
         
-        <div class="per-page-selector">
-            <label for="per_page">Show:</label>
-            <select id="per_page" onchange="changePerPage(this.value)">
-                <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
-                <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
-                <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
-                <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
-                <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
-            </select>
-            <span>entries</span>
+        <!-- Show Entries and Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing {{ $categories->firstItem() ?? 0 }} to {{ $categories->lastItem() ?? 0 }} of {{ $categories->total() }} entries
+            </div>
+            
+            <div class="per-page-selector">
+                <label for="per_page">Show:</label>
+                <select id="per_page" onchange="changePerPage(this.value)">
+                    <option value="5" {{ request('per_page', 10) == 5 ? 'selected' : '' }}>5</option>
+                    <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                    <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                </select>
+                <span>entries</span>
+            </div>
         </div>
-    </div>
-    
-    <div class="pagination-links">
-        {{ $categories->appends(['per_page' => request('per_page', 10), 'search' => request('search')])->links() }}
+        
+        <div class="pagination-links">
+            {{ $categories->appends(['per_page' => request('per_page', 10), 'search' => request('search')])->links() }}
+        </div>
     </div>
 </div>
 
@@ -842,6 +845,110 @@
 </div>
 
 <script>
+// ==== AJAX Search/Pagination for Category Management ====
+document.addEventListener('DOMContentLoaded', function() {
+    const listContainer = document.getElementById('categoryListContainer');
+    const searchForm = document.getElementById('categorySearchForm');
+    const searchInput = document.getElementById('categorySearchInput');
+    const perPageSelect = document.getElementById('per_page');
+    const clearSearchLink = document.getElementById('categoryClearSearch');
+    let typingTimer;
+    const doneTypingInterval = 10;
+
+    function buildUrl() {
+        const url = new URL('{{ route("category-management") }}', window.location.origin);
+        const s = (searchInput?.value || '').trim();
+        if (s) url.searchParams.set('search', s);
+        if (perPageSelect) url.searchParams.set('per_page', perPageSelect.value);
+        return url;
+    }
+
+    function pushStateFrom(url) {
+        const newUrl = new URL(window.location.href);
+        newUrl.search = url.search;
+        window.history.pushState({}, '', newUrl);
+    }
+
+    function fetchCategoryPage(url) {
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'text/html'
+            }
+        })
+        .then(res => res.text())
+        .then(html => {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            const newContainer = temp.querySelector('#categoryListContainer') || temp;
+            listContainer.innerHTML = newContainer.innerHTML;
+        })
+        .catch(err => console.error('Category AJAX error:', err));
+    }
+
+    function performCategorySearch() {
+        const url = buildUrl();
+        url.searchParams.delete('page');
+        fetchCategoryPage(url);
+        pushStateFrom(url);
+    }
+
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performCategorySearch();
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(performCategorySearch, doneTypingInterval);
+        });
+    }
+
+    if (clearSearchLink) {
+        clearSearchLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (searchInput) searchInput.value = '';
+            performCategorySearch();
+        });
+    }
+
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', function() {
+            performCategorySearch();
+        });
+    }
+
+    // Handle pagination clicks
+    document.addEventListener('click', function(e) {
+        const a = e.target.closest('.pagination a');
+        if (a && listContainer.contains(a)) {
+            e.preventDefault();
+            const url = new URL(a.href);
+            // preserve current search/per_page
+            const base = buildUrl();
+            const s = base.searchParams.get('search');
+            if (s) url.searchParams.set('search', s); else url.searchParams.delete('search');
+            const pp = base.searchParams.get('per_page');
+            if (pp) url.searchParams.set('per_page', pp);
+            fetchCategoryPage(url);
+            pushStateFrom(url);
+        }
+    });
+
+    // Override changePerPage globally
+    window.changePerPage = function(value) {
+        if (perPageSelect) perPageSelect.value = value;
+        const url = buildUrl();
+        url.searchParams.set('per_page', value);
+        url.searchParams.delete('page');
+        fetchCategoryPage(url);
+        pushStateFrom(url);
+    };
+});
+// ==== End AJAX block ====
 function showModal(action, id = null) {
     const modal = document.getElementById('categoryModal');
     const title = document.getElementById('modalTitle');
@@ -885,15 +992,13 @@ function hideModal() {
 
 // Function to handle show entries change
 function changePerPage(value) {
-    const currentUrl = new URL(window.location);
-    currentUrl.searchParams.set('per_page', value);
-    currentUrl.searchParams.delete('page'); // Reset to first page when changing entries
-    // Preserve search parameter if it exists
-    const searchParam = currentUrl.searchParams.get('search');
-    if (searchParam) {
-        currentUrl.searchParams.set('search', searchParam);
+    // Overridden by AJAX block above (kept for safety)
+    const event = new Event('change');
+    const sel = document.getElementById('per_page');
+    if (sel) {
+        sel.value = value;
+        sel.dispatchEvent(event);
     }
-    window.location.href = currentUrl.toString();
 }
 
 document.getElementById('categoryForm').addEventListener('submit', function(e) {

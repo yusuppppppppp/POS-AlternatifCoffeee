@@ -10,6 +10,101 @@
         box-sizing: border-box;
     }
 
+    /* Elegant Notification System */
+    .elegant-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 350px;
+        width: 100%;
+    }
+
+    .notification-item {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        transform: translateX(120%);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        display: flex;
+        align-items: center;
+        border-left: 4px solid #2E4766;
+    }
+
+    .notification-item.show {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .notification-item.error {
+        border-left-color: #ef4444;
+    }
+
+    .notification-item.warning {
+        border-left-color: #f59e0b;
+    }
+
+    .notification-item.success {
+        border-left-color: #10b981;
+    }
+
+    .notification-icon {
+        margin-right: 12px;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .notification-content {
+        flex: 1;
+    }
+
+    .notification-title {
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 4px;
+        font-size: 15px;
+    }
+
+    .notification-message {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .notification-close {
+        margin-left: 12px;
+        cursor: pointer;
+        color: #9ca3af;
+        font-size: 18px;
+        transition: color 0.2s;
+        background: none;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .notification-close:hover {
+        color: #6b7280;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         background:rgba(135, 178, 248, 0.14);

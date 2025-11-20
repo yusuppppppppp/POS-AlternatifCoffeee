@@ -393,44 +393,55 @@ class UserController extends Controller
 
     public function orderList(Request $request)
     {
-        if (Auth::check() && Auth::user()->usertype === 'user') {
-            // Get per_page from request, default to 5
-            $perPage = $request->get('per_page', 5);
-            $search = $request->get('search', '');
-            
-            $query = Order::with(['items', 'user'])
-                ->whereDate('created_at', now()->toDateString());
-            
-            // Add search functionality
-            if (!empty($search)) {
-                $query->where(function($q) use ($search) {
-                    $q->where('customer_name', 'LIKE', "%{$search}%")
-                      ->orWhere('order_type', 'LIKE', "%{$search}%")
-                      ->orWhere('id', 'LIKE', "%{$search}%")
-                      ->orWhere('total_amount', 'LIKE', "%{$search}%")
-                      ->orWhereHas('user', function($userQuery) use ($search) {
-                          $userQuery->where('name', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('items', function($itemQuery) use ($search) {
-                          $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
-                      });
-                });
-            }
-            
-            $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
-            
-            // Calculate total orders for today (same as dashboard)
-            $totalOrdersToday = Order::whereDate('created_at', now()->toDateString())
-                ->count();
-                
-            // Calculate total revenue for today (same as dashboard)
-            $totalRevenueToday = Order::whereDate('created_at', now()->toDateString())
-                ->sum('total_amount');
-                
-            return view('order-list', compact('orders', 'totalOrdersToday', 'totalRevenueToday', 'perPage', 'search'));
-        } else {
-            return redirect()->route('login');
+        if (!Auth::check() || Auth::user()->usertype !== 'user') {
+            return $request->ajax() 
+                ? response()->json(['error' => 'Unauthorized'], 401)
+                : redirect()->route('login');
         }
+
+        // Get per_page from request, default to 10
+        $perPage = $request->get('per_page', 10);
+        $search = $request->get('search', '');
+        
+        $query = Order::with(['items', 'user'])
+            ->whereDate('created_at', now()->toDateString());
+        
+        // Add search functionality
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('customer_name', 'LIKE', "%{$search}%")
+                  ->orWhere('order_type', 'LIKE', "%{$search}%")
+                  ->orWhere('id', 'LIKE', "%{$search}%")
+                  ->orWhere('total_amount', 'LIKE', "%{$search}%")
+                  ->orWhereHas('user', function($userQuery) use ($search) {
+                      $userQuery->where('name', 'LIKE', "%{$search}%");
+                  })
+                  ->orWhereHas('items', function($itemQuery) use ($search) {
+                      $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
+                  });
+            });
+        }
+        
+        $orders = $query->orderBy('created_at', 'desc')->paginate($perPage);
+        
+        // Calculate total orders for today (same as dashboard)
+        $totalOrdersToday = Order::whereDate('created_at', now()->toDateString())
+            ->count();
+            
+        // Calculate total revenue for today (same as dashboard)
+        $totalRevenueToday = Order::whereDate('created_at', now()->toDateString())
+            ->sum('total_amount');
+            
+        // Return view for both AJAX and regular requests
+        $view = view('order-list', compact('orders', 'totalOrdersToday', 'totalRevenueToday', 'perPage', 'search'));
+        
+        // If it's an AJAX request, return only the orders container and stats
+        if ($request->ajax() || $request->has('ajax')) {
+            $content = $view->render();
+            return response($content);
+        }
+        
+        return $view;
     }
 
     public function downloadOrderListPdf()
