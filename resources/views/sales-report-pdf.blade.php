@@ -151,7 +151,7 @@
                 <div class="summary-value">{{ $totalOrders }}</div>
             </div>
             <div class="summary-item">
-                <div class="summary-label">Total Revenue</div>
+                <div class="summary-label">Total Income</div>
                 <div class="summary-value">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</div>
             </div>
             <div class="summary-item">
