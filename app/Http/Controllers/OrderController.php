@@ -89,7 +89,7 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'data' => $orders
-        ]);
+        ]); 
     }
  
 //     public function todayOrders()

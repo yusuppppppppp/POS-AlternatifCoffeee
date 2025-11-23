@@ -951,15 +951,27 @@
     }
 
     .pdf-download-form button[type="button"] {
-        background: linear-gradient(135deg, #2E4766 0%,rgb(21, 28, 37) 100%);
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
         color: white;
         box-shadow: 0 2px 8px rgba(71, 96, 127, 0.2);
     }
 
     .pdf-download-form button[type="button"]:hover {
-        background: linear-gradient(135deg, #2E47667 0%,rgb(8, 12, 17) 100%);
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(71, 96, 127, 0.2);
+    }
+
+    .btn-send-email {
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-send-email:hover {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
     .filter-form a.reset-btn,
@@ -975,6 +987,16 @@
         color: #374151;
         transform: translateY(-1px);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Hide reset button by default */
+    .pdf-download-form a.reset-btn {
+        display: none;
+    }
+
+    /* Show reset button when filter is applied */
+    .pdf-download-form a.reset-btn.show-reset {
+        display: inline-flex;
     }
 
     /* PDF Download Section */
@@ -1229,6 +1251,178 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #1a2f42;
     }
+
+    /* Email Modal Styles */
+    .email-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(46, 71, 102, 0.8);
+        backdrop-filter: blur(12px);
+        z-index: 3000;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .email-modal-content {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        padding: 30px;
+        width: 90%;
+        max-width: 420px;
+        margin: 20vh auto;
+        border-radius: 24px;
+        box-shadow: 
+            0 25px 50px rgba(46, 71, 102, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        animation: slideUp 0.4s ease-out;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .email-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 16px;
+    }
+
+    .email-modal-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
+        border-radius: 1px;
+    }
+
+    .email-modal-title {
+        color: #2E4766;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .email-close-btn {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(46, 71, 102, 0.1);
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        color: #2E4766;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .email-close-btn:hover {
+        background: rgba(46, 71, 102, 0.2);
+        transform: rotate(90deg);
+    }
+
+    .email-form-group {
+        margin-bottom: 16px;
+    }
+
+    .email-form-group label {
+        font-weight: 600;
+        color: #2E4766;
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+    }
+
+    .email-form-group input,
+    .email-form-group textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #fff;
+        font-family: inherit;
+    }
+
+    .email-form-group textarea {
+        min-height: 70px;
+        resize: vertical;
+    }
+
+    .email-form-group input:focus,
+    .email-form-group textarea:focus {
+        outline: none;
+        border-color: #2E4766;
+        box-shadow: 
+            0 0 0 3px rgba(46, 71, 102, 0.1),
+            0 4px 12px rgba(46, 71, 102, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .email-submit-btn {
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 4px 15px rgba(46, 71, 102, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .email-submit-btn:hover {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+        transform: translateY(-2px);
+        box-shadow: 
+            0 6px 20px rgba(46, 71, 102, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .email-submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .email-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .email-error-message {
+        margin-top: 12px;
+        padding: 10px;
+        background: #fee2e2;
+        color: #dc2626;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+    }
+
+    .email-success-message {
+        margin-top: 12px;
+        padding: 10px;
+        background: #d1fae5;
+        color: #059669;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+    }
 </style>
 
 <div class="order-container">
@@ -1295,7 +1489,15 @@
                 Download PDF
             </button>
             
-            <a href="{{ route('sales-report') }}" class="reset-btn">
+            <button type="button" onclick="sendEmail()" class="btn-send-email">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Send Email
+            </button>
+            
+            <a href="{{ route('sales-report') }}" class="reset-btn" id="resetFilterBtn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -1427,6 +1629,35 @@
     </div>
 </div>
 
+<!-- Email Modal -->
+<div id="emailModal" class="email-modal">
+    <div class="email-modal-content">
+        <div class="email-modal-header">
+            <h2 class="email-modal-title">Kirim Sales Report via Email</h2>
+            <button class="email-close-btn" onclick="hideEmailModal()">×</button>
+        </div>
+        <form id="emailForm">
+            @csrf
+            <div class="email-form-group">
+                <label for="email_to">Alamat Email Tujuan *</label>
+                <input type="email" name="email" id="email_to" required placeholder="contoh@email.com">
+            </div>
+            <div class="email-form-group">
+                <label for="sender_name">Nama Pengirim *</label>
+                <input type="text" name="sender_name" id="sender_name" required placeholder="Masukkan nama pengirim">
+            </div>
+            <div class="email-form-group">
+                <label for="description">Deskripsi</label>
+                <textarea name="description" id="description" placeholder="Masukkan deskripsi (opsional)"></textarea>
+            </div>
+            <button type="submit" class="email-submit-btn" id="emailSubmitBtn">
+                <span class="btn-text">Kirim Email</span>
+            </button>
+            <div id="emailErrorMessage" class="email-error-message"></div>
+            <div id="emailSuccessMessage" class="email-success-message"></div>
+        </form>
+    </div>
+</div>
 
 <script>
 // Make orders data available to JavaScript
@@ -1787,11 +2018,182 @@ function downloadPDF() {
     window.location.href = '{{ route("sales-report.download-pdf") }}?' + params.toString();
 }
 
+// Function to show email modal
+function sendEmail() {
+    const modal = document.getElementById('emailModal');
+    const errorMessage = document.getElementById('emailErrorMessage');
+    const successMessage = document.getElementById('emailSuccessMessage');
+    
+    // Reset form and messages
+    document.getElementById('emailForm').reset();
+    errorMessage.style.display = 'none';
+    successMessage.style.display = 'none';
+    
+    // Show modal
+    modal.style.display = 'block';
+}
+
+// Function to hide email modal
+function hideEmailModal() {
+    const modal = document.getElementById('emailModal');
+    modal.style.display = 'none';
+}
+
+// Handle email form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const emailForm = document.getElementById('emailForm');
+    const emailModal = document.getElementById('emailModal');
+    const errorMessage = document.getElementById('emailErrorMessage');
+    const successMessage = document.getElementById('emailSuccessMessage');
+    const submitBtn = document.getElementById('emailSubmitBtn');
+    const btnText = submitBtn.querySelector('.btn-text');
+    
+    if (emailForm) {
+        emailForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            btnText.textContent = 'Mengirim...';
+            
+            // Get filter form data
+            const filterForm = document.getElementById('filterForm');
+            const filterFormData = new FormData(filterForm);
+            const currentParams = new URLSearchParams(window.location.search);
+            
+            // Get email form data
+            const emailFormData = new FormData(emailForm);
+            
+            // Build form data with filter parameters
+            const formData = new FormData();
+            
+            // Add CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || emailFormData.get('_token');
+            if (csrfToken) {
+                formData.append('_token', csrfToken);
+            }
+            
+            // Add email form fields
+            formData.append('email', emailFormData.get('email'));
+            formData.append('sender_name', emailFormData.get('sender_name'));
+            if (emailFormData.get('description')) {
+                formData.append('description', emailFormData.get('description'));
+            }
+            
+            // Add filter parameters
+            const filterType = filterFormData.get('filter_type') || 'single';
+            formData.append('filter_type', filterType);
+            
+            if (filterType === 'range') {
+                const startDate = filterFormData.get('start_date');
+                const endDate = filterFormData.get('end_date');
+                if (startDate) formData.append('start_date', startDate);
+                if (endDate) formData.append('end_date', endDate);
+            } else if (filterType === 'week' || filterType === 'month') {
+                // Week and month don't need date parameters
+            } else {
+                const date = filterFormData.get('date');
+                if (date) formData.append('date', date);
+            }
+            
+            // Add search from form or current URL
+            const search = filterFormData.get('search') || currentParams.get('search');
+            if (search) formData.append('search', search);
+            
+            // Send AJAX request
+            fetch('{{ route("sales-report.send-email") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMessage.textContent = data.message;
+                    successMessage.style.display = 'block';
+                    
+                    // Reset form after 2 seconds and close modal
+                    setTimeout(() => {
+                        emailForm.reset();
+                        hideEmailModal();
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = data.message || 'Gagal mengirim email';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'Terjadi kesalahan: ' + error.message;
+                errorMessage.style.display = 'block';
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                btnText.textContent = 'Kirim Email';
+            });
+        });
+    }
+    
+    // Close modal when clicking outside
+    if (emailModal) {
+        emailModal.addEventListener('click', function(e) {
+            if (e.target === emailModal) {
+                hideEmailModal();
+            }
+        });
+    }
+});
+
 // Function to handle filter type selection
 document.addEventListener('DOMContentLoaded', function() {
     const filterTypeSelect = document.getElementById('filter_type');
     const singleDateFilter = document.getElementById('singleDateFilter');
     const dateRangeFilter = document.getElementById('dateRangeFilter');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const filterForm = document.getElementById('filterForm');
+    
+    // Check if filter is already applied on page load
+    function checkFilterApplied() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterType = urlParams.get('filter_type');
+        const date = urlParams.get('date');
+        const startDate = urlParams.get('start_date');
+        const endDate = urlParams.get('end_date');
+        
+        // Show reset button if any filter is applied
+        // Check if filter_type is set and not default, or if any date is set
+        if ((filterType && (filterType !== 'single' || date)) || startDate || endDate) {
+            if (resetFilterBtn) {
+                resetFilterBtn.classList.add('show-reset');
+            }
+        }
+    }
+    
+    // Check on page load
+    checkFilterApplied();
+    
+    // Show reset button when form is submitted (Apply button clicked)
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            // Check if it's the Apply Filter button (not download or other actions)
+            const submitButton = e.submitter || document.activeElement;
+            if (submitButton && submitButton.name === 'action' && submitButton.value === 'filter') {
+                // Show reset button after a short delay to ensure form submission happens
+                setTimeout(function() {
+                    if (resetFilterBtn) {
+                        resetFilterBtn.classList.add('show-reset');
+                    }
+                }, 100);
+            }
+        });
+    }
     
     if (filterTypeSelect) {
         filterTypeSelect.addEventListener('change', function() {

@@ -108,6 +108,36 @@
         display: inline-block;
     }
 
+    .btn-send-email {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        backdrop-filter: blur(10px);
+        margin-left: 12px;
+        width: auto;
+        height: 3.3rem;
+    }
+
+    .btn-send-email:hover {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        color: white;
+        text-decoration: none;
+    }
+
     .stats-cards {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -682,6 +712,256 @@
             justify-content: center;
         }
     }
+
+    /* Email Modal Styles */
+    .email-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(46, 71, 102, 0.8);
+        backdrop-filter: blur(12px);
+        z-index: 3000;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .email-modal-content {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        padding: 30px;
+        width: 90%;
+        max-width: 420px;
+        margin: 20vh auto;
+        border-radius: 24px;
+        box-shadow: 
+            0 25px 50px rgba(46, 71, 102, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        animation: slideUp 0.4s ease-out;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .email-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 16px;
+    }
+
+    .email-modal-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #2E4766, #4a6b8a, #2E4766);
+        border-radius: 1px;
+    }
+
+    .email-modal-title {
+        color: #2E4766;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .email-close-btn {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(46, 71, 102, 0.1);
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+        color: #2E4766;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .email-close-btn:hover {
+        background: rgba(46, 71, 102, 0.2);
+        transform: rotate(90deg);
+    }
+
+    .email-form-group {
+        margin-bottom: 16px;
+    }
+
+    .email-form-group label {
+        font-weight: 600;
+        color: #2E4766;
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+    }
+
+    .email-form-group input,
+    .email-form-group textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #fff;
+        font-family: inherit;
+    }
+
+    .email-form-group textarea {
+        min-height: 70px;
+        resize: vertical;
+    }
+
+    .email-form-group input:focus,
+    .email-form-group textarea:focus {
+        outline: none;
+        border-color: #2E4766;
+        box-shadow: 
+            0 0 0 3px rgba(46, 71, 102, 0.1),
+            0 4px 12px rgba(46, 71, 102, 0.1);
+        transform: translateY(-1px);
+    }
+
+    .email-submit-btn {
+        background: linear-gradient(135deg, #2E4766 0%, #3a5a7f 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 4px 15px rgba(46, 71, 102, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .email-submit-btn:hover {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2E4766 100%);
+        transform: translateY(-2px);
+        box-shadow: 
+            0 6px 20px rgba(46, 71, 102, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .email-submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .email-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .email-error-message {
+        margin-top: 12px;
+        padding: 10px;
+        background: #fee2e2;
+        color: #dc2626;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+    }
+
+    .email-success-message {
+        margin-top: 12px;
+        padding: 10px;
+        background: #d1fae5;
+        color: #059669;
+        border-radius: 8px;
+        font-size: 13px;
+        display: none;
+    }
+
+    /* Notification Styles (similar to login page) */
+    .notification {
+        position: fixed !important;
+        top: -20rem;
+        left: 0;
+        right: 0;
+        z-index: 10000 !important;
+        display: flex;
+        justify-content: center;
+        transition: all 0.5s ease-in-out;
+        padding: 15px 0;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .notification.show {
+        top: -7rem;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 90%;
+        width: 100%;
+        max-width: 500px;
+        z-index: 10001 !important;
+        font-weight: 500;
+        position: relative;
+    }
+
+    .success-notification .notification-content {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #059669;
+        border-left: 4px solid #059669;
+        backdrop-filter: blur(10px);
+    }
+
+    .error-notification .notification-content {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #B91C1C;
+        border-left: 4px solid rgb(161, 33, 33);
+        backdrop-filter: blur(10px);
+    }
+
+    .notification svg {
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .notification span {
+        font-size: 14px;
+        line-height: 2;
+    }
 </style>
 
 <div class="order-container">
@@ -689,7 +969,16 @@
     <div class="page-header">
         <h2 class="page-title">Daily Sales Report</h2>
         <p class="page-subtitle">Manage and monitor all sales transactions</p>
-        <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="{{ route('order-list.download-pdf') }}" class="btn-download-pdf">Download PDF</a>
+            <button type="button" onclick="sendEmail()" class="btn-send-email">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Send Email
+            </button>
+        </div>
     </div>
 
     <!-- Stats Cards -->
@@ -974,6 +1263,196 @@
         `;
         document.head.appendChild(style);
     });
+
+    // Function to show email modal
+    function sendEmail() {
+        const modal = document.getElementById('emailModal');
+        const errorMessage = document.getElementById('emailErrorMessage');
+        const successMessage = document.getElementById('emailSuccessMessage');
+        
+        // Reset form and messages
+        document.getElementById('emailForm').reset();
+        errorMessage.style.display = 'none';
+        successMessage.style.display = 'none';
+        
+        // Show modal
+        modal.style.display = 'block';
+    }
+
+    // Function to hide email modal
+    function hideEmailModal() {
+        const modal = document.getElementById('emailModal');
+        modal.style.display = 'none';
+    }
+
+    // Function to show notification (similar to login page)
+    function showNotification(type, message) {
+        // Remove existing notification if any
+        const existingNotification = document.getElementById('emailNotification');
+        if (existingNotification) {
+            existingNotification.remove();
+        }
+
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.id = 'emailNotification';
+        notification.className = `notification ${type}-notification`;
+        
+        const icon = type === 'success' 
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+        
+        notification.innerHTML = `
+            <div class="notification-content">
+                ${icon}
+                <span>${message}</span>
+            </div>
+        `;
+        
+        // Append to body to ensure it's above the modal
+        document.body.appendChild(notification);
+        
+        // Force z-index to ensure it's above modal
+        notification.style.zIndex = '10000';
+        
+        // Show notification after a short delay
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            
+            // Remove from DOM after animation completes
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }, 3000);
+
+        // Allow manual close
+        notification.addEventListener('click', function () {
+            this.classList.remove('show');
+            setTimeout(() => this.remove(), 500);
+        });
+    }
+
+    // Handle email form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const emailForm = document.getElementById('emailForm');
+        const emailModal = document.getElementById('emailModal');
+        const errorMessage = document.getElementById('emailErrorMessage');
+        const successMessage = document.getElementById('emailSuccessMessage');
+        const submitBtn = document.getElementById('emailSubmitBtn');
+        const btnText = submitBtn ? submitBtn.querySelector('.btn-text') : null;
+        
+        if (emailForm && submitBtn) {
+            emailForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Hide previous messages
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                // Disable submit button
+                submitBtn.disabled = true;
+                if (btnText) btnText.textContent = 'Mengirim...';
+                
+                // Get email form data
+                const emailFormData = new FormData(emailForm);
+                
+                // Build form data
+                const formData = new FormData();
+                
+                // Add CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || emailFormData.get('_token');
+                if (csrfToken) {
+                    formData.append('_token', csrfToken);
+                }
+                
+                // Add email form fields
+                formData.append('email', emailFormData.get('email'));
+                formData.append('sender_name', emailFormData.get('sender_name'));
+                if (emailFormData.get('description')) {
+                    formData.append('description', emailFormData.get('description'));
+                }
+                
+                // Send AJAX request
+                fetch('{{ route("order-list.send-email") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        successMessage.textContent = data.message;
+                        successMessage.style.display = 'block';
+                        
+                        // Reset form after 2 seconds and close modal
+                        setTimeout(() => {
+                            emailForm.reset();
+                            hideEmailModal();
+                        }, 2000);
+                    } else {
+                        errorMessage.textContent = data.message || 'Gagal mengirim email';
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    errorMessage.textContent = 'Terjadi kesalahan: ' + error.message;
+                    errorMessage.style.display = 'block';
+                })
+                .finally(() => {
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    if (btnText) btnText.textContent = 'Kirim Email';
+                });
+            });
+        }
+        
+        // Close modal when clicking outside
+        if (emailModal) {
+            emailModal.addEventListener('click', function(e) {
+                if (e.target === emailModal) {
+                    hideEmailModal();
+                }
+            });
+        }
+    });
     </script>
+</div>
+
+<!-- Email Modal -->
+<div id="emailModal" class="email-modal">
+    <div class="email-modal-content">
+        <div class="email-modal-header">
+            <h2 class="email-modal-title">Kirim Daily Sales Report via Email</h2>
+            <button class="email-close-btn" onclick="hideEmailModal()">×</button>
+        </div>
+        <form id="emailForm">
+            @csrf
+            <div class="email-form-group">
+                <label for="email_to">Alamat Email Tujuan *</label>
+                <input type="email" name="email" id="email_to" required placeholder="contoh@email.com">
+            </div>
+            <div class="email-form-group">
+                <label for="sender_name">Nama Pengirim *</label>
+                <input type="text" name="sender_name" id="sender_name" required placeholder="Masukkan nama pengirim">
+            </div>
+            <div class="email-form-group">
+                <label for="description">Deskripsi</label>
+                <textarea name="description" id="description" placeholder="Masukkan deskripsi (opsional)"></textarea>
+            </div>
+            <button type="submit" class="email-submit-btn" id="emailSubmitBtn">
+                <span class="btn-text">Kirim Email</span>
+            </button>
+            <div id="emailErrorMessage" class="email-error-message"></div>
+            <div id="emailSuccessMessage" class="email-success-message"></div>
+        </form>
+    </div>
 </div>
 @endsection

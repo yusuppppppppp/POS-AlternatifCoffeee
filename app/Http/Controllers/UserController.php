@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
@@ -467,6 +468,78 @@ class UserController extends Controller
         }
     }
 
+    public function sendOrderListEmail(Request $request)
+    {
+        if (Auth::check() && Auth::user()->usertype === 'user') {
+            $request->validate([
+                'email' => 'required|email',
+                'sender_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ]);
+
+            $orders = Order::with(['items', 'user'])
+                ->whereDate('created_at', now()->toDateString())
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            // Calculate summary statistics
+            $totalOrders = $orders->count();
+            $totalRevenue = $orders->sum('total_amount');
+            $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+            
+            $downloadedBy = Auth::user()->name;
+            
+            // Generate PDF
+            $pdf = Pdf::loadView('order-list-pdf', compact('orders', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy'));
+            
+            // Prepare email data
+            $emailData = [
+                'sender_name' => $request->sender_name,
+                'description' => $request->description ?? '',
+                'recipient_email' => $request->email,
+            ];
+            
+            // Send email with PDF attachment
+            try {
+                $emailBody = '
+                    <html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #2E4766;">Daily Sales Report - Alternatif Coffee</h2>
+                        <p>Dear Recipient,</p>
+                        <p>' . ($emailData['description'] ? nl2br(e($emailData['description'])) : 'Please find attached the daily sales report for today.') . '</p>
+                        <p>Best regards,<br>' . e($request->sender_name) . '</p>
+                    </body>
+                    </html>
+                ';
+                
+                Mail::send([], [], function ($message) use ($request, $pdf, $emailBody) {
+                    $message->to($request->email)
+                            ->subject('Daily Sales Report - Alternatif Coffee')
+                            ->from(config('mail.from.address'), $request->sender_name)
+                            ->attachData($pdf->output(), 'order-list-' . now()->format('Y-m-d') . '.pdf', [
+                                'mime' => 'application/pdf',
+                            ]);
+                    $message->html($emailBody);
+                });
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email berhasil dikirim ke ' . $request->email
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengirim email: ' . $e->getMessage()
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+    }
+
     public function downloadSalesReportPdf(Request $request)
     {
         if (Auth::check() && Auth::user()->usertype == 'admin') {
@@ -588,6 +661,139 @@ class UserController extends Controller
             return $pdf->download($fileName . '.pdf');
         } else {
             return redirect()->route('login');
+        }
+    }
+
+    public function sendSalesReportEmail(Request $request)
+    {
+        if (Auth::check() && Auth::user()->usertype == 'admin') {
+            $request->validate([
+                'email' => 'required|email',
+                'sender_name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+            ]);
+
+            $query = Order::with(['items', 'user']);
+            $fileName = 'sales-report';
+            $period = 'custom';
+            
+            // Handle date filtering based on filter type (same as downloadSalesReportPdf method)
+            $filterType = $request->get('filter_type', 'single');
+            
+            if ($filterType === 'range') {
+                if ($request->filled('start_date') && $request->filled('end_date')) {
+                    $query->whereBetween('created_at', [$request->start_date . ' 00:00:00', $request->end_date . ' 23:59:59']);
+                    $fileName .= '-range-' . $request->start_date . '-to-' . $request->end_date;
+                    $period = 'custom';
+                } elseif ($request->filled('start_date')) {
+                    $query->whereDate('created_at', '>=', $request->input('start_date'));
+                    $fileName .= '-from-' . $request->start_date;
+                    $period = 'custom';
+                } elseif ($request->filled('end_date')) {
+                    $query->whereDate('created_at', '<=', $request->input('end_date'));
+                    $fileName .= '-until-' . $request->end_date;
+                    $period = 'custom';
+                }
+            } elseif ($filterType === 'week') {
+                $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                $fileName .= '-week-' . now()->format('Y-W');
+                $period = 'week';
+            } elseif ($filterType === 'month') {
+                $query->whereYear('created_at', now()->year)
+                      ->whereMonth('created_at', now()->month);
+                $fileName .= '-month-' . now()->format('Y-m');
+                $period = 'month';
+            } else {
+                if ($request->filled('date')) {
+                    $query->whereDate('created_at', $request->input('date'));
+                    $fileName .= '-date-' . $request->date;
+                    $period = 'single';
+                } else {
+                    $query->whereDate('created_at', now()->toDateString());
+                    $fileName .= '-today-' . now()->format('Y-m-d');
+                    $period = 'today';
+                }
+            }
+            
+            // Add search functionality if provided
+            $search = $request->get('search', '');
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('customer_name', 'LIKE', "%{$search}%")
+                      ->orWhere('order_type', 'LIKE', "%{$search}%")
+                      ->orWhere('id', 'LIKE', "%{$search}%")
+                      ->orWhere('total_amount', 'LIKE', "%{$search}%")
+                      ->orWhereHas('user', function($userQuery) use ($search) {
+                          $userQuery->where('name', 'LIKE', "%{$search}%");
+                      })
+                      ->orWhereHas('items', function($itemQuery) use ($search) {
+                          $itemQuery->where('menu_name', 'LIKE', "%{$search}%");
+                      });
+                });
+                $fileName .= '-search-' . substr($search, 0, 20);
+            }
+            
+            $orders = $query->orderBy('created_at', 'desc')->get();
+            
+            // Calculate summary statistics
+            $totalOrders = $orders->count();
+            $totalRevenue = $orders->sum('total_amount');
+            $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+            
+            $downloadedBy = Auth::user()->name;
+            $filterType = $request->get('filter_type', 'single');
+            $selectedDate = $request->get('date');
+            $startDate = $request->get('start_date');
+            $endDate = $request->get('end_date');
+            
+            // Generate PDF
+            $pdf = Pdf::loadView('sales-report-pdf', compact('orders', 'period', 'totalOrders', 'totalRevenue', 'averageOrderValue', 'downloadedBy', 'filterType', 'selectedDate', 'startDate', 'endDate'));
+            
+            // Prepare email data
+            $emailData = [
+                'sender_name' => $request->sender_name,
+                'description' => $request->description ?? '',
+                'recipient_email' => $request->email,
+            ];
+            
+            // Send email with PDF attachment
+            try {
+                $emailBody = '
+                    <html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                        <h2 style="color: #2E4766;">Sales Report - Alternatif Coffee</h2>
+                        <p>Dear Recipient,</p>
+                        <p>' . ($emailData['description'] ? nl2br(e($emailData['description'])) : 'Please find attached the sales report.') . '</p>
+                        <p>Best regards,<br>' . e($request->sender_name) . '</p>
+                    </body>
+                    </html>
+                ';
+                
+                Mail::send([], [], function ($message) use ($request, $pdf, $fileName, $emailBody) {
+                    $message->to($request->email)
+                            ->subject('Sales Report - Alternatif Coffee')
+                            ->from(config('mail.from.address'), $request->sender_name)
+                            ->attachData($pdf->output(), $fileName . '.pdf', [
+                                'mime' => 'application/pdf',
+                            ]);
+                    $message->html($emailBody);
+                });
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Email berhasil dikirim ke ' . $request->email
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengirim email: ' . $e->getMessage()
+                ], 500);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
         }
     }
 

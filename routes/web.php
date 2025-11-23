@@ -42,7 +42,9 @@ Route::middleware(['auth', 'prevent.back.history'])->group(function () {
     // Order
     Route::get('/order-list', [UserController::class, 'orderList'])->name('order-list'); // Menampilkan halaman
     Route::get('/order-list/download-pdf', [UserController::class, 'downloadOrderListPdf'])->name('order-list.download-pdf'); // Download PDF
+    Route::post('/order-list/send-email', [UserController::class, 'sendOrderListEmail'])->name('order-list.send-email'); // Send Order List Email
     Route::get('/sales-report/download-pdf', [UserController::class, 'downloadSalesReportPdf'])->name('sales-report.download-pdf'); // Download Sales Report PDF
+    Route::post('/sales-report/send-email', [UserController::class, 'sendSalesReportEmail'])->name('sales-report.send-email'); // Send Sales Report Email
     Route::get('/order-data', [OrderController::class, 'todayOrders'])->name('order.data'); // Ambil data pesanan (HARUS JSON)
     Route::post('/save-order', [OrderController::class, 'store'])->name('save-order');
 
